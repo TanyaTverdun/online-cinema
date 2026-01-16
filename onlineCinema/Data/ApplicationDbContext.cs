@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using onlineCinema.Models;
 
 namespace onlineCinema.Data
 {
@@ -9,5 +10,8 @@ namespace onlineCinema.Data
 			: base(options)
 		{
 		}
-	}
+
+        public DbSet<Hall> Halls { get; set; }
+        public DbSet<HallType> HallTypes { get; set; }
+    }
 }
