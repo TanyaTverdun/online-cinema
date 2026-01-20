@@ -19,8 +19,7 @@
     public enum SeatType : byte
     {
         Standard = 1,
-        VIP = 2,
-        Sofa = 3
+        VIP = 2
     }
 
     public enum PaymentStatus : byte
