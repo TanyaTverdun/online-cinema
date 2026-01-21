@@ -1,17 +1,15 @@
-﻿using System.ComponentModel.DataAnnotations;
+namespace onlineCinema.Domain.Entities;
 
-namespace onlineCinema.Domain.Entities
+public class Hall
 {
-    public class Hall
-    {
-        [Key]
-        public int Id { get; set; }
+    public int HallId { get; set; }
+    public int CinemaId { get; set; }
 
-        [Required]
-        [StringLength(50)]
-        public string Name { get; set; }
-        public int RowsCount { get; set; }
-        public int SeatsPerRow { get; set; }
-        public int HallTypeId { get; set; }
-    }
+    public byte HallNumber { get; set; }
+    public byte RowCount { get; set; }
+    public byte SeatInRowCount { get; set; }
+
+    public Cinema Cinema { get; set; } = null!;
+    public ICollection<Seat> Seats { get; set; } = new List<Seat>();
+    public ICollection<Session> Sessions { get; set; } = new List<Session>();
 }
