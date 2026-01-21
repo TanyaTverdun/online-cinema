@@ -9,11 +9,11 @@ namespace onlineCinema.Domain.Entities
         public string EmailAddress { get; set; } = string.Empty;
         public DateTime CreatedDateTime { get; set; }
 
-        // ===== Payment =====
+        
         public int? PaymentId { get; set; }
         public Payment? Payment { get; set; }
 
-        // ===== Identity User =====
+        
         public string ApplicationUserId { get; set; } = string.Empty;
         public ApplicationUser ApplicationUser { get; set; } = null!;
         public ICollection<SnackBooking> SnackBookings { get; set; } = new List<SnackBooking>();
