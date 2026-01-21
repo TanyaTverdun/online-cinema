@@ -9,5 +9,5 @@ public class Payment
     public DateTime PaymentDate { get; set; }
     public byte Status { get; set; }
 
-    public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+    public Booking? Booking { get; set; }
 }
