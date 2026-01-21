@@ -12,4 +12,5 @@ public class Hall
     public Cinema Cinema { get; set; } = null!;
     public ICollection<Seat> Seats { get; set; } = new List<Seat>();
     public ICollection<Session> Sessions { get; set; } = new List<Session>();
+    public ICollection<HallFeature> HallFeatures { get; set; } = new List<HallFeature>();
 }
