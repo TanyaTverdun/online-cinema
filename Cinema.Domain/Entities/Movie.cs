@@ -2,54 +2,27 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
+using onlineCinema.Domain.Enums;
 
 namespace onlineCinema.Domain.Entities
 {
     public class Movie
     {
-        [Key]
         public int Id { get; set; }
-
-        // Basic info.
-        [Required(ErrorMessage = "Please specify the movie title")]
-        [StringLength(200)]
-        [Display(Name = "Title")]
-        public string Title { get; set; } = null!;
-
-        [StringLength(1000)]
-        [Display(Name = "Description")]
+        public string Title { get; set; } = string.Empty;
+        public MovieStatus Status { get; set; }
+        public AgeRating AgeRating { get; set; }
+        public int Runtime { get; set; }
+        public DateTime ReleaseDate { get; set; }
+        public string? TrailerLink { get; set; }
         public string? Description { get; set; }
+        public string? PosterImage { get; set; }
 
-        [StringLength(200)]
-        [Display(Name = "Director")]
-        public string? Director { get; set; }
-
-        [StringLength(500)]
-        [Display(Name = "Actors")]
-        public string? Actors { get; set; }
-
-        [StringLength(100)]
-        [Display(Name = "Genre")]
-        public string? Genre { get; set; }
-
-        // Duration.
-        [Required]
-        [Display(Name = "Duration (minutes)")]
-        public int DurationMinutes { get; set; }
-
-        // Media.
-        [Display(Name = "Image URL")]
-        public string? ImageUrl { get; set; }
-
-        // Rental period.
-        [Display(Name = "Rental start date")]
-        public DateTime? RentalStartDate { get; set; }
-
-        [Display(Name = "Rental end date")]
-        public DateTime? RentalEndDate { get; set; }
-
-        // Navigation properties.
-        [Display(Name = "Sessions")]
+        public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
+        public ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
+        public ICollection<DirectorMovie> MovieDirectors { get; set; } = new List<DirectorMovie>();
+        public ICollection<LanguageMovie> MovieLanguages { get; set; } = new List<LanguageMovie>();
+        public ICollection<MovieFeature> ShowingFeatures { get; set; } = new List<MovieFeature>();
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
     }
 }
