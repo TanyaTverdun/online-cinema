@@ -11,4 +11,6 @@ public class Seat
     public float Coefficient { get; set; }
 
     public Hall Hall { get; set; } = null!;
+
+    public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }
