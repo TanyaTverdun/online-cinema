@@ -30,7 +30,7 @@ namespace onlineCinema.Infrastructure.Data.Configurations
             builder.HasMany(u => u.Bookings)
                 .WithOne(b => b.ApplicationUser)
                 .HasForeignKey(b => b.ApplicationUserId)
-                .OnDelete(DeleteBehavior.Cascade);
+                .OnDelete(DeleteBehavior.Restrict);
 
         }
     }
