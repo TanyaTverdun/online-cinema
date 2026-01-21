@@ -22,7 +22,7 @@ namespace onlineCinema.Domain.Entities
         public ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
         public ICollection<DirectorMovie> MovieDirectors { get; set; } = new List<DirectorMovie>();
         public ICollection<LanguageMovie> MovieLanguages { get; set; } = new List<LanguageMovie>();
-        public ICollection<MovieFeature> ShowingFeatures { get; set; } = new List<MovieFeature>();
+        public ICollection<MovieFeature> MovieFeature { get; set; } = new List<MovieFeature>();
         public ICollection<Session> Sessions { get; set; } = new List<Session>();
     }
 }
