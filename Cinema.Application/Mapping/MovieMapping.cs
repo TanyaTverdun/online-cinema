@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace onlineCinema.Application.Mapping
 {
-    internal class MovieMapping
+    public class MovieMapping
     {
     }
 }
