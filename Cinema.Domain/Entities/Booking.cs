@@ -17,5 +17,6 @@ namespace onlineCinema.Domain.Entities
         public string ApplicationUserId { get; set; } = string.Empty;
         public ApplicationUser ApplicationUser { get; set; } = null!;
         public ICollection<SnackBooking> SnackBookings { get; set; } = new List<SnackBooking>();
+        public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
     }
 }
