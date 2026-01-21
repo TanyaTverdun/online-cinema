@@ -7,8 +7,8 @@ using CinemaEntity = onlineCinema.Domain.Entities.Cinema;
 
 namespace onlineCinema.Infrastructure.Data
 {
-	public class ApplicationDbContext : IdentityDbContext
-	{
+	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    {
 		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
 			: base(options)
 		{
@@ -28,5 +28,12 @@ namespace onlineCinema.Infrastructure.Data
         public DbSet<Language> Languages { get; set; }
         public DbSet<Feature> Features { get; set; }
         public DbSet<Snack> Snacks { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            base.OnModelCreating(builder);
+
+            builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
+        }
     }
 }
