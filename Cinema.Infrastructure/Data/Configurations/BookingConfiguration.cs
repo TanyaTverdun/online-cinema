@@ -23,13 +23,13 @@ namespace onlineCinema.Infrastructure.Data.Configurations
                 .HasColumnType("datetime");
 
             builder.HasOne(b => b.Payment)
-                .WithMany()
-                .HasForeignKey(b => b.PaymentId)
-                .OnDelete(DeleteBehavior.Restrict);
+               .WithOne(p => p.Booking)
+               .HasForeignKey<Booking>(b => b.PaymentId)
+               .OnDelete(DeleteBehavior.Restrict);
 
 
             builder.HasOne(b => b.ApplicationUser)
-                .WithMany()
+                .WithMany(u => u.Bookings)
                 .HasForeignKey(b => b.ApplicationUserId)
                 .IsRequired()
                 .OnDelete(DeleteBehavior.Restrict);
