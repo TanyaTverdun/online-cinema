@@ -1,61 +1,16 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
+﻿namespace onlineCinema.Domain.Entities;
 
-namespace onlineCinema.Domain.Entities
+public class Ticket
 {
-    public enum TicketStatus
-    {
-        Reserved = 0,
-        Paid = 1,
-        Cancelled = 2
-    }
+    public int TicketId { get; set; }
+    public decimal Price { get; set; }
 
-    [Index(nameof(SessionId), nameof(RowNumber), nameof(SeatNumber), IsUnique = true)]
-    public class Ticket
-    {
-        [Key]
-        public int Id { get; set; }
+    public int SessionId { get; set; }
+    public Session Session { get; set; } = null!;
 
-        // Seat info.
-        [Required(ErrorMessage = "Please specify the row number")]
-        [Display(Name = "Row number")]
-        public int RowNumber { get; set; }
+    public int SeatId { get; set; }
+    public Seat Seat { get; set; } = null!;
 
-        [Required(ErrorMessage = "Please specify the seat number")]
-        [Display(Name = "Seat number")]
-        public int SeatNumber { get; set; }
-
-        // Purchase info.
-        [Display(Name = "Purchase date")]
-        public DateTime PurchaseDate { get; set; } = DateTime.UtcNow;
-
-        [Required]
-        [Column(TypeName = "decimal(18,2)")]
-        [Display(Name = "Price paid")]
-        public decimal PricePaid { get; set; }
-
-        // Ticket status.
-        [Required]
-        [Display(Name = "Ticket status")]
-        public TicketStatus TicketStatus { get; set; } = TicketStatus.Reserved;
-
-        // Session.
-        [Required]
-        [Display(Name = "Session")]
-        public int SessionId { get; set; }
-
-        [ForeignKey(nameof(SessionId))]
-        public Session? Session { get; set; }
-
-        // ASP.NET Identity User.
-        [Required]
-        [Display(Name = "User")]
-        public string UserId { get; set; } = null!;
-
-        [ForeignKey(nameof(UserId))]
-        public IdentityUser? User { get; set; }
-    }
+    public int BookingId { get; set; }
+    public Booking Booking { get; set; } = null!;
 }
