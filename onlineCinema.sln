@@ -3,7 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.11.35327.3
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "onlineCinema", "onlineCinema\onlineCinema.csproj", "{F2C9B449-E5B4-4E28-BCC8-9AA6E3E5EB08}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "onlineCinema", "onlineCinema\onlineCinema.csproj", "{F2C9B449-E5B4-4E28-BCC8-9AA6E3E5EB08}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "onlineCinema.Domain", "Cinema.Domain\onlineCinema.Domain.csproj", "{53FE9AF1-9F1F-4A28-A902-FCB3438DF79F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "onlineCinema.Application", "Cinema.Application\onlineCinema.Application.csproj", "{4592E0C4-E50F-40B9-9436-E1D4640D7C2C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "onlineCinema.Infrastructure", "Cinema.Infrastructure\onlineCinema.Infrastructure.csproj", "{D7DF6AB0-0506-4ACB-8E37-3D9DE708FBFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +21,18 @@ Global
 		{F2C9B449-E5B4-4E28-BCC8-9AA6E3E5EB08}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F2C9B449-E5B4-4E28-BCC8-9AA6E3E5EB08}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F2C9B449-E5B4-4E28-BCC8-9AA6E3E5EB08}.Release|Any CPU.Build.0 = Release|Any CPU
+		{53FE9AF1-9F1F-4A28-A902-FCB3438DF79F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53FE9AF1-9F1F-4A28-A902-FCB3438DF79F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53FE9AF1-9F1F-4A28-A902-FCB3438DF79F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53FE9AF1-9F1F-4A28-A902-FCB3438DF79F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4592E0C4-E50F-40B9-9436-E1D4640D7C2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4592E0C4-E50F-40B9-9436-E1D4640D7C2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4592E0C4-E50F-40B9-9436-E1D4640D7C2C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4592E0C4-E50F-40B9-9436-E1D4640D7C2C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7DF6AB0-0506-4ACB-8E37-3D9DE708FBFC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7DF6AB0-0506-4ACB-8E37-3D9DE708FBFC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7DF6AB0-0506-4ACB-8E37-3D9DE708FBFC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7DF6AB0-0506-4ACB-8E37-3D9DE708FBFC}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
