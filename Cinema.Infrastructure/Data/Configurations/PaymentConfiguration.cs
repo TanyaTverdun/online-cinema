@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using OnlineCinema.Domain.Entities;
+using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Infrastructure.Data.Configurations
 {
@@ -24,10 +24,9 @@ namespace onlineCinema.Infrastructure.Data.Configurations
             builder.Property(p => p.Status)
                 .HasColumnType("tinyint");
 
-            // One Payment -> many Bookings
-            builder.HasMany(p => p.Bookings)
+            builder.HasOne(p => p.Booking)
                 .WithOne(b => b.Payment)
-                .HasForeignKey(b => b.PaymentId)
+                .HasForeignKey<Booking>(b => b.PaymentId)
                 .OnDelete(DeleteBehavior.Restrict);
         }
     }

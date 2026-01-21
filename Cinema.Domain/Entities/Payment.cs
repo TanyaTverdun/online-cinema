@@ -1,6 +1,6 @@
 ﻿using onlineCinema.Domain.Entities;
 
-namespace OnlineCinema.Domain.Entities;
+namespace onlineCinema.Domain.Entities;
 
 public class Payment
 {
@@ -9,5 +9,6 @@ public class Payment
     public DateTime PaymentDate { get; set; }
     public byte Status { get; set; }
 
+    public int? BookingId { get; set; }
     public Booking? Booking { get; set; }
 }

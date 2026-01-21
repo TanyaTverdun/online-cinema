@@ -1,6 +1,4 @@
-﻿using OnlineCinema.Domain.Entities;
-
-namespace onlineCinema.Domain.Entities
+﻿namespace onlineCinema.Domain.Entities
 {
     public class Booking
     {

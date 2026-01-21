@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using onlineCinema.Domain.Entities;
-
 using CinemaEntity = onlineCinema.Domain.Entities.Cinema;
 
 
