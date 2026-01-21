@@ -4,7 +4,7 @@ using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Infrastructure.Data.Configurations
 {
-    public class HallConfiguration: IEntityTypeConfiguration<Hall>
+    public class HallConfiguration : IEntityTypeConfiguration<Hall>
     {
         public void Configure(EntityTypeBuilder<Hall> builder)
         {
