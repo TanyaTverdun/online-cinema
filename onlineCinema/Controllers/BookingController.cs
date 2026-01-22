@@ -9,5 +9,11 @@ namespace onlineCinema.Controllers
 {
     public class BookingController
     {
+        private readonly IUnitOfWork _unitOfWork;
+
+        public BookingController(IUnitOfWork unitOfWork)
+        {
+            _unitOfWork = unitOfWork;
+        }
     }
 }

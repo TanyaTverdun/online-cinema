@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace onlineCinema.Application.Interfaces
 {
-    public interface ISnackRepository
+    public interface ISnackRepository : IGenericRepository<Snack>
     {
-
-        Task<IEnumerable<Snack>> GetAllAsync();
-        Task<Snack?> GetByIdAsync(int id);
     }
 }

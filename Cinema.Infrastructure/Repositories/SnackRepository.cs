@@ -10,23 +10,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class SnackRepository : ISnackRepository
+    public class SnackRepository : GenericRepository<Snack>, ISnackRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public SnackRepository(ApplicationDbContext context)
+        public SnackRepository(ApplicationDbContext db) : base(db)
         {
-            _context = context;
-        }
-
-        public async Task<IEnumerable<Snack>> GetAllAsync()
-        {
-            return await _context.Snacks.ToListAsync();
-        }
-
-        public async Task<Snack?> GetByIdAsync(int id)
-        {
-            return await _context.Snacks.FirstOrDefaultAsync(s => s.SnackId == id);
+            _db = db;
         }
     }
 }

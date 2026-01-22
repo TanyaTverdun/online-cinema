@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using onlineCinema.Infrastructure.Data;
 using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Application.Interfaces;
-using Microsoft.EntityFrameworkCore;
 using onlineCinema.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -20,8 +19,7 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
-builder.Services.AddScoped<IPaymentRepository, PaymentRepository>();
-builder.Services.AddScoped<ISnackRepository, SnackRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

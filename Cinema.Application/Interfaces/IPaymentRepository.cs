@@ -7,10 +7,7 @@ using System.Threading.Tasks;
 
 namespace onlineCinema.Application.Interfaces
 {
-    public interface IPaymentRepository
+    public interface IPaymentRepository : IGenericRepository<Payment>
     {
-        Task<Payment?> GetByIdAsync(int id);
-        Task AddAsync(Payment payment);
-        Task UpdateAsync(Payment payment);
     }
 }
