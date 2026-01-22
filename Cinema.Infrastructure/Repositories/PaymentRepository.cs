@@ -10,30 +10,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class PaymentRepository : IPaymentRepository
+    public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
     {
-        private readonly ApplicationDbContext _context;
+        private readonly ApplicationDbContext _db;
 
-        public PaymentRepository(ApplicationDbContext context)
+        public PaymentRepository(ApplicationDbContext db) : base(db)
         {
-            _context = context;
-        }
-
-        public async Task<Payment?> GetByIdAsync(int id)
-        {
-            return await _context.Payments.FirstOrDefaultAsync(p => p.PaymentId == id);
-        }
-
-        public async Task AddAsync(Payment payment)
-        {
-            _context.Payments.Add(payment);
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateAsync(Payment payment)
-        {
-            _context.Payments.Update(payment);
-            await _context.SaveChangesAsync();
+            _db = db;
         }
     }
 }

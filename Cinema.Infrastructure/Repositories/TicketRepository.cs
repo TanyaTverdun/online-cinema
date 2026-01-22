@@ -1,13 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.Interfaces;
+﻿using onlineCinema.Application.Interfaces;
+using onlineCinema.Domain.Entities;
+using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class TicketRepository : ITicketRepository
+    public class TicketRepository : GenericRepository<Ticket>, ITicketRepository
     {
+        private readonly ApplicationDbContext _db;
+
+        public TicketRepository(ApplicationDbContext db) : base(db)
+        {
+            _db = db;
+        }
     }
 }
