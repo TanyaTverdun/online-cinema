@@ -1,3 +1,5 @@
+using onlineCinema.Domain.Enums;
+
 namespace onlineCinema.Domain.Entities;
 
 public class Seat
@@ -7,7 +9,7 @@ public class Seat
 
     public byte RowNumber { get; set; }
     public byte SeatNumber { get; set; }
-    public byte Type { get; set; }
+    public SeatType Type { get; set; }
     public float Coefficient { get; set; }
 
     public Hall Hall { get; set; } = null!;
