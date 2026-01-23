@@ -9,5 +9,10 @@ namespace onlineCinema.Application.Interfaces
 {
     public interface IBookingRepository : IGenericRepository<Booking>
     {
+        
+        Task<Booking?> GetByIdWithDetailsAsync(int id);
+
+        
+        Task UpdateWithDetailsAsync(Booking booking);
     }
 }

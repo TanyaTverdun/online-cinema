@@ -1,11 +1,12 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using onlineCinema.Application.Interfaces;
+using onlineCinema.Domain.Entities;
+using onlineCinema.Infrastructure.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using onlineCinema.Application.Interfaces;
-using onlineCinema.Domain.Entities;
-using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
@@ -16,6 +17,15 @@ namespace onlineCinema.Infrastructure.Repositories
         public SessionRepository(ApplicationDbContext db) : base(db)
         {
             _db = db;
+        }
+
+        public async Task<IEnumerable<Session>> GetFutureSessionsByMovieIdAsync(int movieId)
+        {
+            return await _db.Sessions
+                .Where(s => s.MovieId == movieId && s.ShowingDateTime > DateTime.Now)
+                .Include(s => s.Hall) 
+                .OrderBy(s => s.ShowingDateTime) 
+                .ToListAsync();
         }
     }
 }

@@ -9,5 +9,7 @@ namespace onlineCinema.Application.Interfaces
 {
     public interface ISessionRepository : IGenericRepository<Session>
     {
+        //майбутні сеанси 
+        Task<IEnumerable<Session>> GetFutureSessionsByMovieIdAsync(int movieId);
     }
 }
