@@ -9,5 +9,8 @@ namespace onlineCinema.Application.Interfaces
 {
     public interface IPaymentRepository : IGenericRepository<Payment>
     {
+        Task<IEnumerable<Payment>> GetAllWithBookingAsync();
+        Task<Payment?> GetByIdWithBookingAsync(int id);
     }
+
 }
