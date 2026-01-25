@@ -36,6 +36,8 @@ namespace onlineCinema.ViewModels
 
         [Display(Name = "Повне ім'я")]
         public string FullName => $"{LastName} {FirstName} {MiddleName}".Trim();
+
+        public List<BookingHistoryItemViewModel> BookingHistory { get; set; } = new();
     }
 }
 
