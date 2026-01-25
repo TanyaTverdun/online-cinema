@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using onlineCinema.Application.DTOs;
+using onlineCinema.Application.Interfaces;
+using onlineCinema.Domain.Entities;
+using onlineCinema.Infrastructure.Data;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using onlineCinema.Application.Interfaces;
-using onlineCinema.Domain.Entities;
-using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
@@ -29,21 +30,20 @@ namespace onlineCinema.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<Hall>> GetAllForClientAsync()
-        {
-            throw new NotImplementedException();
-            //return await _db.Halls
-            //    .Include(h => h.HallFeatures)
-            //    .ThenInclude(hf => hf.Feature)
-            //    .ToListAsync();
-        }
-
-        public async Task<Hall?> GetByIdWithFeaturesAsync(int id)
+        public async Task<HallDto?> GetByIdWithStatsAsync(int id)
         {
             return await _db.Halls
-                .Include(h => h.HallFeatures)
-                .ThenInclude(hf => hf.Feature)
-                .FirstOrDefaultAsync(h => h.HallId == id);
+               .Select(h => new HallDto
+               {
+                   Id = h.HallId,
+                   HallNumber = h.HallNumber,
+                   RowCount = h.RowCount,
+                   SeatInRowCount = h.SeatInRowCount,
+                   FeatureNames = h.HallFeatures
+                       .Select(hf => hf.Feature.Name)
+                       .ToList()
+               })
+               .FirstOrDefaultAsync(h => h.Id == id);
         }
 
         public async Task UpdateWithFeaturesAsync(Hall hall, List<int> selectedFeatureIds)
@@ -91,6 +91,22 @@ namespace onlineCinema.Infrastructure.Repositories
             }
 
             await _db.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<HallDto>> GetAllWithStatsAsync()
+        {
+            return await _db.Halls
+                .Select(h => new HallDto
+                {
+                    Id = h.HallId,
+                    HallNumber = h.HallNumber,
+                    RowCount = h.RowCount,
+                    SeatInRowCount = h.SeatInRowCount,
+                    FeatureNames = h.HallFeatures
+                        .Select(hf => hf.Feature.Name)
+                        .ToList()
+                })
+                .ToListAsync();
         }
     }
 }

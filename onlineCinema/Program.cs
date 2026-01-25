@@ -28,9 +28,11 @@ builder.Services.AddSingleton<BookingMapper>();
 builder.Services.AddSingleton<SnackMapper>();
 builder.Services.AddSingleton<BookingViewModelMapper>();
 builder.Services.AddSingleton<SnackViewModelMapper>();
+builder.Services.AddSingleton<HallMapper>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
+builder.Services.AddScoped<IHallService, HallService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

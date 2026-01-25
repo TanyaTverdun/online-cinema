@@ -1,0 +1,43 @@
+﻿@using onlineCinema.Application.DTOs
+@using onlineCinema.Domain.Entities
+@model HallDto
+
+@{
+    var features = ViewBag.Features as IEnumerable<Feature>;
+}
+
+<h2>Create New Hall</h2>
+
+<form asp-action="Create" method="post">
+    <div>
+        <label>Hall Number</label>
+        <input asp-for="HallNumber" type="number" />
+    </div>
+
+    <div>
+        <label>Rows</label>
+        <input asp-for="RowCount" type="number" />
+    </div>
+
+    <div>
+        <label>Seats in Row</label>
+        <input asp-for="SeatInRowCount" type="number" />
+    </div>
+
+    <h3>Features:</h3>
+    @if (features != null)
+    {
+        foreach (var feature in features)
+        {
+            <div>
+                <input type="checkbox"
+                       name="selectedFeatureIds"
+                       value="@feature.Id"
+                       id="feature_@feature.Id" />
+                <label for="feature_@feature.Id">@feature.Name</label>
+            </div>
+        }
+    }
+
+    <button type="submit">Create</button>
+</form>
