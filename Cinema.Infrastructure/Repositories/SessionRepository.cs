@@ -27,5 +27,13 @@ namespace onlineCinema.Infrastructure.Repositories
                 .OrderBy(s => s.ShowingDateTime) 
                 .ToListAsync();
         }
+
+        public async Task<Session?> GetByIdWithMovieAndHallAsync(int sessionId)
+        {
+            return await _db.Sessions
+                .Include(s => s.Movie)
+                .Include(s => s.Hall)
+                .FirstOrDefaultAsync(s => s.SessionId == sessionId);
+        }
     }
 }

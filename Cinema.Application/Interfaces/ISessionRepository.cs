@@ -11,5 +11,6 @@ namespace onlineCinema.Application.Interfaces
     {
         //майбутні сеанси 
         Task<IEnumerable<Session>> GetFutureSessionsByMovieIdAsync(int movieId);
+        Task<Session?> GetByIdWithMovieAndHallAsync(int sessionId);
     }
 }
