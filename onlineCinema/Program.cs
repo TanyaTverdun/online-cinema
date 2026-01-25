@@ -4,6 +4,10 @@ using onlineCinema.Infrastructure.Data;
 using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Domain.Entities;
+using onlineCinema.Application.Mapping;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Application.Services;
+using onlineCinema.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -19,7 +23,14 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddSingleton<BookingMapper>();
+builder.Services.AddSingleton<SnackMapper>();
+builder.Services.AddSingleton<BookingViewModelMapper>();
+builder.Services.AddSingleton<SnackViewModelMapper>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IBookingService, BookingService>();
+builder.Services.AddScoped<ISnackService, SnackService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

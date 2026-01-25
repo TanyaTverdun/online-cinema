@@ -1,0 +1,192 @@
+﻿
+
+
+<!-- ЗГЕНЕРИНО ДЛЯ ТЕСТУ -->
+
+
+
+@using onlineCinema.Domain.Enums
+@model onlineCinema.ViewModels.BookingViewModel
+
+@{
+    ViewData["Title"] = "Вибір місць";
+}
+
+<style>
+    .cinema-screen {
+        background-color: #ddd;
+        height: 50px;
+        width: 80%;
+        margin: 20px auto 50px;
+        transform: perspective(300px) rotateX(-5deg);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        text-align: center;
+        line-height: 50px;
+        color: #555;
+        font-weight: bold;
+        letter-spacing: 5px;
+    }
+
+    .seat-row {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 10px;
+        gap: 10px;
+    }
+
+    .seat {
+        width: 35px;
+        height: 35px;
+        border-radius: 5px 5px 0 0;
+        background-color: #444;
+        color: white;
+        font-size: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: 0.2s;
+        position: relative;
+    }
+
+    .seat.seat-vip {
+        background-color: #ffc107;
+        color: black;
+        border: 1px solid #e0a800;
+        width: 45px; 
+    }
+
+    .seat.seat-booked {
+        background-color: #d9534f;
+        cursor: not-allowed;
+        opacity: 0.6;
+    }
+
+    .seat.seat-selected {
+        background-color: #28a745;
+        transform: scale(1.1);
+        box-shadow: 0 0 10px #28a745;
+        color: white;
+    }
+
+    .seat:not(.seat-booked):hover {
+        opacity: 0.8;
+    }
+
+    .booking-summary {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin-top: 30px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+</style>
+
+<div class="container">
+    <div class="text-center my-4">
+        <h2>@Model.MovieTitle</h2>
+        <p class="text-muted">
+            @Model.HallName | @Model.ShowingDate.ToString("dd MMMM HH:mm")
+        </p>
+    </div>
+
+    <div class="d-flex justify-content-center gap-4 mb-4">
+        <div class="d-flex align-items-center gap-2">
+            <div class="seat" style="width:20px; height:20px; cursor:default;"></div> Вільне
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="seat seat-booked" style="width:20px; height:20px; cursor:default;"></div> Зайняте
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="seat seat-selected" style="width:20px; height:20px; cursor:default;"></div> Обране
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="seat seat-vip" style="width:20px; height:20px; cursor:default;"></div> VIP
+        </div>
+    </div>
+
+    <div class="cinema-screen">ЕКРАН</div>
+
+    <div class="cinema-hall">
+        @* Групуємо місця по рядах *@
+        @foreach (var rowGroup in Model.Seats.GroupBy(s => s.Row))
+        {
+            <div class="seat-row">
+                <span class="me-2 align-self-center text-muted">Ряд @rowGroup.Key</span>
+
+                @foreach (var seat in rowGroup.OrderBy(s => s.Number))
+                {
+                    <div class="seat @seat.CssClass"
+                        data-id="@seat.SeatId"
+                        data-price="@seat.Price"
+                        /* ... решта атрибутів ... */ >
+                            @seat.Number
+                    </div>
+                }
+            </div>
+        }
+    </div>
+
+    <form asp-action="BookSeats" method="post" id="bookingForm">
+        <input type="hidden" name="sessionId" value="@Model.SessionId" />
+
+        <div id="selectedSeatsContainer"></div>
+
+        <div class="booking-summary text-center">
+            <h4>Обрано місць: <span id="countDisplay">0</span></h4>
+            <h3>До сплати: <span id="priceDisplay">0</span> грн</h3>
+
+            <button type="submit" class="btn btn-primary btn-lg mt-3" id="submitBtn" disabled>
+                Перейти до бронювання
+            </button>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const seats = document.querySelectorAll('.seat:not(.seat-booked)');
+            const countDisplay = document.getElementById('countDisplay');
+            const priceDisplay = document.getElementById('priceDisplay');
+            const submitBtn = document.getElementById('submitBtn');
+            const hiddenContainer = document.getElementById('selectedSeatsContainer');
+
+            let totalCount = 0;
+            let totalPrice = 0;
+
+            seats.forEach(seat => {
+                seat.addEventListener('click', function () {
+                    this.classList.toggle('seat-selected');
+
+                    const price = parseFloat(this.dataset.price);
+                    const id = this.dataset.id;
+
+                    if (this.classList.contains('seat-selected')) {
+                        totalCount++;
+                        totalPrice += price;
+
+                        const input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = 'selectedSeatIds';
+                        input.value = id;
+                        input.id = 'input-seat-' + id;
+                        hiddenContainer.appendChild(input);
+
+                    } else {
+                        totalCount--;
+                        totalPrice -= price;
+
+                        const inputToRemove = document.getElementById('input-seat-' + id);
+                        if(inputToRemove) inputToRemove.remove();
+                    }
+
+                    countDisplay.textContent = totalCount;
+                    priceDisplay.textContent = totalPrice.toFixed(2);
+
+                    submitBtn.disabled = totalCount === 0;
+                });
+            });
+        });
+    </script>
+}

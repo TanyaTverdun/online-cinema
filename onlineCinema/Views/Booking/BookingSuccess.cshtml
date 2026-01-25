@@ -1,0 +1,33 @@
+﻿
+
+
+
+<!-- ЗГЕНЕРИНО ДЛЯ ТЕСТУ -->
+
+
+
+@model int
+
+@{
+    ViewData["Title"] = "Успішне бронювання";
+}
+
+<div class="container text-center mt-5">
+    <div class="card shadow p-5">
+        <div class="mb-4">
+            <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+        </div>
+        <h1 class="display-4 text-success">Вітаємо!</h1>
+        <p class="lead">Ваше бронювання було успішно створено.</p>
+        <div class="alert alert-info d-inline-block">
+            <strong>Номер замовлення: #@Model</strong>
+        </div>
+        <hr />
+        <p class="text-muted">Тепер ви можете переглянути квитки в особистому кабінеті або перейти до оплати.</p>
+
+        <div class="mt-4">
+            <a href="/" class="btn btn-primary btn-lg">На головну</a>
+            <button class="btn btn-outline-primary btn-lg ms-2" onclick="window.print()">Друкувати чек</button>
+        </div>
+    </div>
+</div>

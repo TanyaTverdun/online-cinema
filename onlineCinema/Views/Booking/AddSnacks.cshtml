@@ -1,0 +1,87 @@
+﻿
+
+
+
+<!-- ЗГЕНЕРИНО ДЛЯ ТЕСТУ -->
+
+
+
+@model onlineCinema.ViewModels.SnackSelectionViewModel
+
+<div class="container mt-5">
+    <!-- Шапка з проміжним підсумком -->
+    <div class="alert alert-secondary d-flex justify-content-between align-items-center">
+        <span>Вартість обраних квитків:</span>
+        <strong id="seatsTotalDisplay">@Model.SeatsTotalPrice.ToString("F2") грн</strong>
+    </div>
+
+    <form asp-action="AddSnacks" method="post">
+        <input type="hidden" asp-for="BookingId" />
+
+        <!-- Тут твій цикл зі снеками (картки) -->
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            @for (int i = 0; i < Model.AvailableSnacks.Count; i++)
+            {
+                <div class="col">
+                    <div class="card h-100 shadow-sm">
+                        <div class="card-body text-center">
+                            <h5>@Model.AvailableSnacks[i].Name</h5>
+                            <p class="text-primary fw-bold">@Model.AvailableSnacks[i].Price.ToString("F2") грн</p>
+
+                            <input type="hidden" asp-for="AvailableSnacks[i].SnackId" />
+                            <input type="hidden" asp-for="AvailableSnacks[i].Price" class="snack-price" />
+
+                            <div class="input-group">
+                                <button type="button" class="btn btn-outline-secondary" onclick="updateQty(this, -1)">-</button>
+                                <input type="number" asp-for="AvailableSnacks[i].Quantity"
+                                       class="form-control text-center qty-input" value="0" readonly />
+                                <button type="button" class="btn btn-outline-secondary" onclick="updateQty(this, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+
+        <!-- ФІКСОВАНА ПАНЕЛЬ З ЗАГАЛЬНОЮ СУМОЮ -->
+        <div class="sticky-bottom bg-white border-top p-3 mt-5 shadow-lg">
+            <div class="container d-flex justify-content-between align-items-center">
+                <div>
+                    <h5 class="mb-0">Загальна сума замовлення:</h5>
+                    <h2 class="text-success mb-0"><span id="grandTotalDisplay">@Model.SeatsTotalPrice.ToString("F2")</span> грн</h2>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg px-5">Підтвердити замовлення</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <script>
+        const baseSeatsPrice = parseFloat("@Model.SeatsTotalPrice".replace(',', '.'));
+
+        function updateQty(btn, delta) {
+            const input = btn.closest('.input-group').querySelector('.qty-input');
+            let newVal = parseInt(input.value) + delta;
+            if (newVal < 0) newVal = 0;
+            input.value = newVal;
+
+            calculateGrandTotal();
+        }
+
+        function calculateGrandTotal() {
+            let snacksTotal = 0;
+
+            // Проходимо по всіх картках снеків
+            document.querySelectorAll('.card-body').forEach(card => {
+                const price = parseFloat(card.querySelector('.snack-price').value.replace(',', '.'));
+                const qty = parseInt(card.querySelector('.qty-input').value);
+                snacksTotal += price * qty;
+            });
+
+            // Оновлюємо фінальну цифру: Квитки + Снеки
+            const grandTotal = baseSeatsPrice + snacksTotal;
+            document.getElementById('grandTotalDisplay').innerText = grandTotal.toFixed(2);
+        }
+    </script>
+}
