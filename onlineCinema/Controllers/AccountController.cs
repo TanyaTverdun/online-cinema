@@ -2,10 +2,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Domain.Entities;
-using onlineCinema.Domain.Enums;
 using onlineCinema.ViewModels;
 using onlineCinema.Mapping;
-using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Services.Interfaces;
 
 namespace onlineCinema.Controllers
 {
@@ -15,20 +14,20 @@ namespace onlineCinema.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly ILogger<AccountController> _logger;
         private readonly UserMapping _userMapping;
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly IBookingService _bookingService;
 
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
             ILogger<AccountController> logger,
             UserMapping userMapping,
-            IUnitOfWork unitOfWork)
+            IBookingService bookingService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _logger = logger;
             _userMapping = userMapping;
-            _unitOfWork = unitOfWork;
+            _bookingService = bookingService;
         }
 
         [HttpGet]
@@ -139,7 +138,7 @@ namespace onlineCinema.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Profile()
+        public async Task<IActionResult> Profile(string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
             
@@ -148,37 +147,8 @@ namespace onlineCinema.Controllers
                 return NotFound();
             }
 
-            var model = _userMapping.ToProfileViewModel(user);
-
-            // Завантажуємо історію замовлень
-            var bookings = await _unitOfWork.Booking.GetUserBookingsWithDetailsAsync(user.Id);
-            
-            model.BookingHistory = bookings.Select(booking => new BookingHistoryItemViewModel
-            {
-                BookingId = booking.BookingId,
-                CreatedDateTime = booking.CreatedDateTime,
-                TotalAmount = booking.Payment?.Amount ?? booking.Tickets.Sum(t => t.Price),
-                MovieTitle = booking.Tickets.FirstOrDefault()?.Session?.Movie?.Title ?? "Невідомо",
-                SessionDateTime = booking.Tickets.FirstOrDefault()?.Session?.ShowingDateTime ?? DateTime.MinValue,
-                MoviePoster = booking.Tickets.FirstOrDefault()?.Session?.Movie?.PosterImage,
-                HallName = $"Зал {booking.Tickets.FirstOrDefault()?.Session?.Hall?.HallNumber ?? 0}",
-                PaymentStatus = booking.Payment?.Status switch
-                {
-                    PaymentStatus.Pending => "Очікується",
-                    PaymentStatus.Completed => "Оплачено",
-                    PaymentStatus.Failed => "Помилка",
-                    PaymentStatus.Refunded => "Повернено",
-                    _ => booking.Payment != null ? "Невідомо" : "Не оплачено"
-                },
-                Tickets = booking.Tickets.Select(ticket => new TicketInfoViewModel
-                {
-                    TicketId = ticket.TicketId,
-                    Price = ticket.Price,
-                    RowNumber = ticket.Seat.RowNumber,
-                    SeatNumber = ticket.Seat.SeatNumber,
-                    SeatType = ticket.Seat.Type == SeatType.VIP ? "VIP" : "Стандарт"
-                }).ToList()
-            }).ToList();
+            var bookings = await _bookingService.GetBookingHistoryAsync(user.Id);
+            var model = _userMapping.ToProfileViewModel(user, bookings, returnUrl);
 
             return View(model);
         }

@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using onlineCinema.Infrastructure.Data;
 using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Mapping;
+using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Mapping;
 
@@ -43,6 +45,8 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<UserMapping>();
+builder.Services.AddScoped<BookingMapper>();
+builder.Services.AddScoped<IBookingService, onlineCinema.Application.Services.BookingService>();
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

@@ -1,4 +1,5 @@
 using Riok.Mapperly.Abstractions;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Domain.Entities;
 using onlineCinema.ViewModels;
 
@@ -21,7 +22,56 @@ namespace onlineCinema.Mapping
         [MapperIgnoreSource(nameof(ApplicationUser.LockoutEnabled))]
         [MapperIgnoreSource(nameof(ApplicationUser.AccessFailedCount))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.FullName))]
-        public partial ProfileViewModel ToProfileViewModel(ApplicationUser user);
+        [MapperIgnoreTarget(nameof(ProfileViewModel.BookingHistory))]
+        [MapperIgnoreTarget(nameof(ProfileViewModel.ReturnUrl))]
+        public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
+
+        public ProfileViewModel ToProfileViewModel(
+            ApplicationUser user, 
+            IEnumerable<BookingHistoryDto> bookings, 
+            string? returnUrl = null)
+        {
+            var viewModel = ToProfileViewModelBase(user);
+            viewModel.BookingHistory = bookings.Select(ToBookingHistoryItemViewModel).ToList();
+            viewModel.ReturnUrl = returnUrl;
+            return viewModel;
+        }
+
+        public BookingHistoryItemViewModel ToBookingHistoryItemViewModel(BookingHistoryDto dto)
+        {
+            return new BookingHistoryItemViewModel
+            {
+                BookingId = dto.BookingId,
+                CreatedDateTime = dto.CreatedDateTime,
+                TotalAmount = dto.TotalAmount,
+                MovieTitle = dto.MovieTitle,
+                SessionDateTime = dto.SessionDateTime,
+                MoviePoster = MapMoviePoster(dto.MoviePoster),
+                PaymentStatus = dto.PaymentStatus,
+                HallName = dto.HallName,
+                Tickets = dto.Tickets.Select(ToTicketInfoViewModel).ToList()
+            };
+        }
+
+        [MapProperty(nameof(TicketInfoDto.TicketId), nameof(TicketInfoViewModel.TicketId))]
+        [MapProperty(nameof(TicketInfoDto.Price), nameof(TicketInfoViewModel.Price))]
+        [MapProperty(nameof(TicketInfoDto.RowNumber), nameof(TicketInfoViewModel.RowNumber))]
+        [MapProperty(nameof(TicketInfoDto.SeatNumber), nameof(TicketInfoViewModel.SeatNumber))]
+        [MapProperty(nameof(TicketInfoDto.SeatType), nameof(TicketInfoViewModel.SeatType))]
+        public partial TicketInfoViewModel ToTicketInfoViewModel(TicketInfoDto dto);
+
+        private string? MapMoviePoster(byte[]? posterBytes)
+        {
+            // Convert byte[] to base64 string if needed, or return null
+            // For now, since we're returning null from BookingMapper, this will be null
+            if (posterBytes == null || posterBytes.Length == 0)
+            {
+                return null;
+            }
+            
+            // Convert byte[] to base64 string
+            return Convert.ToBase64String(posterBytes);
+        }
 
         [MapProperty(nameof(RegisterViewModel.Email), nameof(ApplicationUser.UserName))]
         [MapProperty(nameof(RegisterViewModel.Email), nameof(ApplicationUser.Email))]
