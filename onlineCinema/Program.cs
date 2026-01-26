@@ -14,10 +14,15 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
-    options.UseSqlServer(
-        connectionString,
-        b => b.MigrationsAssembly("onlineCinema.Infrastructure")
-    ));
+	{
+		options.UseSqlServer(
+			connectionString,
+			b => b.MigrationsAssembly("onlineCinema.Infrastructure")
+		);
+		options.LogTo(Console.WriteLine, LogLevel.Information);
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    });
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
@@ -34,6 +39,26 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
 var app = builder.Build();
+
+////////////////////////////////////////////////////////////////////
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    try
+    {
+        var context = services.GetRequiredService<onlineCinema.Infrastructure.Data.ApplicationDbContext>();
+        var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<onlineCinema.Domain.Entities.ApplicationUser>>();
+
+        // Викликаємо наш метод
+        await onlineCinema.Infrastructure.Data.DbInitializer.Initialize(context, userManager);
+    }
+    catch (Exception ex)
+    {
+        var logger = services.GetRequiredService<ILogger<Program>>();
+        logger.LogError(ex, "Сталася помилка під час заповнення БД.");
+    }
+}
+////////////////////////////////////////////////////////////////////
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
