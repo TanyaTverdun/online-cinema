@@ -91,7 +91,15 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnd))]
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnabled))]
         [MapperIgnoreTarget(nameof(ApplicationUser.AccessFailedCount))]
-        public partial ApplicationUser ToApplicationUser(RegisterViewModel model);
+        private partial ApplicationUser ToApplicationUserBase(RegisterViewModel model);
+
+        public ApplicationUser ToApplicationUser(RegisterViewModel model)
+        {
+            var user = ToApplicationUserBase(model);
+            user.EmailConfirmed = true; // Для спрощення
+            user.MiddleName ??= string.Empty;
+            return user;
+        }
 
         [MapProperty(nameof(ProfileViewModel.PhoneNumber), nameof(ApplicationUser.PhoneNumber))]
         [MapProperty(nameof(ProfileViewModel.FirstName), nameof(ApplicationUser.FirstName))]
@@ -116,7 +124,13 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnd))]
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnabled))]
         [MapperIgnoreTarget(nameof(ApplicationUser.AccessFailedCount))]
-        public partial void UpdateApplicationUser(ProfileViewModel model, ApplicationUser user);
+        private partial void UpdateApplicationUserBase(ProfileViewModel model, ApplicationUser user);
+
+        public void UpdateApplicationUser(ProfileViewModel model, ApplicationUser user)
+        {
+            UpdateApplicationUserBase(model, user);
+            user.MiddleName ??= string.Empty;
+        }
     }
 }
 

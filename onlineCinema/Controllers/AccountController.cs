@@ -34,8 +34,7 @@ namespace onlineCinema.Controllers
         [AllowAnonymous]
         public IActionResult Register(string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(new RegisterViewModel());
+            return View(new RegisterViewModel { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -43,7 +42,7 @@ namespace onlineCinema.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            model.ReturnUrl = returnUrl ?? model.ReturnUrl;
             
             if (!ModelState.IsValid)
             {
@@ -51,8 +50,6 @@ namespace onlineCinema.Controllers
             }
 
             var user = _userMapping.ToApplicationUser(model);
-            user.EmailConfirmed = true; // Для спрощення, в продакшені потрібно підтвердження email
-            user.MiddleName ??= string.Empty;
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
@@ -62,9 +59,9 @@ namespace onlineCinema.Controllers
                 
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
-                    return Redirect(returnUrl);
+                    return Redirect(model.ReturnUrl);
                 }
                 
                 return RedirectToAction("Index", "Home");
@@ -82,8 +79,7 @@ namespace onlineCinema.Controllers
         [AllowAnonymous]
         public IActionResult Login(string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
-            return View(new LoginViewModel());
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
         [HttpPost]
@@ -91,7 +87,7 @@ namespace onlineCinema.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model, string? returnUrl = null)
         {
-            ViewData["ReturnUrl"] = returnUrl;
+            model.ReturnUrl = returnUrl ?? model.ReturnUrl;
 
             if (!ModelState.IsValid)
             {
@@ -108,9 +104,9 @@ namespace onlineCinema.Controllers
             {
                 _logger.LogInformation("Користувач {Email} успішно увійшов", model.Email);
                 
-                if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl))
+                if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
-                    return Redirect(returnUrl);
+                    return Redirect(model.ReturnUrl);
                 }
                 
                 return RedirectToAction("Index", "Home");
@@ -171,7 +167,6 @@ namespace onlineCinema.Controllers
             }
 
             _userMapping.UpdateApplicationUser(model, user);
-            user.MiddleName ??= string.Empty;
 
             if (user.Email != model.Email)
             {
