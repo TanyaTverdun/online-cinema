@@ -7,73 +7,94 @@ using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Mapping;
+using onlineCinema.ViewModels;
 
 namespace onlineCinema.Controllers
 {
     public class HallController : Controller
     {
         private readonly IHallService _hallService;
+        private readonly HallViewModelMapper _mapper;
 
-        public HallController(IHallService hallService)
+        public HallController(IHallService hallService, HallViewModelMapper mapper)
         {
             _hallService = hallService;
+            _mapper = mapper;
         }
 
-        [HttpGet]
+        [HttpGet] //Hall
         public async Task<IActionResult> Index()
         {
-            var halls = await _hallService.GetAllHallsAsync();
-            return View(halls);
+            var dtos = await _hallService.GetAllHallsAsync();
+
+            var viewModels = dtos.Select(dto => _mapper.MapToViewModel(dto)).ToList();
+
+            return View(viewModels);
         }
 
-        [HttpGet]
+        [HttpGet] //Hall/Details/{id}
         public async Task<IActionResult> Details(int id)
         {
-            var hall = await _hallService.GetHallByIdAsync(id);
-            if (hall == null)
+            var dto = await _hallService.GetHallByIdAsync(id);
+            if (dto == null)
             {
                 return NotFound();
             }
-            return View(hall);
+
+            var viewModel = _mapper.MapToViewModel(dto);
+
+            return View(viewModel);
         }
 
-        [HttpGet]
+        [HttpGet] //Hall/Create
         public async Task<IActionResult> Create()
         {
-            ViewBag.Features = await _hallService.GetAllFeaturesAsync();
-            return View();
+            var features = await _hallService.GetAllFeaturesAsync();
+
+            var viewModel = _mapper.PrepareInputViewModel(features);
+
+            return View(viewModel);
         }
 
-        [HttpPost]
+        [HttpPost] //Hall/Create
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(HallDto hallDto, List<int> selectedFeatureIds)
+        public async Task<IActionResult> Create(HallInputViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    await _hallService.CreateHallAsync(hallDto, selectedFeatureIds);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (ArgumentException ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
-                    ViewBag.Features = await _hallService.GetAllFeaturesAsync();
-                    return View(hallDto);
-                }
+                var features = await _hallService.GetAllFeaturesAsync();
+
+                model.AvailableFeatures = features
+                    .Select(f => new FeatureCheckboxViewModel
+                    {
+                        Id = f.Id,
+                        Name = f.Name,
+                        IsSelected = model.SelectedFeatureIds != null && model.SelectedFeatureIds.Contains(f.Id)
+                    })
+                    .ToList();
+
+                return View(model);
             }
-            ViewBag.Features = await _hallService.GetAllFeaturesAsync();
-            return View(hallDto);
+
+            var dto = _mapper.MapToDto(model);
+
+            await _hallService.CreateHallAsync(dto);
+
+            return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet]
+        [HttpGet] //Hall/Edit/{id}
         public async Task<IActionResult> Edit(int id)
         {
             try
             {
-                var hall = await _hallService.GetHallByIdAsync(id);
-                ViewBag.Features = await _hallService.GetAllFeaturesAsync();
-                return View(hall);
+                var dto = await _hallService.GetHallByIdAsync(id);
+                var features = await _hallService.GetAllFeaturesAsync();
+
+                var viewModel = _mapper.PrepareInputViewModel(features, dto);
+
+                return View(viewModel);
             }
             catch (KeyNotFoundException)
             {
@@ -81,26 +102,31 @@ namespace onlineCinema.Controllers
             }
         }
 
-        [HttpPost]
+        [HttpPost] //Hall/Edit/{id}
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(HallDto hallDto, List<int> selectedFeatureIds)
+        public async Task<IActionResult> Edit(HallInputViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Features = await _hallService.GetAllFeaturesAsync();
-                return View(hallDto);
+                var features = await _hallService.GetAllFeaturesAsync();
+                model.AvailableFeatures = features.Select(f => new FeatureCheckboxViewModel
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    IsSelected = model.SelectedFeatureIds.Contains(f.Id)
+                }).ToList();
+                return View(model);
             }
 
             try
             {
-                await _hallService.EditHallAsync(hallDto, selectedFeatureIds);
+                var dto = _mapper.MapToDto(model);
+                await _hallService.EditHallAsync(dto);
                 return RedirectToAction(nameof(Index));
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException)
             {
-                ModelState.AddModelError("", ex.Message);
-                ViewBag.Features = await _hallService.GetAllFeaturesAsync();
-                return View(hallDto);
+                return NotFound();
             }
         }
 

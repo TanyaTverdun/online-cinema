@@ -1,5 +1,5 @@
-﻿@using onlineCinema.Application.DTOs
-@model IEnumerable<HallDto>
+﻿@using onlineCinema.ViewModels
+@model IEnumerable<HallViewModel>
 
 @{
     ViewData["Title"] = "Зали";
@@ -9,59 +9,58 @@
     <div class="d-flex justify-content-between align-items-center mb-3">
         <h2>Керування залами</h2>
         <a asp-action="Create" class="btn btn-primary">
-            + Додати зал
+            <i class="bi bi-plus-lg"></i> + Додати зал
         </a>
     </div>
 
     @if (!Model.Any())
     {
         <div class="alert alert-info">
-            Залів немає!
+            Список залів порожній.
         </div>
     }
     else
     {
-        <table class="table table-striped table-hover table-bordered">
+        <table class="table table-striped table-hover table-bordered align-middle">
             <thead class="table-dark">
                 <tr>
                     <th># Залу</th>
                     <th>Рядів</th>
                     <th>Місць у ряду</th>
                     <th>Всього місць</th>
-                    <th>Особливості (Features)</th>
-                    <th style="width: 200px;">Дії</th>
+                    <th>Особливості</th>
+                    <th style="width: 180px;">Дії</th>
                 </tr>
             </thead>
             <tbody>
                 @foreach (var item in Model)
                 {
                     <tr>
-                        <td><strong>@item.HallNumber</strong></td>
+                        <td class="fw-bold">@item.HallNumber</td>
                         <td>@item.RowCount</td>
                         <td>@item.SeatInRowCount</td>
                         <td>
                             <span class="badge bg-info text-dark">@item.TotalSeats</span>
                         </td>
                         <td>
-                            @if (item.FeatureNames != null && item.FeatureNames.Any())
+                            @if (!string.IsNullOrEmpty(item.FeaturesList))
                             {
-                                @foreach (var feature in item.FeatureNames)
-                                {
-                                    <span class="badge bg-secondary">@feature</span>
-                                }
+                                <span class="text-secondary">@item.FeaturesList</span>
                             }
                             else
                             {
-                                <span class="text-muted small">Ні</span>
+                                <span class="text-muted small">-</span>
                             }
                         </td>
                         <td>
                             <div class="btn-group" role="group">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">Edit</a>
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                    Ред.
+                                </a>
 
                                 <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;"
-                                      onsubmit="return confirm('Ви впевнені, що хочете видалити зал №@item.HallNumber?');">
-                                    <button type="submit" class="btn btn-sm btn-danger">Delete</button>
+                                      onsubmit="return confirm('Ви дійсно хочете видалити зал №@item.HallNumber?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Вид.</button>
                                 </form>
                             </div>
                         </td>

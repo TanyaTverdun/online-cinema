@@ -33,17 +33,17 @@ namespace onlineCinema.Infrastructure.Repositories
         public async Task<HallDto?> GetByIdWithStatsAsync(int id)
         {
             return await _db.Halls
-               .Select(h => new HallDto
-               {
-                   Id = h.HallId,
-                   HallNumber = h.HallNumber,
-                   RowCount = h.RowCount,
-                   SeatInRowCount = h.SeatInRowCount,
-                   FeatureNames = h.HallFeatures
-                       .Select(hf => hf.Feature.Name)
-                       .ToList()
-               })
-               .FirstOrDefaultAsync(h => h.Id == id);
+                 .Where(h => h.HallId == id)
+                 .Select(h => new HallDto
+                 {
+                     Id = h.HallId,
+                     HallNumber = h.HallNumber,
+                     RowCount = h.RowCount,
+                     SeatInRowCount = h.SeatInRowCount,
+                     FeatureNames = h.HallFeatures.Select(hf => hf.Feature.Name).ToList(),
+                     FeatureIds = h.HallFeatures.Select(hf => hf.FeatureId).ToList()
+                 })
+                 .FirstOrDefaultAsync();
         }
 
         public async Task UpdateWithFeaturesAsync(Hall hall, List<int> selectedFeatureIds)

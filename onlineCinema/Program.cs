@@ -34,6 +34,7 @@ builder.Services.AddSingleton<SnackMapper>();
 builder.Services.AddSingleton<BookingViewModelMapper>();
 builder.Services.AddSingleton<SnackViewModelMapper>();
 builder.Services.AddSingleton<HallMapper>();
+builder.Services.AddSingleton<HallViewModelMapper>();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();

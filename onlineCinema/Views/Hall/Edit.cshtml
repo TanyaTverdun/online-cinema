@@ -1,20 +1,22 @@
 ﻿@model onlineCinema.ViewModels.HallInputViewModel
 
 @{
-    ViewData["Title"] = "Створення залу";
+    ViewData["Title"] = "Редагування залу";
 }
 
 <div class="container mt-4">
-    <h2>Створення нового залу</h2>
+    <h2>Редагування залу №@Model.HallNumber</h2>
     <hr />
     <div class="row">
         <div class="col-md-6">
-            <form asp-action="Create" method="post">
+            <form asp-action="Edit" method="post">
                 <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="Id" />
 
                 <div class="mb-3">
                     <label asp-for="HallNumber" class="form-label"></label>
-                    <input asp-for="HallNumber" class="form-control" placeholder="Наприклад: 1" />
+                    <input asp-for="HallNumber" class="form-control" />
                     <span asp-validation-for="HallNumber" class="text-danger"></span>
                 </div>
 
@@ -31,34 +33,34 @@
                     </div>
                 </div>
 
-                <h4 class="mt-3">Особливості (Features)</h4>
+                <h4 class="mt-3">Особливості</h4>
                 <div class="mb-3 border p-3 rounded">
                     @if (Model.AvailableFeatures != null && Model.AvailableFeatures.Any())
                     {
-                        @for (int i = 0; i < Model.AvailableFeatures.Count; i++)
+                        foreach (var feature in Model.AvailableFeatures)
                         {
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox"
                                        name="SelectedFeatureIds"
-                                       value="@Model.AvailableFeatures[i].Id"
-                                       id="feature_@Model.AvailableFeatures[i].Id"
-                                       @(Model.AvailableFeatures[i].IsSelected ? "checked" : "") />
+                                       value="@feature.Id"
+                                       id="edit_f_@feature.Id"
+                                       @(feature.IsSelected ? "checked" : "") />
 
-                                <label class="form-check-label" for="feature_@Model.AvailableFeatures[i].Id">
-                                    @Model.AvailableFeatures[i].Name
+                                <label class="form-check-label" for="edit_f_@feature.Id">
+                                    @feature.Name
                                 </label>
                             </div>
                         }
                     }
                     else
                     {
-                        <p class="text-muted">Немає доступних особливостей.</p>
+                        <p class="text-muted">Особливості відсутні в базі даних.</p>
                     }
                 </div>
 
                 <div class="mt-4">
-                    <button type="submit" class="btn btn-success">Створити</button>
-                    <a asp-action="Index" class="btn btn-secondary">Назад</a>
+                    <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+                    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
                 </div>
             </form>
         </div>

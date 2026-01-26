@@ -22,7 +22,7 @@ namespace onlineCinema.Application.Services
             _mapper = hallMapper;
         }
 
-        public async Task<HallDto?> CreateHallAsync(HallDto hallDto, List<int> selectedFeatureIds)
+        public async Task<HallDto?> CreateHallAsync(HallDto hallDto)
         {
             if (hallDto.RowCount > 255 || hallDto.SeatInRowCount > 255)
             {
@@ -30,14 +30,15 @@ namespace onlineCinema.Application.Services
             }
 
             var hallEntity = _mapper.MapToEntity(hallDto);
+            // TODO: Remove hardcoded cinema ID
             hallEntity.CinemaId = 3; // Temporary hardcoded cinema ID
 
             await _unitOfWork.Hall.AddAsync(hallEntity);
             await _unitOfWork.SaveAsync();
 
-            if(selectedFeatureIds != null && selectedFeatureIds.Count > 0)
+            if(hallDto.FeatureIds != null && hallDto.FeatureIds.Any())
             {
-                await _unitOfWork.Hall.UpdateWithFeaturesAsync(hallEntity, selectedFeatureIds);
+                await _unitOfWork.Hall.UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
             }
 
             return await GetHallByIdAsync(hallEntity.HallId);
@@ -50,7 +51,7 @@ namespace onlineCinema.Application.Services
             return true;
         }
 
-        public async Task<HallDto?> EditHallAsync(HallDto hallDto, List<int> selectedFeatureIds)
+        public async Task<HallDto?> EditHallAsync(HallDto hallDto)
         {
             var exists = await _unitOfWork.Hall.GetByIdWithStatsAsync(hallDto.Id);
 
@@ -62,7 +63,7 @@ namespace onlineCinema.Application.Services
             var hallEntity = _mapper.MapToEntity(hallDto);
             hallEntity.HallId = hallDto.Id;
 
-            await _unitOfWork.Hall.UpdateWithFeaturesAsync(hallEntity, selectedFeatureIds);
+            await _unitOfWork.Hall.UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
 
             return await GetHallByIdAsync(hallDto.Id);
         }
