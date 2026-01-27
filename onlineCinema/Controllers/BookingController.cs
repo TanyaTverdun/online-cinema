@@ -78,10 +78,18 @@ namespace onlineCinema.Controllers
         [Authorize]
         public async Task<IActionResult> BookSeats(BookingInputViewModel model)
         {
-            if (model.SelectedSeatIds == null || !model.SelectedSeatIds.Any())
+            if (!ModelState.IsValid)
             {
-                _logger.LogWarning("Спроба бронювання без вибраних місць для сеансу {SessionId}", model.SessionId);
-                TempData["Error"] = "Ви не обрали місця!";
+                var errors = string.Join("; ", ModelState.Values
+                        .SelectMany(v => v.Errors)
+                        .Select(e => e.ErrorMessage));
+
+                _logger.LogWarning("Помилка валідації моделі бронювання: {ValidationErrors}", errors);
+
+                TempData["Error"] = ModelState.Values
+                    .SelectMany(v => v.Errors)
+                    .FirstOrDefault()?.ErrorMessage;
+                
                 return RedirectToAction(nameof(SelectSeats), new { sessionId = model.SessionId });
             }
 

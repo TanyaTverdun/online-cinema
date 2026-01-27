@@ -8,6 +8,9 @@ using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.Services;
 using onlineCinema.Mapping;
+using FluentValidation;
+using onlineCinema.Validators;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -40,6 +43,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<BookingInputViewModelValidator>();
+
+builder.Services.AddFluentValidationAutoValidation();
 var app = builder.Build();
 
 ////////////////////////////////////////////////////////////////////
