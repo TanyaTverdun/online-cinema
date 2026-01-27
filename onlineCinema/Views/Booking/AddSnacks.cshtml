@@ -1,64 +1,220 @@
-﻿
-
-
-
-<!-- ЗГЕНЕРИНО ДЛЯ ТЕСТУ -->
-
-
-
+﻿@using onlineCinema.Domain.Enums
 @model onlineCinema.ViewModels.SnackSelectionViewModel
 
-<div class="container mt-5">
-    <!-- Таймер бронювання -->
-    <div class="alert alert-warning d-flex justify-content-between align-items-center mb-4 shadow-sm">
-        <div>
-            <i class="bi bi-clock-history me-2"></i>
-            <span>Ваші місця заброньовано на 15 хвилин. Будь ласка, завершіть замовлення протягом:</span>
-        </div>
-        <h4 class="mb-0 fw-bold" id="countdown">15:00</h4>
+@{
+    ViewData["Title"] = "Снеки та напої";
+}
+
+<style>
+    /* --- ЗМІННІ (Ті самі, що і на сторінці місць) --- */
+    :root {
+        --color-bg: #000;
+        --card-bg: var(--bs-gray-900);
+        --text-main: var(--bs-white);
+        --text-muted: var(--bs-gray-600);
+        --accent-red: var(--bs-danger);
+        --accent-border: #222;
+    }
+
+    /* --- ГЛОБАЛЬНІ СТИЛІ --- */
+    body, html {
+        background-color: var(--color-bg) !important;
+        color: var(--text-main);
+        font-family: 'Nunito Sans', -apple-system, sans-serif;
+    }
+
+    .container {
+        max-width: 1200px;
+    }
+
+    /* --- ТАЙМЕР --- */
+    .timer-box {
+        background-color: transparent;
+        border: 1px solid var(--bs-warning);
+        color: var(--bs-warning);
+        border-radius: 0; /* Lux style */
+        padding: 1rem 1.5rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .timer-text {
+        font-family: monospace;
+        font-size: 1.5rem;
+        font-weight: 700;
+        letter-spacing: 2px;
+    }
+
+    /* --- ІНФО ПАНЕЛЬ (КВИТКИ) --- */
+    .info-bar {
+        background-color: var(--card-bg);
+        border-bottom: 1px solid var(--accent-border);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    /* --- КАРТКИ СНЕКІВ --- */
+    .snack-card {
+        background-color: var(--card-bg);
+        border: 1px solid var(--accent-border);
+        border-radius: 0;
+        transition: transform 0.3s, border-color 0.3s;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 2rem 1rem;
+    }
+
+    .snack-card:hover {
+        border-color: var(--bs-gray-600);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+    .snack-title {
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 1.1rem;
+        margin-bottom: 0.5rem;
+        color: var(--text-main);
+    }
+
+    .snack-price-display {
+        color: var(--bs-gray-500);
+        font-size: 1.2rem;
+        font-weight: 700;
+        margin-bottom: 1.5rem;
+    }
+
+    /* --- КОНТРОЛЕРИ КІЛЬКОСТІ --- */
+    .qty-group {
+        display: flex;
+        align-items: center;
+        border: 1px solid var(--bs-gray-700);
+        width: fit-content;
+        margin: 0 auto;
+    }
+
+    .btn-qty {
+        background: transparent;
+        border: none;
+        color: var(--text-main);
+        width: 40px;
+        height: 40px;
+        font-size: 1.2rem;
+        transition: 0.2s;
+    }
+    .btn-qty:hover {
+        background-color: var(--bs-gray-800);
+        color: var(--bs-white);
+    }
+
+    .qty-input {
+        background: transparent;
+        border: none;
+        color: var(--text-main);
+        width: 50px;
+        text-align: center;
+        font-weight: bold;
+        pointer-events: none; /* Щоб не вводили руками, тільки кнопками */
+    }
+    /* Прибираємо стрілочки input number */
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+
+    /* --- НИЖНЯ ПАНЕЛЬ --- */
+    .checkout-bar {
+        background-color: var(--card-bg);
+        border-top: 1px solid var(--accent-red); /* Акцентна лінія зверху */
+        position: sticky;
+        bottom: 0;
+        z-index: 1000;
+        padding: 1.5rem 0;
+        box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+    }
+
+    .btn-confirm {
+        background-color: var(--accent-red);
+        color: white;
+        text-transform: uppercase;
+        font-weight: 700;
+        border-radius: 0;
+        letter-spacing: 1px;
+        border: none;
+        padding: 0.8rem 2rem;
+        transition: 0.3s;
+    }
+    .btn-confirm:hover {
+        background-color: #c9302c;
+        box-shadow: 0 0 15px rgba(217, 83, 79, 0.4);
+        color: white;
+    }
+</style>
+
+<div class="container py-5 mb-5">
+
+    <!-- ЗАГОЛОВОК -->
+    <div class="text-center mb-5">
+        <h2 class="text-white text-uppercase fw-bold ls-wide">Choose Snacks</h2>
+        <p class="text-white-50">Add something tasty to your movie experience</p>
     </div>
-    <!-- Шапка з проміжним підсумком -->
-    <div class="alert alert-secondary d-flex justify-content-between align-items-center">
-        <span>Вартість обраних квитків:</span>
-        <strong id="seatsTotalDisplay">@Model.SeatsTotalPrice.ToString("F2") грн</strong>
+
+    <!-- ТАЙМЕР -->
+    <div class="timer-box mb-4 animate__animated animate__fadeInDown">
+        <div class="d-flex align-items-center">
+            <i class="bi bi-clock-history me-3 fs-4"></i>
+            <span class="text-uppercase small ls-1">Reservation expires in:</span>
+        </div>
+        <div class="timer-text" id="countdown">15:00</div>
+    </div>
+
+    <!-- ІНФО ПРО КВИТКИ -->
+    <div class="info-bar d-flex justify-content-between align-items-center">
+        <span class="text-white-50 text-uppercase small">Tickets Value</span>
+        <strong class="text-white fs-5" id="seatsTotalDisplay">@Model.SeatsTotalPrice.ToString("F2") $</strong>
     </div>
 
     <form asp-action="AddSnacks" method="post">
         <input type="hidden" asp-for="BookingId" />
 
-        <!-- Тут твій цикл зі снеками (картки) -->
-        <div class="row row-cols-1 row-cols-md-3 g-4">
+        <!-- СІТКА СНЕКІВ -->
+        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
             @for (int i = 0; i < Model.AvailableSnacks.Count; i++)
             {
                 <div class="col">
-                    <div class="card h-100 shadow-sm">
-                        <div class="card-body text-center">
-                            <h5>@Model.AvailableSnacks[i].Name</h5>
-                            <p class="text-primary fw-bold">@Model.AvailableSnacks[i].Price.ToString("F2") грн</p>
+                    <div class="snack-card">
+                        <!-- Можна додати іконку, якщо є -->
+                        <div class="text-white-50 mb-3"><i class="bi bi-cup-straw fs-1"></i></div>
 
-                            <input type="hidden" asp-for="AvailableSnacks[i].SnackId" />
-                            <input type="hidden" asp-for="AvailableSnacks[i].Price" class="snack-price" />
+                        <h5 class="snack-title">@Model.AvailableSnacks[i].Name</h5>
+                        <p class="snack-price-display">@Model.AvailableSnacks[i].Price.ToString("F2") $</p>
 
-                            <div class="input-group">
-                                <button type="button" class="btn btn-outline-secondary" onclick="updateQty(this, -1)">-</button>
-                                <input type="number" asp-for="AvailableSnacks[i].Quantity"
-                                       class="form-control text-center qty-input" value="0" readonly />
-                                <button type="button" class="btn btn-outline-secondary" onclick="updateQty(this, 1)">+</button>
-                            </div>
+                        <input type="hidden" asp-for="AvailableSnacks[i].SnackId" />
+                        <input type="hidden" asp-for="AvailableSnacks[i].Price" class="snack-price" />
+
+                        <div class="qty-group">
+                            <button type="button" class="btn-qty" onclick="updateQty(this, -1)">-</button>
+                            <input type="number" asp-for="AvailableSnacks[i].Quantity"
+                                   class="qty-input" value="0" readonly />
+                            <button type="button" class="btn-qty" onclick="updateQty(this, 1)">+</button>
                         </div>
                     </div>
                 </div>
             }
         </div>
 
-        <!-- ФІКСОВАНА ПАНЕЛЬ З ЗАГАЛЬНОЮ СУМОЮ -->
-        <div class="sticky-bottom bg-white border-top p-3 mt-5 shadow-lg">
-            <div class="container d-flex justify-content-between align-items-center">
-                <div>
-                    <h5 class="mb-0">Загальна сума замовлення:</h5>
-                    <h2 class="text-success mb-0"><span id="grandTotalDisplay">@Model.SeatsTotalPrice.ToString("F2")</span> грн</h2>
+        <!-- НИЖНЯ ПАНЕЛЬ (Checkout) -->
+        <div class="checkout-bar">
+            <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                <div class="text-center text-md-start">
+                    <div class="text-white-50 text-uppercase small" style="letter-spacing: 2px;">Grand Total</div>
+                    <div class="text-white fw-bold fs-2">$<span id="grandTotalDisplay">@Model.SeatsTotalPrice.ToString("F2")</span></div>
                 </div>
-                <button type="submit" class="btn btn-success btn-lg px-5">Підтвердити замовлення</button>
+                <button type="submit" class="btn btn-confirm btn-lg w-100 w-md-auto">
+                    Complete Order <i class="bi bi-chevron-right ms-2"></i>
+                </button>
             </div>
         </div>
     </form>
@@ -67,8 +223,8 @@
 @section Scripts {
     <script>
         // --- ЛОГІКА ТАЙМЕРА ---
-        // Отримуємо час завершення з моделі (C# передає дату в форматі ISO)
-        const lockUntil = new Date("@Model.LockUntil.ToString("yyyy-MM-ddTHH:mm:ss")").getTime();
+        const lockUntilStr = "@Model.LockUntil.ToString("yyyy-MM-ddTHH:mm:ss")";
+        const lockUntil = new Date(lockUntilStr).getTime();
 
         const timerInterval = setInterval(function () {
             const now = new Date().getTime();
@@ -77,44 +233,68 @@
             if (distance < 0) {
                 clearInterval(timerInterval);
                 document.getElementById("countdown").innerHTML = "00:00";
-                alert("Час бронювання вийшов! Ваші місця були розблоковані.");
-                window.location.href = "/"; // Повертаємо на головну
+                alert("Reservation time expired!");
+                window.location.href = "/";
                 return;
             }
 
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            // Виводимо у форматі 00:00
             document.getElementById("countdown").innerHTML =
                 (minutes < 10 ? "0" : "") + minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
         }, 1000);
 
 
-        // --- ВАША СТАРА ЛОГІКА СНЕКІВ ---
+        // --- ЛОГІКА СНЕКІВ ---
+        // Замінюємо кому на крапку, якщо культура сервера UA
         const baseSeatsPrice = parseFloat("@Model.SeatsTotalPrice".replace(',', '.'));
 
         function updateQty(btn, delta) {
-            const input = btn.closest('.input-group').querySelector('.qty-input');
+            // Знаходимо input всередині того ж блоку div.qty-group
+            const group = btn.closest('.qty-group');
+            const input = group.querySelector('.qty-input');
+
             let newVal = parseInt(input.value) + delta;
             if (newVal < 0) newVal = 0;
+
             input.value = newVal;
+
+            // Підсвітка картки, якщо обрано > 0
+            const card = btn.closest('.snack-card');
+            if (newVal > 0) {
+                card.style.borderColor = "var(--bs-white)";
+                card.style.backgroundColor = "#222";
+            } else {
+                card.style.borderColor = "var(--accent-border)";
+                card.style.backgroundColor = "var(--card-bg)";
+            }
+
             calculateGrandTotal();
         }
 
         function calculateGrandTotal() {
             let snacksTotal = 0;
-            document.querySelectorAll('.card-body').forEach(card => {
+
+            // Проходимо по всіх прихованих полях цін та інпутах кількості
+            // Важливо: asp-for генерує name і id, тому ми шукаємо по структурі DOM
+            // Шукаємо батьківський елемент .snack-card, бо там лежать input.snack-price і input.qty-input
+
+            document.querySelectorAll('.snack-card').forEach(card => {
                 const priceField = card.querySelector('.snack-price');
-                if (priceField) {
+                const qtyField = card.querySelector('.qty-input');
+
+                if (priceField && qtyField) {
                     const price = parseFloat(priceField.value.replace(',', '.'));
-                    const qty = parseInt(card.querySelector('.qty-input').value);
-                    snacksTotal += price * qty;
+                    const qty = parseInt(qtyField.value);
+                    if (!isNaN(price) && !isNaN(qty)) {
+                        snacksTotal += price * qty;
+                    }
                 }
             });
+
             const grandTotal = baseSeatsPrice + snacksTotal;
             document.getElementById('grandTotalDisplay').innerText = grandTotal.toFixed(2);
         }
     </script>
-}
 }
