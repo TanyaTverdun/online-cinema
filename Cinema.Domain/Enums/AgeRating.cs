@@ -10,7 +10,7 @@ namespace onlineCinema.Domain.Enums
     {
         Age0 = 0,
         Age6 = 6,
-        Age12 = 12,
+        Age13 = 13,
         Age16 = 16,
         Age18 = 18
     }

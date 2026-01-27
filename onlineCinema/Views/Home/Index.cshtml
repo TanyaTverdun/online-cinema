@@ -1,8 +1,142 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+﻿@using onlineCinema.Application.DTOs.Movie
+@using onlineCinema.Domain.Enums
+@model IEnumerable<MovieCardDto>
+
+@{
+    ViewData["Title"] = "Афіша";
+
+    var nowShowing = Model.Where(m => m.Status == MovieStatus.Released).ToList();
+    var comingSoon = Model.Where(m => m.Status == MovieStatus.ComingSoon).ToList();
+    var heroMovie = nowShowing.FirstOrDefault();
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+@if (heroMovie != null)
+{
+    <section class="position-relative overflow-hidden" style="height: 75vh;">
+        <div class="position-absolute w-100 h-100">
+            <img src="@heroMovie.PosterUrl"
+                 alt="@heroMovie.Title Backdrop"
+                 class="w-100 h-100 object-fit-cover opacity-50"
+                 style="filter: blur(4px);">
+        </div>
+
+        <div class="position-absolute top-0 start-0 w-100 h-100"
+             style="background: linear-gradient(to right, #060606 0%, rgba(6,6,6,0.3) 100%);"></div>
+
+        <div class="container position-relative h-100 d-flex align-items-center">
+            <div class="col-12 col-lg-7">
+                <span class="badge bg-danger mb-3">PREMIER</span>
+                <h1 class="display-3 fw-bold text-uppercase text-white mb-3" style="text-shadow: 0 0 10px rgba(0,0,0,0.8);">@heroMovie.Title</h1>
+
+                <p class="lead mb-4 text-white opacity-75">
+                    <i class="bi bi-tags-fill me-2 text-primary"></i>@heroMovie.GenreSummary
+                </p>
+
+                <div class="d-flex gap-3">
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@heroMovie.Id"
+                       class="btn btn-primary btn-lg px-4">
+                        <i class="bi bi-ticket-perforated me-2"></i>Get Tickets
+                    </a>
+                    <a asp-controller="Home" asp-action="Details" asp-route-id="@heroMovie.Id"
+                       class="btn btn-outline-light btn-lg px-4">
+                        Info
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+}
+
+<section class="py-5">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-end mb-4 border-bottom border-secondary pb-2">
+            <div>
+                <h2 class="text-white fw-bold mb-0">NOW SHOWING</h2>
+                <small class="text-muted">In theaters</small>
+            </div>
+            <a href="#" class="btn btn-sm btn-outline-secondary">View All</a>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var movie in nowShowing)
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 border-0 shadow-sm movie-card-hover movie-table">
+                        <div class="position-relative overflow-hidden">
+                            <a asp-action="Details" asp-route-id="@movie.Id">
+                                <img src="@movie.PosterUrl" class="card-img-top object-fit-cover" alt="@movie.Title"
+                                     style="height: 400px; transition: transform 0.3s;">
+                            </a>
+
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-2 shadow fs-6">
+                                @movie.AgeRating+
+                            </span>
+
+                            <span class="badge bg-black bg-opacity-75 position-absolute top-0 start-0 m-2 shadow small">
+                                @movie.ReleaseYear
+                            </span>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate fw-bold text-white">@movie.Title</h5>
+                            <p class="card-text text-muted small mb-3">
+                                @movie.GenreSummary
+                            </p>
+                            <a asp-action="Details" asp-route-id="@movie.Id"
+                               class="btn btn-sm btn-primary w-100">
+                                Buy Ticket
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (!nowShowing.Any())
+            {
+                <div class="col-12 text-center py-5 text-muted">No movies currently showing.</div>
+            }
+        </div>
+    </div>
+</section>
+
+<section class="py-5 bg-opacity-10 bg-secondary">
+    <div class="container">
+        <div class="d-flex align-items-center mb-4">
+            <h2 class="text-white fw-bold border-start border-4 border-warning ps-3">COMING SOON</h2>
+        </div>
+
+        <div class="row g-4">
+            @foreach (var movie in comingSoon)
+            {
+                <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="card h-100 border-secondary">
+                        <div class="position-relative">
+                            <img src="@movie.PosterUrl" class="card-img-top opacity-75" alt="@movie.Title"
+                                 style="height: 400px; object-fit: cover; filter: grayscale(80%);">
+                            <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
+                                <span class="badge bg-warning text-dark fs-6 shadow">COMING SOON</span>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <h5 class="card-title text-truncate">@movie.Title</h5>
+                            <p class="card-text text-muted small">@movie.GenreSummary</p>
+                        </div>
+                    </div>
+                </div>
+            }
+            @if (!comingSoon.Any())
+            {
+                <div class="col-12 text-center py-5 text-muted">No upcoming movies.</div>
+            }
+        </div>
+    </div>
+</section>
+
+<style>
+    
+    .movie-card-hover:hover img { 
+        transform: scale(1.05);
+    }
+
+    .movie-card-hover img {
+        transition: transform 0.3s ease;
+    }
+</style>

@@ -1,9 +1,10 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Services;
+using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
 using onlineCinema.Infrastructure.Repositories;
-using onlineCinema.Application.Interfaces;
-using onlineCinema.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,6 +21,10 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -40,6 +45,10 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.MapControllerRoute(
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
 	name: "default",

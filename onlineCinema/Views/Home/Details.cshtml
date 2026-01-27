@@ -1,0 +1,100 @@
+﻿@using onlineCinema.Application.DTOs.Movie
+@using onlineCinema.Domain.Enums
+@model MovieDetailsDto
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="min-vh-100 pb-5">
+
+    <div class="position-relative overflow-hidden" style="height: 60vh;">
+        <img src="@Model.PosterUrl"
+             alt="@Model.Title Backdrop"
+             class="w-100 h-100 object-fit-cover opacity-25"
+             style="filter: blur(10px);">
+
+        <div class="position-absolute top-0 start-0 w-100 h-100"
+             style="background: linear-gradient(to bottom, transparent 0%, #060606 100%);"></div>
+    </div>
+
+    <div class="container position-relative" style="margin-top: -300px; z-index: 10;">
+        <div class="row g-5">
+            <div class="col-12 col-md-4 col-lg-3">
+                <img src="@Model.PosterUrl"
+                     alt="@Model.Title Poster"
+                     class="img-fluid rounded shadow-lg border border-secondary">
+            </div>
+
+            <div class="col-12 col-md-8 col-lg-9 pt-md-5">
+                <div class="mb-4">
+                    <span class="badge bg-info text-dark mb-2">@Model.AgeRating+</span>
+                    <h1 class="display-3 fw-bold text-white mb-2">@Model.Title</h1>
+
+                    <div class="d-flex align-items-center gap-3 text-muted small">
+                        <span><i class="bi bi-calendar3 me-1"></i> @Model.ReleaseDate.Year</span>
+                        <span><i class="bi bi-clock me-1"></i> @Model.Runtime min</span>
+                        <span class="text-primary fw-bold">@string.Join(", ", Model.Genres)</span>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-8">
+                        <h4 class="text-white border-bottom border-secondary pb-2 mb-3">Description</h4>
+                        <p class="lead fs-6 mb-5 text-white text-break">@Model.Description</p>
+
+                        <div class="row g-4 mb-5">
+                            <div class="col-6">
+                                <small class="text-muted d-block mb-1">DIRECTOR</small>
+                                <span class="fw-bold text-white">@string.Join(", ", Model.Directors)</span>
+                            </div>
+                            <div class="col-6">
+                                <small class="text-muted d-block mb-1">LANGUAGES</small>
+                                <span class="text-white">@string.Join(", ", Model.Languages)</span>
+                            </div>
+                            <div class="col-12">
+                                <small class="text-muted d-block mb-1">CAST</small>
+                                <span class="text-white">@string.Join(", ", Model.Actors.Take(5))</span>
+                            </div>
+                        </div>
+
+                        @if (!string.IsNullOrEmpty(Model.TrailerLink))
+                        {
+                            <a href="@Model.TrailerLink" target="_blank" class="btn btn-outline-light px-4">
+                                <i class="bi bi-youtube me-2"></i>Watch Trailer
+                            </a>
+                        }
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="card border-secondary p-4 bg-dark bg-opacity-50">
+                            <div class="text-center mb-4">
+                                <small class="text-muted text-uppercase">Current Status</small>
+                                @if (Model.Status == MovieStatus.Released)
+                                {
+                                    <h3 class="text-success fw-bold mt-1">Now Showing</h3>
+                                }
+                                else
+                                {
+                                    <h3 class="text-warning fw-bold mt-1">Coming Soon</h3>
+                                }
+                            </div>
+
+                            @if (Model.Status == MovieStatus.Released)
+                            {
+                                <button class="btn btn-danger btn-lg w-100 mb-3 shadow">
+                                    <i class="bi bi-ticket-fill me-2"></i>Get Tickets
+                                </button>
+                                <small class="d-block text-center text-muted">Select session time next</small>
+                            }
+                            else
+                            {
+                                <button class="btn btn-secondary w-100" disabled>Tickets Unavailable</button>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
