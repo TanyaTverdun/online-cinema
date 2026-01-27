@@ -13,5 +13,7 @@ namespace onlineCinema.Application.Services.Interfaces
         Task AddSnacksToBookingAsync(int bookingId, List<SelectedSnackDto> selectedSnacks);
         Task<int> CreateBookingAsync(CreateBookingDto bookingDto);
         Task<decimal> GetTicketsPriceTotalAsync(int bookingId);
+        Task<DateTime> GetBookingLockUntilAsync(int bookingId);
+        Task CompletePaymentAsync(int bookingId);
     }
 }

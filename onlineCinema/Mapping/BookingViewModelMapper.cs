@@ -30,6 +30,7 @@ namespace onlineCinema.Mapping
 
             dto.UserId = user.Id;
             dto.UserEmail = user.Email ?? string.Empty;
+            dto.UserDateOfBirth = user.DateOfBirth;
 
             return dto;
         }

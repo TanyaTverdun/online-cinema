@@ -50,13 +50,14 @@ namespace onlineCinema.Application.Mapping
             return booking;
         }
 
-        public Ticket MapToTicket(Seat seat, int sessionId, decimal basePrice)
+        public Ticket MapToTicket(Seat seat, int sessionId, decimal basePrice, DateTime lockUntil)
         {
             return new Ticket
             {
                 SessionId = sessionId,
                 SeatId = seat.SeatId,
-                Price = basePrice * (decimal)seat.Coefficient
+                Price = basePrice * (decimal)seat.Coefficient,
+                LockUntil = lockUntil
             };
         }
     }

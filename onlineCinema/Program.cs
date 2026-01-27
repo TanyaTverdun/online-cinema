@@ -29,6 +29,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddScoped<PaymentMapper>();
 builder.Services.AddSingleton<BookingMapper>();
 builder.Services.AddSingleton<SnackMapper>();
 builder.Services.AddSingleton<BookingViewModelMapper>();

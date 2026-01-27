@@ -12,5 +12,6 @@ namespace onlineCinema.Application.DTOs
         public List<int> SeatIds { get; set; } = new List<int>();
         public string UserId { get; set; } = string.Empty;
         public string UserEmail { get; set; } = string.Empty;
+        public DateTime? UserDateOfBirth { get; set; }
     }
 }

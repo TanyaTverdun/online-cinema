@@ -22,6 +22,20 @@ namespace onlineCinema.Infrastructure.Data
             //context.Movies.RemoveRange(context.Movies);
             //context.Snacks.RemoveRange(context.Snacks);
 
+            if (!context.Features.Any())
+            {
+                context.Features.AddRange(new List<Feature>
+                {
+                    new Feature { Name = "IMAX", Description = "Величезний екран та кришталево чисте зображення" },
+                    new Feature { Name = "Dolby Atmos", Description = "Революційна система об'ємного звуку" },
+                    new Feature { Name = "3D", Description = "Підтримка перегляду в 3D окулярах" },
+                    new Feature { Name = "4DX", Description = "Рухомі крісла та ефекти навколишнього середовища" },
+                    new Feature { Name = "VIP-крісла", Description = "Крісла-реклайнери з підвищеним комфортом" },
+                    new Feature { Name = "Laser", Description = "Лазерна проекція високої чіткості" }
+                });
+                await context.SaveChangesAsync();
+            }
+
             // Видаляємо тестового користувача, якщо він існує
             var existingUser = await userManager.FindByEmailAsync("test@user.com");
             if (existingUser != null)
@@ -125,22 +139,35 @@ namespace onlineCinema.Infrastructure.Data
             await context.SaveChangesAsync();
 
             // 7. Створюємо Тестового Юзера (для імітації зайнятих місць)
-            var user = new ApplicationUser
+            var user1 = new ApplicationUser
             {
-                UserName = "test@user.com",
-                Email = "test@user.com",
-                FirstName = "Test",
-                LastName = "User",
+                UserName = "user1@test.com",
+                Email = "user1@test.com",
+                FirstName = "Користувач",
+                LastName = "Один",
+                DateOfBirth = new DateTime(1990, 1, 1),
                 EmailConfirmed = true
             };
-            await userManager.CreateAsync(user, "Pa$$w0rd");
+            await userManager.CreateAsync(user1, "Pa$$w0rd");
+
+            // Користувач 2
+            var user2 = new ApplicationUser
+            {
+                UserName = "user2@test.com",
+                Email = "user2@test.com",
+                FirstName = "Користувач",
+                LastName = "Два",
+                DateOfBirth = new DateTime(1995, 1, 1),
+                EmailConfirmed = true
+            };
+            await userManager.CreateAsync(user2, "Pa$$w0rd");
 
             // 8. Створюємо Бронь (Імітуємо, що хтось вже купив квитки)
             var booking = new Booking
             {
-                ApplicationUserId = user.Id,
+                ApplicationUserId = user1.Id,
                 CreatedDateTime = DateTime.Now,
-                EmailAddress = user.Email
+                EmailAddress = user1.Email
             };
             context.Bookings.Add(booking);
             await context.SaveChangesAsync();

@@ -7,5 +7,6 @@
         public decimal TotalSnacksPrice => AvailableSnacks.Sum(s => s.Price * s.Quantity);
         public decimal SeatsTotalPrice { get; set; }
         public decimal GrandTotal => SeatsTotalPrice + TotalSnacksPrice;
+        public DateTime LockUntil { get; set; }
     }
 }

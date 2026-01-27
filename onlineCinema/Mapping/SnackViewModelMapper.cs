@@ -10,13 +10,14 @@ namespace onlineCinema.Mapping
         public partial SnackItemViewModel MapSnackDtoToViewModel(SnackDto dto);
 
         private partial List<SnackItemViewModel> MapSnackDtoToViewModelList(IEnumerable<SnackDto> dtos);
-        public SnackSelectionViewModel MapToSelectionViewModel(IEnumerable<SnackDto> snacks, int bookingId, decimal seatsTotalPrice)
+        public SnackSelectionViewModel MapToSelectionViewModel(IEnumerable<SnackDto> snacks, int bookingId, decimal seatsTotalPrice, DateTime lockUntil)
         {
             return new SnackSelectionViewModel
             {
                 BookingId = bookingId,
                 SeatsTotalPrice = seatsTotalPrice,
-                AvailableSnacks = MapSnackDtoToViewModelList(snacks)
+                AvailableSnacks = MapSnackDtoToViewModelList(snacks),
+                LockUntil = lockUntil
             };
         }
 
