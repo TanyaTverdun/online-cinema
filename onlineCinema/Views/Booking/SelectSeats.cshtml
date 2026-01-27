@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Вибір місць";
+    ViewData["BodyClass"] = "booking-page";
 }
 
 <style>
@@ -24,12 +25,14 @@
         --screen-shadow: rgba(255, 255, 255, 0.1);
     }
 
-    /* --- ГЛОБАЛЬНІ ФІКСИ --- */
-    .container, .container-fluid, main {
+    .booking-page main,
+    .booking-page .container,
+    .booking-page .container-fluid {
         max-width: 100% !important;
         padding: 0 !important;
         margin: 0 !important;
     }
+
 
     body, html {
         background-color: var(--color-bg) !important;
@@ -44,9 +47,8 @@
         min-height: 100vh;
         display: flex;
         flex-direction: column;
-        justify-content: center;
         align-items: center;
-        padding: 2rem 1rem;
+        padding: 1rem;
         overflow-x: hidden;
     }
 
@@ -140,7 +142,7 @@
     .summary-sidebar {
         background-color: var(--sidebar-bg);
         border-left: 1px solid #222;
-        height: 100vh;
+        height: 80vh;
         position: sticky;
         top: 0;
         right: 0;
@@ -301,12 +303,12 @@
             <div class="legend-item"><span class="legend-dot l-booked"></span><span class="legend-text">Booked</span></div>
             <div class="legend-item"><span class="legend-dot l-vip"></span><span class="legend-text">Premium</span></div>
         </div>
-
-        <div class="text-center mt-auto pt-5 opacity-50 small">
+@* 
+        <div class="text-center mt-auto pt-5 opacity-50 small border-top border-opacity-25">
             <span class="text-white-50">
                 &copy; 2026 OnlineCinema • Всі права захищено
             </span>
-        </div>
+        </div> *@
     </div>
 
     <!-- ПРАВА КОЛОНКА -->

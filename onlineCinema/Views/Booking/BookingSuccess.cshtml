@@ -36,7 +36,7 @@
         background-color: var(--card-bg);
         border: 1px solid #333;
         border-radius: 0; /* Гострі кути Lux */
-        padding: 4rem 2rem;
+        padding: 3rem 0rem;
         max-width: 600px;
         width: 100%;
         text-align: center;
@@ -74,7 +74,7 @@
         text-transform: uppercase;
         letter-spacing: 2px;
         font-weight: 800;
-        margin-bottom: 1rem;
+        color: var(--bs-white)
     }
 
     .success-desc {
@@ -86,7 +86,7 @@
     .order-number-box {
         background-color: #0a0a0a;
         border: 1px dashed var(--bs-gray-700);
-        padding: 1.5rem;
+        padding: 1rem;
         margin-bottom: 3rem;
         display: inline-block;
         min-width: 250px;
@@ -141,6 +141,9 @@
         background-color: rgba(255,255,255,0.05);
     }
 
+    footer {
+        display: none !important;
+    }
     /* Анімація появи галочки */
     @@keyframes popIn {
         0% { transform: scale(0); opacity: 0; }
