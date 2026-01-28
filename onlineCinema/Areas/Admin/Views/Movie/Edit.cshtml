@@ -1,6 +1,6 @@
-﻿@using onlineCinema.Application.DTOs.Movie
+﻿@using onlineCinema.Areas.Admin.Models
 @using onlineCinema.Domain.Enums
-@model MovieFormDto
+@model MovieFormViewModel
 
 @{
     ViewData["Title"] = "Edit Movie";
@@ -61,26 +61,26 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Genres</label>
-                                <select asp-for="GenreIds" asp-items="ViewBag.Genres" class="form-select" multiple size="4"></select>
+                                <select asp-for="GenreIds" asp-items="Model.GenresList" class="form-select" multiple size="4"></select>
                                 <div class="form-text text-muted small">Hold Ctrl to select multiple</div>
                                 <input asp-for="GenresInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new (comma separated)" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Actors</label>
-                                <select asp-for="CastIds" asp-items="ViewBag.Actors" class="form-select" multiple size="4"></select>
+                                <select asp-for="CastIds" asp-items="Model.ActorsList" class="form-select" multiple size="4"></select>
                                 <input asp-for="ActorsInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new (First Lastname)" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Directors</label>
-                                <select asp-for="DirectorIds" asp-items="ViewBag.Directors" class="form-select" multiple size="3"></select>
+                                <select asp-for="DirectorIds" asp-items="Model.DirectorsList" class="form-select" multiple size="3"></select>
                                 <input asp-for="DirectorsInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new" />
                             </div>
 
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Languages</label>
-                                <select asp-for="LanguageIds" asp-items="ViewBag.Languages" class="form-select" multiple size="3"></select>
+                                <select asp-for="LanguageIds" asp-items="Model.LanguagesList" class="form-select" multiple size="3"></select>
                                 <input asp-for="LanguagesInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new" />
                             </div>
                         </div>
@@ -104,7 +104,7 @@
                                 <input asp-for="Runtime" type="number" class="form-control" />
                             </div>
                             <div class="col-6">
-                                <label asp-for="AgeRating" class="form-label text-light small text-uppercase ">Age Rating</label>
+                                <label asp-for="AgeRating" class="form-label text-muted  small text-uppercase ">Age Rating</label>
                                 <select asp-for="AgeRating"
                                         asp-items="Html.GetEnumSelectList<AgeRating>()"
                                         class="form-select  text-light border-secondary">

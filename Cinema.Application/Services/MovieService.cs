@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using System.Linq.Expressions;
 using System.Threading.Tasks;
-using onlineCinema.Application.Services.Interfaces;
 using Microsoft.AspNetCore.Hosting;
 using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
@@ -24,25 +23,28 @@ namespace onlineCinema.Application.Services
             _webHostEnvironment = webHostEnvironment;
         }
 
+       
+
         public async Task<IEnumerable<MovieCardDto>> GetMoviesForShowcaseAsync()
         {
-           
             var movies = await _unitOfWork.Movie.GetAllAsync(
                 filter: m => m.Status != MovieStatus.Archived,
                 includeProperties: "MovieGenres.Genre"
             );
 
-           
             return movies
                 .OrderBy(m => m.Status)
-                .ThenByDescending(m => m.ReleaseDate) 
+                .ThenByDescending(m => m.ReleaseDate)
                 .Select(m => m.ToCardDto());
         }
 
         public async Task<MovieDetailsDto?> GetMovieDetailsAsync(int id)
         {
             var movie = await _unitOfWork.Movie.GetByIdWithAllDetailsAsync(id);
-            if (movie == null || movie.Status == MovieStatus.Archived) return null;
+            if (movie == null || movie.Status == MovieStatus.Archived)
+            {
+                return null;
+            }
 
             return movie.ToDetailsDto();
         }
@@ -50,244 +52,88 @@ namespace onlineCinema.Application.Services
         public async Task<MovieFormDto?> GetMovieForEditAsync(int id)
         {
             var movie = await _unitOfWork.Movie.GetByIdWithAllDetailsAsync(id);
-            if (movie == null) return null;
+            if (movie == null)
+            {
+                return null;
+            }
 
             return movie.ToFormDto();
         }
 
+       
+        public async Task<MovieDropdownsDto> GetMovieDropdownsValuesAsync()
+        {
+            var response = new MovieDropdownsDto();
+
+            var genres = await _unitOfWork.Genre.GetAllAsync();
+            response.Genres = genres.Select(g => new GenreDto { Id = g.GenreId, Name = g.GenreName }).ToList();
+
+            var actors = await _unitOfWork.CastMember.GetAllAsync();
+            response.Actors = actors.Select(a => new PersonDto { Id = a.CastId, FullName = $"{a.CastFirstName} {a.CastLastName}" }).ToList();
+
+            var directors = await _unitOfWork.Director.GetAllAsync();
+            response.Directors = directors.Select(d => new PersonDto { Id = d.DirectorId, FullName = $"{d.DirectorFirstName} {d.DirectorLastName}" }).ToList();
+
+            var languages = await _unitOfWork.Language.GetAllAsync();
+            response.Languages = languages.Select(l => new LanguageDto { Id = l.LanguageId, Name = l.LanguageName }).ToList();
+
+            return response;
+        }
+
         public async Task AddMovieAsync(MovieFormDto model)
         {
+           
             var movie = model.ToEntity();
 
+           
             if (model.PosterFile != null)
             {
                 movie.PosterImage = await SaveImageAsync(model.PosterFile);
             }
 
-           
-            var allGenreIds = new HashSet<int>(model.GenreIds);
+            await ProcessGenresAsync(movie, model);
+            await ProcessActorsAsync(movie, model);
+            await ProcessDirectorsAsync(movie, model);
+            await ProcessLanguagesAsync(movie, model);
 
-            if (!string.IsNullOrWhiteSpace(model.GenresInput))
-            {
-                var names = model.GenresInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var name in names)
-                {
-                  
-                    var existing = (await _unitOfWork.Genre.GetAllAsync(x => x.GenreName.ToLower() == name.ToLower())).FirstOrDefault();
-
-                    if (existing != null)
-                    {
-                        allGenreIds.Add(existing.GenreId); 
-                    }
-                    else
-                    {
-                        var newEntity = new Genre { GenreName = name };
-                        await _unitOfWork.Genre.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync(); 
-                        allGenreIds.Add(newEntity.GenreId);
-                    }
-                }
-            }
-         
-            foreach (var id in allGenreIds) movie.MovieGenres.Add(new MovieGenre { GenreId = id });
-
-
-            var allActorIds = new HashSet<int>(model.CastIds);
-
-            if (!string.IsNullOrWhiteSpace(model.ActorsInput))
-            {
-                var names = model.ActorsInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var fullName in names)
-                {
-                    var parts = fullName.Split(' ');
-                    var first = parts[0];
-                    var last = parts.Length > 1 ? parts[1] : "";
-
-                    var existing = (await _unitOfWork.CastMember.GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower() && x.CastLastName.ToLower() == last.ToLower())).FirstOrDefault();
-
-                    if (existing != null)
-                    {
-                        allActorIds.Add(existing.CastId);
-                    }
-                    else
-                    {
-                        var newEntity = new CastMember { CastFirstName = first, CastLastName = last };
-                        await _unitOfWork.CastMember.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allActorIds.Add(newEntity.CastId);
-                    }
-                }
-            }
-            foreach (var id in allActorIds) movie.MovieCasts.Add(new MovieCast { CastId = id });
-
-
-           
-            var allDirectorIds = new HashSet<int>(model.DirectorIds);
-            if (!string.IsNullOrWhiteSpace(model.DirectorsInput))
-            {
-                var names = model.DirectorsInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var fullName in names)
-                {
-                    var parts = fullName.Split(' ');
-                    var first = parts[0];
-                    var last = parts.Length > 1 ? parts[1] : "";
-
-                    var existing = (await _unitOfWork.Director.GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower() && x.DirectorLastName.ToLower() == last.ToLower())).FirstOrDefault();
-
-                    if (existing != null) allDirectorIds.Add(existing.DirectorId);
-                    else
-                    {
-                        var newEntity = new Director { DirectorFirstName = first, DirectorLastName = last };
-                        await _unitOfWork.Director.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allDirectorIds.Add(newEntity.DirectorId);
-                    }
-                }
-            }
-            foreach (var id in allDirectorIds) movie.MovieDirectors.Add(new DirectorMovie { DirectorId = id });
-
-
-         
-            var allLangIds = new HashSet<int>(model.LanguageIds);
-            if (!string.IsNullOrWhiteSpace(model.LanguagesInput))
-            {
-                var names = model.LanguagesInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var name in names)
-                {
-                    var existing = (await _unitOfWork.Language.GetAllAsync(x => x.LanguageName.ToLower() == name.ToLower())).FirstOrDefault();
-
-                    if (existing != null) allLangIds.Add(existing.LanguageId);
-                    else
-                    {
-                        var newEntity = new Language { LanguageName = name };
-                        await _unitOfWork.Language.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allLangIds.Add(newEntity.LanguageId);
-                    }
-                }
-            }
-            foreach (var id in allLangIds) movie.MovieLanguages.Add(new LanguageMovie { LanguageId = id });
-
-           
             await _unitOfWork.Movie.AddAsync(movie);
             await _unitOfWork.SaveAsync();
         }
 
         public async Task UpdateMovieAsync(MovieFormDto model)
         {
-           
             var movieFromDb = await _unitOfWork.Movie.GetByIdWithAllDetailsAsync(model.Id);
-            if (movieFromDb == null) return;
+            if (movieFromDb == null)
+            {
+                return;
+            }
 
-           
+        
             if (model.PosterFile != null)
             {
-                if (!string.IsNullOrEmpty(movieFromDb.PosterImage)) DeleteImage(movieFromDb.PosterImage);
+                if (!string.IsNullOrEmpty(movieFromDb.PosterImage))
+                {
+                    DeleteImage(movieFromDb.PosterImage);
+                }
                 movieFromDb.PosterImage = await SaveImageAsync(model.PosterFile);
             }
 
-         
-            movieFromDb.Title = model.Title;
-            movieFromDb.Description = model.Description;
-            movieFromDb.ReleaseDate = model.ReleaseDate;
-            movieFromDb.Runtime = model.Runtime;
-            movieFromDb.Status = model.Status;
-            movieFromDb.AgeRating = (AgeRating)model.AgeRating; 
-            movieFromDb.TrailerLink = model.TrailerLink;
+            
+            movieFromDb.UpdateEntityFromDto(model);
 
-            movieFromDb.MovieGenres.Clear(); 
-            var allGenreIds = new HashSet<int>(model.GenreIds); 
+       
+            movieFromDb.MovieGenres.Clear();
+            await ProcessGenresAsync(movieFromDb, model);
 
-            if (!string.IsNullOrWhiteSpace(model.GenresInput))
-            {
-                var names = model.GenresInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var name in names)
-                {
-                    var existing = (await _unitOfWork.Genre.GetAllAsync(x => x.GenreName.ToLower() == name.ToLower())).FirstOrDefault();
-                    if (existing != null) allGenreIds.Add(existing.GenreId);
-                    else
-                    {
-                        var newEntity = new Genre { GenreName = name };
-                        await _unitOfWork.Genre.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allGenreIds.Add(newEntity.GenreId);
-                    }
-                }
-            }
-            foreach (var id in allGenreIds) movieFromDb.MovieGenres.Add(new MovieGenre { GenreId = id });
-
-          
             movieFromDb.MovieCasts.Clear();
-            var allActorIds = new HashSet<int>(model.CastIds);
+            await ProcessActorsAsync(movieFromDb, model);
 
-            if (!string.IsNullOrWhiteSpace(model.ActorsInput))
-            {
-                var names = model.ActorsInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var fullName in names)
-                {
-                    var parts = fullName.Split(' ');
-                    var first = parts[0];
-                    var last = parts.Length > 1 ? parts[1] : "";
-                    var existing = (await _unitOfWork.CastMember.GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower() && x.CastLastName.ToLower() == last.ToLower())).FirstOrDefault();
-
-                    if (existing != null) allActorIds.Add(existing.CastId);
-                    else
-                    {
-                        var newEntity = new CastMember { CastFirstName = first, CastLastName = last };
-                        await _unitOfWork.CastMember.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allActorIds.Add(newEntity.CastId);
-                    }
-                }
-            }
-            foreach (var id in allActorIds) movieFromDb.MovieCasts.Add(new MovieCast { CastId = id });
-
-          
             movieFromDb.MovieDirectors.Clear();
-            var allDirectorIds = new HashSet<int>(model.DirectorIds);
-            if (!string.IsNullOrWhiteSpace(model.DirectorsInput))
-            {
-                var names = model.DirectorsInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var fullName in names)
-                {
-                    var parts = fullName.Split(' ');
-                    var first = parts[0];
-                    var last = parts.Length > 1 ? parts[1] : "";
-                    var existing = (await _unitOfWork.Director.GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower() && x.DirectorLastName.ToLower() == last.ToLower())).FirstOrDefault();
-
-                    if (existing != null) allDirectorIds.Add(existing.DirectorId);
-                    else
-                    {
-                        var newEntity = new Director { DirectorFirstName = first, DirectorLastName = last };
-                        await _unitOfWork.Director.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allDirectorIds.Add(newEntity.DirectorId);
-                    }
-                }
-            }
-            foreach (var id in allDirectorIds) movieFromDb.MovieDirectors.Add(new DirectorMovie { DirectorId = id });
+            await ProcessDirectorsAsync(movieFromDb, model);
 
             movieFromDb.MovieLanguages.Clear();
-            var allLangIds = new HashSet<int>(model.LanguageIds);
-            if (!string.IsNullOrWhiteSpace(model.LanguagesInput))
-            {
-                var names = model.LanguagesInput.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-                foreach (var name in names)
-                {
-                    var existing = (await _unitOfWork.Language.GetAllAsync(x => x.LanguageName.ToLower() == name.ToLower())).FirstOrDefault();
-                    if (existing != null) allLangIds.Add(existing.LanguageId);
-                    else
-                    {
-                        var newEntity = new Language { LanguageName = name };
-                        await _unitOfWork.Language.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allLangIds.Add(newEntity.LanguageId);
-                    }
-                }
-            }
-            foreach (var id in allLangIds) movieFromDb.MovieLanguages.Add(new LanguageMovie { LanguageId = id });
+            await ProcessLanguagesAsync(movieFromDb, model);
 
-           
             _unitOfWork.Movie.Update(movieFromDb);
             await _unitOfWork.SaveAsync();
         }
@@ -297,33 +143,151 @@ namespace onlineCinema.Application.Services
             var movie = await _unitOfWork.Movie.GetByIdAsync(id);
             if (movie != null)
             {
-                movie.Status = MovieStatus.Archived; 
+                movie.Status = MovieStatus.Archived;
                 _unitOfWork.Movie.Update(movie);
-               await _unitOfWork.SaveAsync();
+                await _unitOfWork.SaveAsync();
             }
         }
 
-      
-
-        private void UpdateCollections(Movie movie, MovieFormDto model)
+        private async Task ProcessGenresAsync(Movie movie, MovieFormDto model)
         {
-         
-            movie.MovieGenres.Clear();
-            foreach (var id in model.GenreIds)
-                movie.MovieGenres.Add(new MovieGenre { GenreId = id, MovieId = movie.Id });
+            var allIds = new HashSet<int>(model.GenreIds);
 
-            movie.MovieCasts.Clear();
-            foreach (var id in model.CastIds)
-                movie.MovieCasts.Add(new MovieCast { CastId = id, MovieId = movie.Id });
+            if (!string.IsNullOrWhiteSpace(model.GenresInput))
+            {
+                var names = SplitInput(model.GenresInput);
+                foreach (var name in names)
+                {
+                    var existing = (await _unitOfWork.Genre.GetAllAsync(x => x.GenreName.ToLower() == name.ToLower())).FirstOrDefault();
+                    if (existing != null)
+                    {
+                        allIds.Add(existing.GenreId);
+                    }
+                    else
+                    {
+                        var newEntity = new Genre { GenreName = name };
+                        await _unitOfWork.Genre.AddAsync(newEntity);
+                        await _unitOfWork.SaveAsync();
+                        allIds.Add(newEntity.GenreId);
+                    }
+                }
+            }
 
-            
-            movie.MovieDirectors.Clear();
-            foreach (var id in model.DirectorIds)
-                movie.MovieDirectors.Add(new DirectorMovie { DirectorId = id, MovieId = movie.Id });
+            foreach (var id in allIds)
+            {
+                movie.MovieGenres.Add(new MovieGenre { GenreId = id });
+            }
+        }
 
-            movie.MovieLanguages.Clear();
-            foreach (var id in model.LanguageIds)
-                movie.MovieLanguages.Add(new LanguageMovie { LanguageId = id, MovieId = movie.Id });
+        private async Task ProcessActorsAsync(Movie movie, MovieFormDto model)
+        {
+            var allIds = new HashSet<int>(model.CastIds);
+
+            if (!string.IsNullOrWhiteSpace(model.ActorsInput))
+            {
+                var names = SplitInput(model.ActorsInput);
+                foreach (var fullName in names)
+                {
+                    var (first, last) = ParseName(fullName);
+                    var existing = (await _unitOfWork.CastMember.GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower() && x.CastLastName.ToLower() == last.ToLower())).FirstOrDefault();
+
+                    if (existing != null)
+                    {
+                        allIds.Add(existing.CastId);
+                    }
+                    else
+                    {
+                        var newEntity = new CastMember { CastFirstName = first, CastLastName = last };
+                        await _unitOfWork.CastMember.AddAsync(newEntity);
+                        await _unitOfWork.SaveAsync();
+                        allIds.Add(newEntity.CastId);
+                    }
+                }
+            }
+
+            foreach (var id in allIds)
+            {
+                movie.MovieCasts.Add(new MovieCast { CastId = id });
+            }
+        }
+
+        private async Task ProcessDirectorsAsync(Movie movie, MovieFormDto model)
+        {
+            var allIds = new HashSet<int>(model.DirectorIds);
+
+            if (!string.IsNullOrWhiteSpace(model.DirectorsInput))
+            {
+                var names = SplitInput(model.DirectorsInput);
+                foreach (var fullName in names)
+                {
+                    var (first, last) = ParseName(fullName);
+                    var existing = (await _unitOfWork.Director.GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower() && x.DirectorLastName.ToLower() == last.ToLower())).FirstOrDefault();
+
+                    if (existing != null)
+                    {
+                        allIds.Add(existing.DirectorId);
+                    }
+                    else
+                    {
+                        var newEntity = new Director { DirectorFirstName = first, DirectorLastName = last };
+                        await _unitOfWork.Director.AddAsync(newEntity);
+                        await _unitOfWork.SaveAsync();
+                        allIds.Add(newEntity.DirectorId);
+                    }
+                }
+            }
+
+            foreach (var id in allIds)
+            {
+                movie.MovieDirectors.Add(new DirectorMovie { DirectorId = id });
+            }
+        }
+
+        private async Task ProcessLanguagesAsync(Movie movie, MovieFormDto model)
+        {
+            var allIds = new HashSet<int>(model.LanguageIds);
+
+            if (!string.IsNullOrWhiteSpace(model.LanguagesInput))
+            {
+                var names = SplitInput(model.LanguagesInput);
+                foreach (var name in names)
+                {
+                    var existing = (await _unitOfWork.Language.GetAllAsync(x => x.LanguageName.ToLower() == name.ToLower())).FirstOrDefault();
+                    if (existing != null)
+                    {
+                        allIds.Add(existing.LanguageId);
+                    }
+                    else
+                    {
+                        var newEntity = new Language { LanguageName = name };
+                        await _unitOfWork.Language.AddAsync(newEntity);
+                        await _unitOfWork.SaveAsync();
+                        allIds.Add(newEntity.LanguageId);
+                    }
+                }
+            }
+
+            foreach (var id in allIds)
+            {
+                movie.MovieLanguages.Add(new LanguageMovie { LanguageId = id });
+            }
+        }
+
+     
+
+        private string[] SplitInput(string input)
+        {
+            return input.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+        }
+
+        private (string First, string Last) ParseName(string fullName)
+        {
+            var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            if (parts.Length == 0) return ("", "");
+
+            var first = parts[0];
+            var last = parts.Length > 1 ? string.Join(" ", parts.Skip(1)) : ""; 
+            return (first, last);
         }
 
         private async Task<string> SaveImageAsync(Microsoft.AspNetCore.Http.IFormFile file)
@@ -332,7 +296,10 @@ namespace onlineCinema.Application.Services
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
             string folderPath = Path.Combine(wwwRootPath, @"images\movies");
 
-            if (!Directory.Exists(folderPath)) Directory.CreateDirectory(folderPath);
+            if (!Directory.Exists(folderPath))
+            {
+                Directory.CreateDirectory(folderPath);
+            }
 
             using (var fileStream = new FileStream(Path.Combine(folderPath, fileName), FileMode.Create))
             {
@@ -344,7 +311,6 @@ namespace onlineCinema.Application.Services
 
         private void DeleteImage(string imageUrl)
         {
-           
             if (imageUrl.Contains("no-poster.png")) return;
 
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, imageUrl.TrimStart('\\', '/'));

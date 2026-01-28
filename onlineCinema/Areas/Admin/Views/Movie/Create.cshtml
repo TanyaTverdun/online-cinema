@@ -1,10 +1,11 @@
-﻿@using onlineCinema.Application.DTOs.Movie
+﻿@using onlineCinema.Areas.Admin.Models
 @using onlineCinema.Domain.Enums
-@model MovieFormDto
+@model MovieFormViewModel
 
 @{
     ViewData["Title"] = "Add New Movie";
 }
+
 @if (!ViewData.ModelState.IsValid)
 {
     <div class="alert alert-warning">
@@ -29,12 +30,12 @@
         </a>
     </div>
 
-    <form asp-action="Create"  method="post" enctype="multipart/form-data">
-        
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+
         <div asp-validation-summary="All" class="alert alert-danger text-white mb-4 border-danger">
             <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please fix the following errors:</h5>
         </div>
-       
+
         <div class="row g-4">
 
             <div class="col-lg-8">
@@ -81,23 +82,23 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Genres</label>
-                                <select asp-for="GenreIds" asp-items="ViewBag.Genres" class="form-select" multiple size="4"></select>
+                                <select asp-for="GenreIds" asp-items="Model.GenresList" class="form-select" multiple size="4"></select>
                                 <div class="form-text text-white small">Hold Ctrl to select multiple</div>
                                 <input asp-for="GenresInput" class="form-control mt-2 form-control-sm" placeholder="Add new (comma separated)" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Actors</label>
-                                <select asp-for="CastIds" asp-items="ViewBag.Actors" class="form-select" multiple size="4"></select>
+                                <select asp-for="CastIds" asp-items="Model.ActorsList" class="form-select" multiple size="4"></select>
                                 <input asp-for="ActorsInput" class="form-control mt-2 form-control-sm" placeholder="Add new (First Lastname)" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Directors</label>
-                                <select asp-for="DirectorIds" asp-items="ViewBag.Directors" class="form-select" multiple size="3"></select>
+                                <select asp-for="DirectorIds" asp-items="Model.DirectorsList" class="form-select" multiple size="3"></select>
                                 <input asp-for="DirectorsInput" class="form-control mt-2 form-control-sm" placeholder="Add new director" />
                             </div>
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Languages</label>
-                                <select asp-for="LanguageIds" asp-items="ViewBag.Languages" class="form-select" multiple size="3"></select>
+                                <select asp-for="LanguageIds" asp-items="Model.LanguagesList" class="form-select" multiple size="3"></select>
                                 <input asp-for="LanguagesInput" class="form-control mt-2 form-control-sm" placeholder="Add new language" />
                             </div>
                         </div>
@@ -120,12 +121,13 @@
                             <div class="col-6">
                                 <label asp-for="Runtime" class="form-label text-white small text-uppercase">Runtime (min)</label>
                                 <input asp-for="Runtime" type="number" class="form-control" />
+                                <span asp-validation-for="Runtime" class="text-danger small"></span>
                             </div>
                             <div class="col-6">
                                 <label asp-for="AgeRating" class="form-label text-white small text-uppercase ">Age Rating</label>
                                 <select asp-for="AgeRating"
-                                        asp-items="Html.GetEnumSelectList<AgeRating>()   "
-                                        class="form-select   border-secondary">
+                                        asp-items="Html.GetEnumSelectList<AgeRating>()"
+                                        class="form-select  border-secondary">
                                 </select>
                                 <span asp-validation-for="AgeRating" class="text-danger small"></span>
                             </div>
@@ -140,7 +142,7 @@
                     <div class="card-body text-center">
                         <div class="mb-3">
                             <div class="ratio ratio-2x3 bg-black border border-secondary rounded mb-3 d-flex align-items-center justify-content-center">
-                                <i class="bi  display-4 text-secondary"></i>
+                                <i class="bi display-4 text-secondary"></i>
                             </div>
 
                             <input asp-for="PosterFile" type="file" class="form-control form-control-sm" accept="image/*" />

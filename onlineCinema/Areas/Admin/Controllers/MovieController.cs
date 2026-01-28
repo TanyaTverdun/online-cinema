@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc.Rendering;
 using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
+using onlineCinema.Areas.Admin.Models; 
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -9,89 +10,91 @@ namespace onlineCinema.Areas.Admin.Controllers
     public class MovieController : Controller
     {
         private readonly IMovieService _movieService;
-        private readonly IUnitOfWork _unitOfWork;
 
-        public MovieController(IMovieService movieService, IUnitOfWork unitOfWork)
+        public MovieController(IMovieService movieService)
         {
             _movieService = movieService;
-            _unitOfWork = unitOfWork;
         }
 
         public async Task<IActionResult> Index()
         {
+            
             var movies = await _movieService.GetMoviesForShowcaseAsync();
             return View(movies);
         }
 
-    
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            await PopulateDropDownsAsync();
-            return View();
+           
+            var viewModel = new MovieFormViewModel();
+
+            
+            await ConfigureViewModel(viewModel);
+
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MovieFormDto model)
+        public async Task<IActionResult> Create(MovieFormViewModel viewModel)
         {
-            
             if (ModelState.IsValid)
             {
                 try
                 {
                     
-                    await _movieService.AddMovieAsync(model);
+                    var dto = MapToDto(viewModel);
+
+                    await _movieService.AddMovieAsync(dto);
                     return RedirectToAction(nameof(Index));
                 }
                 catch (Exception ex)
                 {
-                   
-                    ModelState.AddModelError("", $"System Error: {ex.Message}");
-
-                   
-                    if (ex.InnerException != null)
-                    {
-                        ModelState.AddModelError("", $"Details: {ex.InnerException.Message}");
-                    }
+                    ModelState.AddModelError("", $"Error: {ex.Message}");
                 }
             }
-            else
-            {
-                
-                ModelState.AddModelError("", "Validation Failed. Please check inputs.");
-            }
 
-          
-            await PopulateDropDownsAsync();
-            return View(model);
+           
+            await ConfigureViewModel(viewModel);
+            return View(viewModel);
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var movieForm = await _movieService.GetMovieForEditAsync(id);
-            if (movieForm == null) return NotFound();
+            var dto = await _movieService.GetMovieForEditAsync(id);
+            if (dto == null) return NotFound();
 
-            await PopulateDropDownsAsync();
-            return View(movieForm); 
+           
+            var viewModel = MapToViewModel(dto);
+
+            await ConfigureViewModel(viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(MovieFormDto model)
+        public async Task<IActionResult> Edit(MovieFormViewModel viewModel)
         {
             if (ModelState.IsValid)
             {
-                await _movieService.UpdateMovieAsync(model);
-                return RedirectToAction(nameof(Index));
+                try
+                {
+                    var dto = MapToDto(viewModel);
+                    await _movieService.UpdateMovieAsync(dto);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError("", $"Error: {ex.Message}");
+                }
             }
 
-            await PopulateDropDownsAsync();
-            return View(model);
+            await ConfigureViewModel(viewModel);
+            return View(viewModel);
         }
 
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -100,33 +103,64 @@ namespace onlineCinema.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-
-        private async Task PopulateDropDownsAsync()
+       
+        private async Task ConfigureViewModel(MovieFormViewModel vm)
         {
-            var genres = await _unitOfWork.Genre.GetAllAsync();
-            var actors = await _unitOfWork.CastMember.GetAllAsync();
-            var directors = await _unitOfWork.Director.GetAllAsync();
-            var languages = await _unitOfWork.Language.GetAllAsync();
+            var dropdowns = await _movieService.GetMovieDropdownsValuesAsync();
 
-            ViewBag.Genres = new SelectList(genres, "GenreId", "GenreName");
+            vm.GenresList = dropdowns.Genres.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+            vm.ActorsList = dropdowns.Actors.Select(x => new SelectListItem(x.FullName, x.Id.ToString()));
+            vm.DirectorsList = dropdowns.Directors.Select(x => new SelectListItem(x.FullName, x.Id.ToString()));
+            vm.LanguagesList = dropdowns.Languages.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+        }
 
-            
-            var actorList = actors.Select(a => new
+     
+        private MovieFormDto MapToDto(MovieFormViewModel vm)
+        {
+            return new MovieFormDto
             {
-                CastId = a.CastId,
-                FullName = $"{a.CastFirstName} {a.CastLastName}" 
-            });
-            ViewBag.Actors = new SelectList(actorList, "CastId", "FullName");
+                Id = vm.Id,
+                Title = vm.Title,
+                Description = vm.Description,
+                Status = vm.Status,
+                AgeRating = vm.AgeRating,
+                Runtime = vm.Runtime,
+                ReleaseDate = vm.ReleaseDate,
+                TrailerLink = vm.TrailerLink,
+                PosterUrl = vm.PosterUrl,
+                PosterFile = vm.PosterFile,
+                GenreIds = vm.GenreIds,
+                CastIds = vm.CastIds,
+                DirectorIds = vm.DirectorIds,
+                LanguageIds = vm.LanguageIds,
+                GenresInput = vm.GenresInput,
+                ActorsInput = vm.ActorsInput,
+                DirectorsInput = vm.DirectorsInput,
+                LanguagesInput = vm.LanguagesInput
+            };
+        }
 
-            
-            var directorList = directors.Select(d => new
+       
+        private MovieFormViewModel MapToViewModel(MovieFormDto dto)
+        {
+            return new MovieFormViewModel
             {
-                DirectorId = d.DirectorId,
-                FullName = $"{d.DirectorFirstName} {d.DirectorLastName}"
-            });
-            ViewBag.Directors = new SelectList(directorList, "DirectorId", "FullName");
-
-            ViewBag.Languages = new SelectList(languages, "LanguageId", "LanguageName");
+                Id = dto.Id,
+                Title = dto.Title,
+                Description = dto.Description,
+                Status = dto.Status,
+                AgeRating = dto.AgeRating,
+                Runtime = dto.Runtime,
+                ReleaseDate = dto.ReleaseDate,
+                TrailerLink = dto.TrailerLink,
+                PosterUrl = dto.PosterUrl,
+              
+                GenreIds = dto.GenreIds,
+                CastIds = dto.CastIds,
+                DirectorIds = dto.DirectorIds,
+                LanguageIds = dto.LanguageIds
+             
+            };
         }
     }
 }

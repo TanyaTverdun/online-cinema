@@ -18,5 +18,6 @@ namespace onlineCinema.Application.Interfaces
         Task AddMovieAsync(MovieFormDto model);
         Task UpdateMovieAsync(MovieFormDto model);
         Task DeleteMovieAsync(int id);
+        Task<MovieDropdownsDto> GetMovieDropdownsValuesAsync();
     }
 }

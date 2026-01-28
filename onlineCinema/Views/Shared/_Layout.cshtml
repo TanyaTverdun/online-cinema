@@ -4,76 +4,108 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - onlineCinema</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/onlineCinema.styles.css" asp-append-version="true" />
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
     <link rel="stylesheet" href="~/css/cyborg.css" />
-
-
-
+    <link rel="stylesheet" href="~/css/layout-styles.css" />
+  
 </head>
-<body>
+
+<body class="bg-black text-white d-flex flex-column min-vh-100">
+
     <header>
-        <nav class="navbar navbar-expand-lg navbar-dark  box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <i class="bi bi-film me-2"></i>onlineCinema
+        <nav class="navbar navbar-expand-lg header-bg py-3 navbar-dark">
+            <div class="container-fluid px-4">
+
+                <a class="navbar-brand d-flex align-items-center gap-2" asp-controller="Home" asp-action="Index">
+                    <div class="logo-icon d-flex align-items-center justify-content-center logo-box">
+                        <i class="bi bi-film fs-4"></i>
+                    </div>
+                    <div class="fw-bold fs-4 lh-1 text-uppercase" style="letter-spacing: 1px;">
+                        <span style="color: white;">Online</span><span class="text-danger">Cinema</span>
+                    </div>
                 </a>
 
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse"
-                        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+                <div class="collapse navbar-collapse" id="navbarContent">
 
+                    <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link nav-custom-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
                         </li>
 
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                                Content Management
+                            <a class="nav-link dropdown-toggle nav-custom-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Admin Panel
                             </a>
-                            <ul class="dropdown-menu">
-                                <li class="nav-item">
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li>
                                     <a class="dropdown-item" asp-area="Admin" asp-controller="Movie" asp-action="Index">
-                                        <i class="bi bi-film me-2"></i>Movies
+                                        <i class="bi bi-film me-2 text-danger"></i>Movies Management
                                     </a>
                                 </li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li class="nav-item">
-                                    <a class="dropdown-item disabled" href="#">Sessions (test)</a>
+                                <li>
+                                    <a class="dropdown-item disabled" href="#">Sessions (Coming Soon)</a>
                                 </li>
                             </ul>
                         </li>
 
+                        <li class="nav-item">
+                            <a class="nav-link nav-custom-link" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                        </li>
                     </ul>
 
-                    <partial name="_LoginPartial" />
+                    <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
+                        @if (User.Identity != null && User.Identity.IsAuthenticated)
+                        {
+                            <div class="user-badge d-flex align-items-center gap-3 px-3 py-1 rounded-pill">
+                                <span class="fw-bold small text-uppercase text-white">@User.Identity.Name</span>
+                                <div class="user-avatar rounded-circle d-flex align-items-center justify-content-center">
+                                    <i class="bi bi-person-fill"></i>
+                                </div>
+                            </div>
+                            <form class="form-inline" asp-area="Identity" asp-page="/Account/Logout" asp-route-returnUrl="@Url.Action("Index", "Home", new { area = "" })">
+                                <button type="submit" class="btn btn-link p-0 text-white-50" title="Logout">
+                                    <i class="bi bi-box-arrow-right fs-5"></i>
+                                </button>
+                            </form>
+                        }
+                        else
+                        {
+                            <a class="btn btn-login px-4 py-2 fw-bold text-uppercase" asp-area="Identity" asp-page="/Account/Login">Log In</a>
+                            <a class="btn btn-signup px-4 py-2 fw-bold text-uppercase" asp-area="Identity" asp-page="/Account/Register">Sign Up</a>
+                        }
+                    </div>
+
                 </div>
             </div>
         </nav>
     </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+
+    <div class="container py-4 flex-grow-1">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
 
-    <footer class=" footer text-muted">
-        <div class="container">
-            &copy; 2026 - onlineCinema - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="footer mt-auto py-3 bg-black border-top border-secondary border-opacity-25 mt-5">
+        <div class="container text-center">
+            <span class="text-white-50 small">
+                &copy; @DateTime.Now.Year onlineCinema • <a asp-controller="Home" asp-action="Privacy" class="text-white-50 text-decoration-none">Privacy</a>
+            </span>
         </div>
     </footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
