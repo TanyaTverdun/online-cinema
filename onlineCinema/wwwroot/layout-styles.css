@@ -1,0 +1,56 @@
+﻿:root {
+    --brand-red: #E50914;
+    --glow-red: rgba(229, 9, 20, 0.8);
+}
+
+/* ФОН СТОРІНКИ */
+body {
+    background-color: #000 !important;
+}
+
+/* ХЕДЕР */
+.header-bg {
+    background-color: rgba(0, 0, 0, 0.9) !important;
+    border-bottom: 1px solid #333 !important;
+}
+
+/* КАРТКИ (Виправлення видимості тексту) */
+.movie-card {
+    background-color: #181818 !important; /* Трохи світліше за фон сторінки */
+    border: 1px solid #333 !important;
+    transition: transform 0.3s ease;
+}
+
+    .movie-card:hover {
+        transform: scale(1.02);
+        border-color: #444 !important;
+    }
+
+    /* ТЕКСТ (Робимо білим і чітким) */
+    .movie-card .card-title {
+        color: #ffffff !important;
+        font-weight: bold;
+    }
+
+    .movie-card .card-text,
+    .movie-card .text-white-50,
+    .movie-card span {
+        color: #e0e0e0 !important; /* Світло-сірий для контрасту */
+    }
+
+/* ПІДСВІТКА КНОПКИ "КУПИТИ" ЯК У NETFLIX */
+.btn-glow {
+    background-color: var(--brand-red) !important;
+    border: none !important;
+    font-weight: bold;
+    color: white !important;
+    transition: all 0.3s ease-in-out !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+    .btn-glow:hover {
+        background-color: #ff0a16 !important;
+        /* Неонове світіння */
+        box-shadow: 0 0 15px var(--glow-red), 0 0 30px var(--glow-red) !important;
+        transform: translateY(-2px);
+    }

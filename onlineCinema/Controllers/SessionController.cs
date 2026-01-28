@@ -1,32 +1,36 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.Interfaces;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
+using onlineCinema.Application.Interfaces;
+using onlineCinema.ViewModels;
+using onlineCinema.Application.Services.Interfaces;
 
-namespace onlineCinema.Controllers
+public class SessionController : Controller
 {
-    public class SessionController : Controller
+    private readonly ISessionService _sessionService;
+
+    public SessionController(ISessionService sessionService)
     {
-        private readonly ISessionRepository _sessionRepository;
+        _sessionService = sessionService;
+    }
 
-        public SessionController(ISessionRepository sessionRepository)
+    public async Task<IActionResult> Index()
+    {
+        var sessionDtos = await _sessionService.GetScheduleAsync();
+        var viewModel = sessionDtos.Select(dto => new SessionScheduleViewModel
         {
-            _sessionRepository = sessionRepository;
-        }
+            SessionId = dto.SessionId,
+            MovieTitle = dto.MovieTitle ?? "Назва відсутня",
+            MoviePoster = dto.MoviePosterImage ?? "/images/default-poster.jpg",
+            StartTime = dto.ShowingDatetime.ToString("HH:mm"),
+            StartDate = dto.ShowingDatetime.ToString("dd MMMM"),
+            HallName = $"Зал №{dto.HallName}",
+            Price = $"{dto.BasePrice:F2} грн"
+        }).ToList();
 
-        public async Task<IActionResult> Index()
-        {
-            var sessions = await _sessionRepository.GetAllAsync();
-            return View(sessions);
-        }
-
-        public async Task<IActionResult> ByMovie(int movieId)
-        {
-            var sessions = await _sessionRepository.GetByMovieIdAsync(movieId);
-            return View("Index", sessions);
-        }
+        return View(viewModel);
     }
 }

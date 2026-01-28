@@ -5,6 +5,8 @@ using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Application.Interfaces;
 using Microsoft.EntityFrameworkCore;
 using onlineCinema.Domain.Entities;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Application.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +22,10 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
+
 builder.Services.AddScoped<ISessionRepository, SessionRepository>();
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 
 var app = builder.Build();
 
