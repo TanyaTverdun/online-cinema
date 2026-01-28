@@ -1,0 +1,150 @@
+﻿:root {
+    --color-bg: #000;
+    --card-bg: var(--bs-gray-900);
+    --text-main: var(--bs-white);
+    --text-muted: var(--bs-gray-600);
+    --accent-red: var(--bs-danger);
+    --accent-border: #222;
+}
+
+body, html {
+    background-color: var(--color-bg) !important;
+    color: var(--text-main);
+    font-family: 'Nunito Sans', -apple-system, sans-serif;
+}
+
+.container {
+    max-width: 1200px;
+}
+
+.timer-box {
+    background-color: transparent;
+    border: 1px solid var(--bs-warning);
+    color: var(--bs-warning);
+    border-radius: 0;
+    padding: 1rem 1.5rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.timer-text {
+    font-family: monospace;
+    font-size: 1.5rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+}
+
+.info-bar {
+    background-color: var(--card-bg);
+    border-bottom: 1px solid var(--accent-border);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.snack-card {
+    background-color: var(--card-bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 0;
+    transition: transform 0.3s, border-color 0.3s;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem 1rem;
+}
+
+    .snack-card:hover {
+        border-color: var(--bs-gray-600);
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+    }
+
+.snack-title {
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-main);
+}
+
+.snack-price-display {
+    color: var(--bs-gray-500);
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+}
+
+/* --- КОНТРОЛЕРИ КІЛЬКОСТІ --- */
+.qty-group {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--bs-gray-700);
+    width: fit-content;
+    margin: 0 auto;
+}
+
+.btn-qty {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    width: 40px;
+    height: 40px;
+    font-size: 1.2rem;
+    transition: 0.2s;
+}
+
+    .btn-qty:hover {
+        background-color: var(--bs-gray-800);
+        color: var(--bs-white);
+    }
+
+.qty-input {
+    background: transparent;
+    border: none;
+    color: var(--text-main);
+    width: 50px;
+    text-align: center;
+    font-weight: bold;
+    pointer-events: none;
+}
+
+    .qty-input::-webkit-outer-spin-button,
+    .qty-input::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+
+/* --- НИЖНЯ ПАНЕЛЬ --- */
+.checkout-bar {
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--accent-red);
+    position: sticky;
+    bottom: 0;
+    z-index: 1000;
+    padding: 1.5rem 0;
+    box-shadow: 0 -10px 30px rgba(0,0,0,0.5);
+}
+
+.btn-confirm {
+    background-color: var(--accent-red);
+    color: white;
+    text-transform: uppercase;
+    font-weight: 700;
+    border-radius: 0;
+    letter-spacing: 1px;
+    border: none;
+    padding: 0.8rem 2rem;
+    transition: 0.3s;
+}
+
+    .btn-confirm:hover {
+        background-color: #c9302c;
+        box-shadow: 0 0 15px rgba(217, 83, 79, 0.4);
+        color: white;
+    }
+
+footer {
+    display: none !important;
+}
