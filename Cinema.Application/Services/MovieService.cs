@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
@@ -22,8 +23,6 @@ namespace onlineCinema.Application.Services
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
         }
-
-       
 
         public async Task<IEnumerable<MovieCardDto>> GetMoviesForShowcaseAsync()
         {
@@ -60,7 +59,6 @@ namespace onlineCinema.Application.Services
             return movie.ToFormDto();
         }
 
-       
         public async Task<MovieDropdownsDto> GetMovieDropdownsValuesAsync()
         {
             var response = new MovieDropdownsDto();
@@ -82,10 +80,8 @@ namespace onlineCinema.Application.Services
 
         public async Task AddMovieAsync(MovieFormDto model)
         {
-           
             var movie = model.ToEntity();
 
-           
             if (model.PosterFile != null)
             {
                 movie.PosterImage = await SaveImageAsync(model.PosterFile);
@@ -108,7 +104,6 @@ namespace onlineCinema.Application.Services
                 return;
             }
 
-        
             if (model.PosterFile != null)
             {
                 if (!string.IsNullOrEmpty(movieFromDb.PosterImage))
@@ -118,10 +113,8 @@ namespace onlineCinema.Application.Services
                 movieFromDb.PosterImage = await SaveImageAsync(model.PosterFile);
             }
 
-            
             movieFromDb.UpdateEntityFromDto(model);
 
-       
             movieFromDb.MovieGenres.Clear();
             await ProcessGenresAsync(movieFromDb, model);
 
@@ -273,8 +266,6 @@ namespace onlineCinema.Application.Services
             }
         }
 
-     
-
         private string[] SplitInput(string input)
         {
             return input.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
@@ -283,14 +274,17 @@ namespace onlineCinema.Application.Services
         private (string First, string Last) ParseName(string fullName)
         {
             var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            if (parts.Length == 0) return ("", "");
+            if (parts.Length == 0)
+            {
+                return ("", "");
+            }
 
             var first = parts[0];
-            var last = parts.Length > 1 ? string.Join(" ", parts.Skip(1)) : ""; 
+            var last = parts.Length > 1 ? string.Join(" ", parts.Skip(1)) : "";
             return (first, last);
         }
 
-        private async Task<string> SaveImageAsync(Microsoft.AspNetCore.Http.IFormFile file)
+        private async Task<string> SaveImageAsync(IFormFile file)
         {
             string wwwRootPath = _webHostEnvironment.WebRootPath;
             string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
@@ -311,7 +305,10 @@ namespace onlineCinema.Application.Services
 
         private void DeleteImage(string imageUrl)
         {
-            if (imageUrl.Contains("no-poster.png")) return;
+            if (imageUrl.Contains("no-poster.png"))
+            {
+                return;
+            }
 
             var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, imageUrl.TrimStart('\\', '/'));
             if (File.Exists(imagePath))

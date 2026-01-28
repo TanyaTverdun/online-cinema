@@ -1,8 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
-using onlineCinema.Areas.Admin.Models; 
+using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Mapping;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -18,7 +18,6 @@ namespace onlineCinema.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            
             var movies = await _movieService.GetMoviesForShowcaseAsync();
             return View(movies);
         }
@@ -26,12 +25,8 @@ namespace onlineCinema.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-           
             var viewModel = new MovieFormViewModel();
-
-            
             await ConfigureViewModel(viewModel);
-
             return View(viewModel);
         }
 
@@ -43,9 +38,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 try
                 {
-                    
-                    var dto = MapToDto(viewModel);
-
+                    var dto = viewModel.ToDto();
                     await _movieService.AddMovieAsync(dto);
                     return RedirectToAction(nameof(Index));
                 }
@@ -55,7 +48,6 @@ namespace onlineCinema.Areas.Admin.Controllers
                 }
             }
 
-           
             await ConfigureViewModel(viewModel);
             return View(viewModel);
         }
@@ -64,11 +56,12 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dto = await _movieService.GetMovieForEditAsync(id);
-            if (dto == null) return NotFound();
+            if (dto == null)
+            {
+                return NotFound();
+            }
 
-           
-            var viewModel = MapToViewModel(dto);
-
+            var viewModel = dto.ToViewModel();
             await ConfigureViewModel(viewModel);
             return View(viewModel);
         }
@@ -81,7 +74,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 try
                 {
-                    var dto = MapToDto(viewModel);
+                    var dto = viewModel.ToDto();
                     await _movieService.UpdateMovieAsync(dto);
                     return RedirectToAction(nameof(Index));
                 }
@@ -103,7 +96,6 @@ namespace onlineCinema.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-       
         private async Task ConfigureViewModel(MovieFormViewModel vm)
         {
             var dropdowns = await _movieService.GetMovieDropdownsValuesAsync();
@@ -112,55 +104,6 @@ namespace onlineCinema.Areas.Admin.Controllers
             vm.ActorsList = dropdowns.Actors.Select(x => new SelectListItem(x.FullName, x.Id.ToString()));
             vm.DirectorsList = dropdowns.Directors.Select(x => new SelectListItem(x.FullName, x.Id.ToString()));
             vm.LanguagesList = dropdowns.Languages.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
-        }
-
-     
-        private MovieFormDto MapToDto(MovieFormViewModel vm)
-        {
-            return new MovieFormDto
-            {
-                Id = vm.Id,
-                Title = vm.Title,
-                Description = vm.Description,
-                Status = vm.Status,
-                AgeRating = vm.AgeRating,
-                Runtime = vm.Runtime,
-                ReleaseDate = vm.ReleaseDate,
-                TrailerLink = vm.TrailerLink,
-                PosterUrl = vm.PosterUrl,
-                PosterFile = vm.PosterFile,
-                GenreIds = vm.GenreIds,
-                CastIds = vm.CastIds,
-                DirectorIds = vm.DirectorIds,
-                LanguageIds = vm.LanguageIds,
-                GenresInput = vm.GenresInput,
-                ActorsInput = vm.ActorsInput,
-                DirectorsInput = vm.DirectorsInput,
-                LanguagesInput = vm.LanguagesInput
-            };
-        }
-
-       
-        private MovieFormViewModel MapToViewModel(MovieFormDto dto)
-        {
-            return new MovieFormViewModel
-            {
-                Id = dto.Id,
-                Title = dto.Title,
-                Description = dto.Description,
-                Status = dto.Status,
-                AgeRating = dto.AgeRating,
-                Runtime = dto.Runtime,
-                ReleaseDate = dto.ReleaseDate,
-                TrailerLink = dto.TrailerLink,
-                PosterUrl = dto.PosterUrl,
-              
-                GenreIds = dto.GenreIds,
-                CastIds = dto.CastIds,
-                DirectorIds = dto.DirectorIds,
-                LanguageIds = dto.LanguageIds
-             
-            };
         }
     }
 }

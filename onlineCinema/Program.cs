@@ -5,6 +5,8 @@ using onlineCinema.Application.Services;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
 using onlineCinema.Infrastructure.Repositories;
+using FluentValidation;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -23,6 +25,9 @@ builder.Services.AddControllersWithViews();
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 
+builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
