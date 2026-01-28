@@ -1,4 +1,5 @@
-﻿using System;
+﻿using onlineCinema.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,5 +9,8 @@ namespace onlineCinema.Application.Interfaces
 {
     public interface ISessionRepository
     {
+        Task<IEnumerable<Session>> GetAllAsync();
+        Task<IEnumerable<Session>> GetByMovieIdAsync(int movieId);
+        Task<Session?> GetByIdAsync(int id);
     }
 }

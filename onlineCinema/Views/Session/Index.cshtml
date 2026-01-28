@@ -1,0 +1,56 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model IEnumerable<onlineCinema.Domain.Entities.Session>
+
+@{
+    ViewData["Title"] = "Розклад сеансів";
+}
+
+<h2>Розклад сеансів</h2>
+
+@if (!Model.Any())
+{
+    <p>Сеансів поки немає.</p>
+}
+else
+{
+    @foreach (var session in Model)
+    {
+        <div style="border:1px solid #ccc; padding:15px; margin-bottom:15px;">
+
+            <div style="display:flex; gap:20px;">
+                <img src="@session.Movie.PosterImage"
+                     alt="@session.Movie.Title"
+                     width="120" />
+
+                <div>
+                    <h4>@session.Movie.Title</h4>
+
+                    <p>
+                        <strong>Дата і час:</strong>
+                        @session.ShowingDateTime.ToString("dd.MM.yyyy HH:mm")
+                    </p>
+
+                    <p>
+                        <strong>Зал:</strong>
+                        Зал @session.Hall.HallNumber
+                    </p>
+
+                    <p>
+                        <strong>Ціна:</strong>
+                        @session.BasePrice грн
+                    </p>
+
+                    <a asp-controller="Session"
+                       asp-action="Create"
+                       asp-route-sessionId="@session.SessionId">
+                        🎟 Обрати квиток
+                    </a>
+                </div>
+            </div>
+        </div>
+    }
+}
