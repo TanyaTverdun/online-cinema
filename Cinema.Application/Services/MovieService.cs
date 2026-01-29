@@ -17,11 +17,13 @@ namespace onlineCinema.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly MovieMapping _mapper;
 
-        public MovieService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment)
+        public MovieService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, MovieMapping mapper)
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
+            _mapper = mapper;
         }
 
         public async Task<IEnumerable<MovieCardDto>> GetMoviesForShowcaseAsync()
@@ -34,7 +36,7 @@ namespace onlineCinema.Application.Services
             return movies
                 .OrderBy(m => m.Status)
                 .ThenByDescending(m => m.ReleaseDate)
-                .Select(m => m.ToCardDto());
+                .Select(m => _mapper.ToCardDto(m));
         }
 
         public async Task<MovieDetailsDto?> GetMovieDetailsAsync(int id)
@@ -45,7 +47,7 @@ namespace onlineCinema.Application.Services
                 return null;
             }
 
-            return movie.ToDetailsDto();
+            return _mapper.ToDetailsDto(movie);
         }
 
         public async Task<MovieFormDto?> GetMovieForEditAsync(int id)
@@ -56,7 +58,7 @@ namespace onlineCinema.Application.Services
                 return null;
             }
 
-            return movie.ToFormDto();
+            return _mapper.ToFormDto(movie);
         }
 
         public async Task<MovieDropdownsDto> GetMovieDropdownsValuesAsync()
@@ -64,23 +66,23 @@ namespace onlineCinema.Application.Services
             var response = new MovieDropdownsDto();
 
             var genres = await _unitOfWork.Genre.GetAllAsync();
-            response.Genres = genres.Select(g => new GenreDto { Id = g.GenreId, Name = g.GenreName }).ToList();
+            response.Genres = genres.Select(g => _mapper.ToGenreDto(g)).ToList();
 
             var actors = await _unitOfWork.CastMember.GetAllAsync();
-            response.Actors = actors.Select(a => new PersonDto { Id = a.CastId, FullName = $"{a.CastFirstName} {a.CastLastName}" }).ToList();
+            response.Actors = actors.Select(a => _mapper.ToPersonDto(a)).ToList();
 
             var directors = await _unitOfWork.Director.GetAllAsync();
-            response.Directors = directors.Select(d => new PersonDto { Id = d.DirectorId, FullName = $"{d.DirectorFirstName} {d.DirectorLastName}" }).ToList();
+            response.Directors = directors.Select(d => _mapper.ToPersonDto(d)).ToList();
 
             var languages = await _unitOfWork.Language.GetAllAsync();
-            response.Languages = languages.Select(l => new LanguageDto { Id = l.LanguageId, Name = l.LanguageName }).ToList();
+            response.Languages = languages.Select(l => _mapper.ToLanguageDto(l)).ToList();
 
             return response;
         }
 
         public async Task AddMovieAsync(MovieFormDto model)
         {
-            var movie = model.ToEntity();
+            var movie = _mapper.ToEntity(model);
 
             if (model.PosterFile != null)
             {
@@ -113,7 +115,7 @@ namespace onlineCinema.Application.Services
                 movieFromDb.PosterImage = await SaveImageAsync(model.PosterFile);
             }
 
-            movieFromDb.UpdateEntityFromDto(model);
+            _mapper.UpdateEntityFromDto(movieFromDb, model);
 
             movieFromDb.MovieGenres.Clear();
             await ProcessGenresAsync(movieFromDb, model);

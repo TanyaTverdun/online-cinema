@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;
@@ -10,16 +9,19 @@ namespace onlineCinema.Areas.Admin.Controllers
     public class MovieController : Controller
     {
         private readonly IMovieService _movieService;
+        private readonly AdminMovieMapper _mapper;
 
-        public MovieController(IMovieService movieService)
+        public MovieController(IMovieService movieService, AdminMovieMapper mapper)
         {
             _movieService = movieService;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
-            var movies = await _movieService.GetMoviesForShowcaseAsync();
-            return View(movies);
+            var moviesDto = await _movieService.GetMoviesForShowcaseAsync();
+            var moviesViewModel = moviesDto.Select(m => _mapper.ToViewModel(m));
+            return View(moviesViewModel);
         }
 
         [HttpGet]
@@ -38,7 +40,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 try
                 {
-                    var dto = viewModel.ToDto();
+                    var dto = _mapper.ToDto(viewModel);
                     await _movieService.AddMovieAsync(dto);
                     return RedirectToAction(nameof(Index));
                 }
@@ -61,7 +63,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var viewModel = dto.ToViewModel();
+            var viewModel = _mapper.ToViewModel(dto);
             await ConfigureViewModel(viewModel);
             return View(viewModel);
         }
@@ -74,7 +76,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 try
                 {
-                    var dto = viewModel.ToDto();
+                    var dto = _mapper.ToDto(viewModel);
                     await _movieService.UpdateMovieAsync(dto);
                     return RedirectToAction(nameof(Index));
                 }
@@ -99,11 +101,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         private async Task ConfigureViewModel(MovieFormViewModel vm)
         {
             var dropdowns = await _movieService.GetMovieDropdownsValuesAsync();
-
-            vm.GenresList = dropdowns.Genres.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
-            vm.ActorsList = dropdowns.Actors.Select(x => new SelectListItem(x.FullName, x.Id.ToString()));
-            vm.DirectorsList = dropdowns.Directors.Select(x => new SelectListItem(x.FullName, x.Id.ToString()));
-            vm.LanguagesList = dropdowns.Languages.Select(x => new SelectListItem(x.Name, x.Id.ToString()));
+            _mapper.Fill(dropdowns, vm);
         }
     }
 }

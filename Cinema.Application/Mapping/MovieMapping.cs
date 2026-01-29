@@ -8,7 +8,7 @@ using Riok.Mapperly.Abstractions;
 namespace onlineCinema.Application.Mapping
 {
     [Mapper]
-    public static partial class MovieMapping
+    public partial class MovieMapping
     {
         private const string PlaceholderImage = "/images/no-poster.png";
 
@@ -16,25 +16,25 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Movie.MovieGenres), nameof(MovieCardDto.GenreSummary), Use = nameof(MapGenreSummary))]
         [MapProperty(nameof(Movie.ReleaseDate), nameof(MovieCardDto.ReleaseYear), Use = nameof(MapReleaseYear))]
         [MapProperty(nameof(Movie.AgeRating), nameof(MovieCardDto.AgeRating))]
-        public static partial MovieCardDto ToCardDto(this Movie movie);
+        public partial MovieCardDto ToCardDto(Movie movie);
 
         [MapProperty(nameof(Movie.PosterImage), nameof(MovieDetailsDto.PosterUrl), Use = nameof(MapPosterUrl))]
         [MapProperty(nameof(Movie.MovieGenres), nameof(MovieDetailsDto.Genres), Use = nameof(MapGenresList))]
         [MapProperty(nameof(Movie.MovieCasts), nameof(MovieDetailsDto.Actors), Use = nameof(MapActorsList))]
         [MapProperty(nameof(Movie.MovieDirectors), nameof(MovieDetailsDto.Directors), Use = nameof(MapDirectorsList))]
         [MapProperty(nameof(Movie.MovieLanguages), nameof(MovieDetailsDto.Languages), Use = nameof(MapLanguagesList))]
-        public static partial MovieDetailsDto ToDetailsDto(this Movie movie);
+        public partial MovieDetailsDto ToDetailsDto(Movie movie);
 
         [MapProperty(nameof(Movie.PosterImage), nameof(MovieFormDto.PosterUrl))]
         [MapProperty(nameof(Movie.MovieGenres), nameof(MovieFormDto.GenreIds), Use = nameof(MapGenreIds))]
         [MapProperty(nameof(Movie.MovieCasts), nameof(MovieFormDto.CastIds), Use = nameof(MapCastIds))]
         [MapProperty(nameof(Movie.MovieDirectors), nameof(MovieFormDto.DirectorIds), Use = nameof(MapDirectorIds))]
         [MapProperty(nameof(Movie.MovieLanguages), nameof(MovieFormDto.LanguageIds), Use = nameof(MapLanguageIds))]
-        public static partial MovieFormDto ToFormDto(this Movie movie);
+        public partial MovieFormDto ToFormDto(Movie movie);
 
-        public static partial Movie ToEntity(this MovieFormDto dto);
+        public partial Movie ToEntity(MovieFormDto dto);
 
-        public static void UpdateEntityFromDto(this Movie movie, MovieFormDto dto)
+        public void UpdateEntityFromDto(Movie movie, MovieFormDto dto)
         {
             movie.Title = dto.Title;
             movie.Description = dto.Description;
@@ -45,36 +45,50 @@ namespace onlineCinema.Application.Mapping
             movie.TrailerLink = dto.TrailerLink;
         }
 
-        private static string MapPosterUrl(string? posterImage) =>
+        [MapProperty(nameof(Genre.GenreId), nameof(GenreDto.Id))]
+        [MapProperty(nameof(Genre.GenreName), nameof(GenreDto.Name))]
+        public partial GenreDto ToGenreDto(Genre genre);
+
+        [MapProperty(nameof(Language.LanguageId), nameof(LanguageDto.Id))]
+        [MapProperty(nameof(Language.LanguageName), nameof(LanguageDto.Name))]
+        public partial LanguageDto ToLanguageDto(Language language);
+
+        public PersonDto ToPersonDto(CastMember actor) =>
+            new PersonDto { Id = actor.CastId, FullName = $"{actor.CastFirstName} {actor.CastLastName}" };
+
+        public PersonDto ToPersonDto(Director director) =>
+            new PersonDto { Id = director.DirectorId, FullName = $"{director.DirectorFirstName} {director.DirectorLastName}" };
+
+        private string MapPosterUrl(string? posterImage) =>
             string.IsNullOrEmpty(posterImage) ? PlaceholderImage : posterImage;
 
-        private static string MapGenreSummary(ICollection<MovieGenre> genres) =>
+        private string MapGenreSummary(ICollection<MovieGenre> genres) =>
             genres == null ? "" : string.Join(", ", genres.Select(mg => mg.Genre.GenreName).Take(2));
 
-        private static List<string> MapGenresList(ICollection<MovieGenre> genres) =>
+        private List<string> MapGenresList(ICollection<MovieGenre> genres) =>
             genres.Select(mg => mg.Genre.GenreName).ToList();
 
-        private static List<string> MapActorsList(ICollection<MovieCast> casts) =>
+        private List<string> MapActorsList(ICollection<MovieCast> casts) =>
             casts.Select(mc => $"{mc.CastMember.CastFirstName} {mc.CastMember.CastLastName}").ToList();
 
-        private static List<string> MapDirectorsList(ICollection<DirectorMovie> directors) =>
+        private List<string> MapDirectorsList(ICollection<DirectorMovie> directors) =>
             directors.Select(md => $"{md.Director.DirectorFirstName} {md.Director.DirectorLastName}").ToList();
 
-        private static List<string> MapLanguagesList(ICollection<LanguageMovie> languages) =>
+        private List<string> MapLanguagesList(ICollection<LanguageMovie> languages) =>
             languages.Select(ml => ml.Language.LanguageName).ToList();
 
-        private static List<int> MapGenreIds(ICollection<MovieGenre> genres) =>
+        private List<int> MapGenreIds(ICollection<MovieGenre> genres) =>
             genres.Select(x => x.GenreId).ToList();
 
-        private static List<int> MapCastIds(ICollection<MovieCast> casts) =>
+        private List<int> MapCastIds(ICollection<MovieCast> casts) =>
             casts.Select(x => x.CastId).ToList();
 
-        private static List<int> MapDirectorIds(ICollection<DirectorMovie> directors) =>
+        private List<int> MapDirectorIds(ICollection<DirectorMovie> directors) =>
             directors.Select(x => x.DirectorId).ToList();
 
-        private static List<int> MapLanguageIds(ICollection<LanguageMovie> languages) =>
+        private List<int> MapLanguageIds(ICollection<LanguageMovie> languages) =>
             languages.Select(x => x.LanguageId).ToList();
 
-        private static int MapReleaseYear(DateTime date) => date.Year;
+        private int MapReleaseYear(DateTime date) => date.Year;
     }
 }

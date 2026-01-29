@@ -19,6 +19,22 @@ namespace onlineCinema.Validators
 
             RuleFor(x => x.ReleaseDate)
                 .NotEmpty().WithMessage("Вкажіть дату виходу");
+
+            RuleFor(x => x.GenreIds)
+                .NotEmpty().WithMessage("Виберіть жанр зі списку або додайте новий")
+                .When(x => string.IsNullOrWhiteSpace(x.GenresInput));
+
+            RuleFor(x => x.CastIds)
+                .NotEmpty().WithMessage("Виберіть акторів або додайте нових")
+                .When(x => string.IsNullOrWhiteSpace(x.ActorsInput));
+
+            RuleFor(x => x.DirectorIds)
+                .NotEmpty().WithMessage("Виберіть режисера або додайте нового")
+                .When(x => string.IsNullOrWhiteSpace(x.DirectorsInput));
+
+            RuleFor(x => x.LanguageIds)
+                .NotEmpty().WithMessage("Виберіть мову або додайте нову")
+                .When(x => string.IsNullOrWhiteSpace(x.LanguagesInput));
         }
     }
 }
