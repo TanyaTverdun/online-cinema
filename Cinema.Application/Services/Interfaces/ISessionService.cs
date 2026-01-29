@@ -11,6 +11,12 @@ namespace onlineCinema.Application.Services.Interfaces
     {
         Task<MovieScheduleDto> GetMovieScheduleAsync(int movieId);
         Task CreateSessionAsync(SessionCreateDto dto);
+        Task<SessionDto> GetByIdAsync(int id);
+        Task UpdateSessionAsync(SessionUpdateDto dto);
+        Task<bool> HallHasSessionAtTime(
+            int hallId,
+            DateTime dateTime,
+            int excludeSessionId);
 
     }
 }

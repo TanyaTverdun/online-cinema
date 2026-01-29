@@ -25,4 +25,8 @@
     <ProjectReference Include="..\Cinema.Infrastructure\onlineCinema.Infrastructure.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Views\NewFolder\" />
+  </ItemGroup>
+
 </Project>

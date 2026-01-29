@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -16,52 +11,139 @@ namespace onlineCinema.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly SessionMapper _mapper;
 
-        public SessionService(IUnitOfWork unitOfWork, SessionMapper mapper)
+        public SessionService(
+            IUnitOfWork unitOfWork,
+            SessionMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
         }
 
+        // =========================
+        // GET BY ID
+        // =========================
+        public async Task<SessionDto> GetByIdAsync(int id)
+        {
+            var session = await _unitOfWork.Session.GetByIdAsync(id);
+
+            if (session == null)
+                throw new KeyNotFoundException("Сеанс не знайдено");
+
+            return new SessionDto
+            {
+                Id = session.SessionId,
+                MovieId = session.MovieId,
+                HallId = session.HallId,
+                ShowingDateTime = session.ShowingDateTime,
+                BasePrice = session.BasePrice
+            };
+        }
+
+        // =========================
+        // MOVIE SCHEDULE
+        // =========================
         public async Task<MovieScheduleDto> GetMovieScheduleAsync(int movieId)
         {
             var movie = await _unitOfWork.Movie.GetByIdAsync(movieId);
+
             if (movie == null)
-            {
-                throw new KeyNotFoundException($"Фільм з ID {movieId} не знайдено.");
-            }
+                throw new KeyNotFoundException(
+                    $"Фільм з ID {movieId} не знайдено");
 
-            var sessions = await _unitOfWork.Session.GetFutureSessionsByMovieIdAsync(movieId);
+            var sessions = await _unitOfWork.Session
+                .GetFutureSessionsByMovieIdAsync(movieId);
 
-            var scheduleDto = _mapper.MapToMovieSchedule(movie, sessions);
-
-            return scheduleDto;
+            return _mapper.MapToMovieSchedule(movie, sessions);
         }
+
+        // =========================
+        // CREATE
+        // =========================
         public async Task CreateSessionAsync(SessionCreateDto dto)
         {
-            // 1️⃣ Перевіряємо фільм
             var movie = await _unitOfWork.Movie.GetByIdAsync(dto.MovieId);
+
             if (movie == null)
                 throw new KeyNotFoundException("Фільм не знайдено");
 
-            // 2️⃣ Перевірка конфлікту часу в залі
-            var hasConflict = await _unitOfWork.Session
-                .HallHasSessionAtTimeAsync(
+            var hasConflict =
+                await _unitOfWork.Session.HallHasSessionAtTimeAsync(
                     dto.HallId,
                     dto.ShowingDateTime,
-                    movie.Runtime
-                );
+                    movie.Runtime);
 
             if (hasConflict)
                 throw new InvalidOperationException(
-                    "У цьому залі вже є сеанс, який перетинається за часом"
-                );
+                    "У цьому залі вже існує сеанс, який перетинається за часом");
 
-            // 3️⃣ Мапінг DTO → Entity
-            var session = _mapper.MapToSession(dto);
+            Session session = _mapper.MapToSession(dto);
 
-            // 4️⃣ Збереження
             await _unitOfWork.Session.AddAsync(session);
             await _unitOfWork.SaveAsync();
+        }
+
+        // =========================
+        // UPDATE / EDIT
+        // =========================
+        public async Task UpdateSessionAsync(SessionUpdateDto dto)
+        {
+            var session =
+                await _unitOfWork.Session.GetByIdAsync(dto.Id);
+
+            if (session == null)
+                throw new KeyNotFoundException("Сеанс не знайдено");
+
+            var movie =
+                await _unitOfWork.Movie.GetByIdAsync(dto.MovieId);
+
+            if (movie == null)
+                throw new KeyNotFoundException("Фільм не знайдено");
+
+            var hasConflict =
+                await _unitOfWork.Session.HallHasSessionAtTimeAsync(
+                    dto.HallId,
+                    dto.ShowingDateTime,
+                    movie.Runtime,
+                    dto.Id);
+
+            if (hasConflict)
+                throw new InvalidOperationException(
+                    "У цьому залі вже є інший сеанс, що перетинається за часом");
+
+            session.MovieId = dto.MovieId;
+            session.HallId = dto.HallId;
+            session.ShowingDateTime = dto.ShowingDateTime;
+            session.BasePrice = dto.BasePrice;
+
+            await _unitOfWork.SaveAsync();
+        }
+
+        // =========================
+        // VALIDATION FOR EDIT
+        // =========================
+        public async Task<bool> HallHasSessionAtTime(
+            int hallId,
+            DateTime dateTime,
+            int excludeSessionId)
+        {
+            var session =
+                await _unitOfWork.Session.GetByIdAsync(excludeSessionId);
+
+            if (session == null)
+                return false;
+
+            var movie =
+                await _unitOfWork.Movie.GetByIdAsync(session.MovieId);
+
+            if (movie == null)
+                return false;
+
+            return await _unitOfWork.Session
+                .HallHasSessionAtTimeAsync(
+                    hallId,
+                    dateTime,
+                    movie.Runtime,
+                    excludeSessionId);
         }
     }
 }

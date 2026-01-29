@@ -1,0 +1,37 @@
+﻿@model onlineCinema.ViewModels.SessionEditViewModel
+
+@{
+    ViewData["Title"] = "Edit session";
+}
+
+<h2>Edit session</h2>
+
+<form asp-action="Edit" method="post">
+
+    <input type="hidden" asp-for="Id" />
+
+    <div>
+        <label>Movie</label>
+        <input asp-for="MovieId" />
+    </div>
+
+    <div>
+        <label>Hall</label>
+        <input asp-for="HallId" />
+    </div>
+
+    <div>
+        <label>Date & time</label>
+        <input asp-for="ShowingDateTime" type="datetime-local" />
+    </div>
+
+    <div>
+        <label>Base price</label>
+        <input asp-for="BasePrice" />
+    </div>
+
+    <br />
+
+    <button type="submit">Save</button>
+
+</form>

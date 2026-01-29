@@ -15,5 +15,18 @@ namespace onlineCinema.Mapping
                 BasePrice = vm.BasePrice
             };
         }
+        public static SessionUpdateDto ToDto(this SessionEditViewModel vm)
+        {
+            return new SessionUpdateDto
+            {
+                Id = vm.Id,
+                MovieId = vm.MovieId,
+                HallId = vm.HallId,
+                ShowingDateTime = vm.ShowingDateTime,
+                BasePrice = vm.BasePrice
+            };
+        }
+
     }
 }
+  

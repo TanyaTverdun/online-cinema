@@ -1,4 +1,5 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using System.Linq;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
 
@@ -7,6 +8,7 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class SessionMapper
     {
+
         public Session MapToSession(SessionCreateDto dto)
         {
             return new Session
@@ -17,6 +19,7 @@ namespace onlineCinema.Application.Mapping
                 BasePrice = dto.BasePrice
             };
         }
+            
         public MovieScheduleDto MapToMovieSchedule(
             Movie movie,
             IEnumerable<Session> sessions)
@@ -40,16 +43,14 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Movie.Id), nameof(MovieScheduleDto.MovieId))]
         [MapProperty(nameof(Movie.Title), nameof(MovieScheduleDto.MovieTitle))]
         [MapProperty(nameof(Movie.Runtime), nameof(MovieScheduleDto.Runtime))]
-        private partial MovieScheduleDto MapMovieToScheduleDtoBase(Movie movie);
+        public partial MovieScheduleDto MapMovieToScheduleDtoBase(Movie movie);
 
-        
         [MapProperty(nameof(Session.ShowingDateTime), nameof(SessionScheduleDto.StartDateTime))]
         [MapProperty(nameof(Session.BasePrice), nameof(SessionScheduleDto.BasePrice))]
         [MapProperty(nameof(Session.Hall), nameof(SessionScheduleDto.HallName))]
         [MapProperty(nameof(Session.Hall.HallFeatures), nameof(SessionScheduleDto.FeatureNames))]
         public partial SessionScheduleDto MapSessionToDto(Session session);
 
-        
         private string MapHallToHallName(Hall hall)
             => $"Зал {hall.HallNumber}";
 
