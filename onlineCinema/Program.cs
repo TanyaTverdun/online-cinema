@@ -48,6 +48,7 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<SessionMapper>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<BookingInputViewModelValidator>();
 

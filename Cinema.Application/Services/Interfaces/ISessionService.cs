@@ -10,5 +10,7 @@ namespace onlineCinema.Application.Services.Interfaces
     public interface ISessionService
     {
         Task<MovieScheduleDto> GetMovieScheduleAsync(int movieId);
+        Task CreateSessionAsync(SessionCreateDto dto);
+
     }
 }

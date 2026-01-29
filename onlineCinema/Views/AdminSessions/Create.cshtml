@@ -1,0 +1,59 @@
+﻿@model onlineCinema.ViewModels.SessionCreateViewModel
+
+@{
+    ViewData["Title"] = "Додати сеанс";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card bg-dark text-light border-secondary shadow-lg">
+                <div class="card-header border-secondary bg-gradient">
+                    <h2 class="text-center mb-0 text-white">ДОДАТИ НОВИЙ СЕАНС</h2>
+                </div>
+                <div class="card-body p-4">
+                    <form asp-action="Create" method="post">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger bg-danger text-white border-0" role="alert"></div>
+
+                        <div class="mb-3">
+                            <label asp-for="MovieId" class="form-label text-white">ID Фільму</label>
+                            <input asp-for="MovieId" class="form-control bg-dark text-white border-secondary" placeholder="Наприклад: 1" required />
+                            <span asp-validation-for="MovieId" class="text-warning small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="HallId" class="form-label text-white">ID Залу</label>
+                            <input asp-for="HallId" class="form-control bg-dark text-white border-secondary" placeholder="Наприклад: 2" required />
+                            <span asp-validation-for="HallId" class="text-warning small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="ShowingDateTime" class="form-label text-white">Дата та час сеансу</label>
+                            <input asp-for="ShowingDateTime" type="datetime-local" class="form-control bg-dark text-white border-secondary" required />
+                            <span asp-validation-for="ShowingDateTime" class="text-warning small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="BasePrice" class="form-label text-white">Ціна квитка</label>
+                            <div class="input-group">
+                                @* Виправлено: тепер фон іконки ₴ темно-сірий *@
+                                <span class="input-group-text bg-dark text-white border-secondary">₴</span>
+                                <input asp-for="BasePrice" class="form-control bg-dark text-white border-secondary" placeholder="0.00" required />
+                            </div>
+                            <span asp-validation-for="BasePrice" class="text-warning small"></span>
+                        </div>
+
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg shadow-sm">СТВОРИТИ СЕАНС</button>
+                            <a asp-action="Index" class="btn btn-outline-light btn-sm mt-2">НАЗАД ДО СПИСКУ</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

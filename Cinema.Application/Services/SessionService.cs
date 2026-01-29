@@ -7,6 +7,7 @@ using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Application.Services
 {
@@ -34,6 +35,33 @@ namespace onlineCinema.Application.Services
             var scheduleDto = _mapper.MapToMovieSchedule(movie, sessions);
 
             return scheduleDto;
+        }
+        public async Task CreateSessionAsync(SessionCreateDto dto)
+        {
+            // 1️⃣ Перевіряємо фільм
+            var movie = await _unitOfWork.Movie.GetByIdAsync(dto.MovieId);
+            if (movie == null)
+                throw new KeyNotFoundException("Фільм не знайдено");
+
+            // 2️⃣ Перевірка конфлікту часу в залі
+            var hasConflict = await _unitOfWork.Session
+                .HallHasSessionAtTimeAsync(
+                    dto.HallId,
+                    dto.ShowingDateTime,
+                    movie.Runtime
+                );
+
+            if (hasConflict)
+                throw new InvalidOperationException(
+                    "У цьому залі вже є сеанс, який перетинається за часом"
+                );
+
+            // 3️⃣ Мапінг DTO → Entity
+            var session = _mapper.MapToSession(dto);
+
+            // 4️⃣ Збереження
+            await _unitOfWork.Session.AddAsync(session);
+            await _unitOfWork.SaveAsync();
         }
     }
 }
