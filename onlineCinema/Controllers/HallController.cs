@@ -36,15 +36,18 @@ namespace onlineCinema.Controllers
         [HttpGet] //Hall/Details/{id}
         public async Task<IActionResult> Details(int id)
         {
-            var dto = await _hallService.GetHallByIdAsync(id);
-            if (dto == null)
+            try
+            {
+                var dto = await _hallService.GetHallDetailsAsync(id);
+
+                var viewModel = _mapper.MapToViewModel(dto);
+
+                return View(viewModel);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var viewModel = _mapper.MapToViewModel(dto);
-
-            return View(viewModel);
         }
 
         [HttpGet] //Hall/Create

@@ -14,7 +14,20 @@ namespace onlineCinema.Mapping
         public HallViewModel MapToViewModel(HallDto dto)
         {
             var vm = MapToViewModelBase(dto);
+
             vm.FeaturesList = string.Join(", ", dto.FeatureNames);
+
+            if (dto.Sessions != null)
+            {
+                vm.Sessions = dto.Sessions.Select(s => new SessionViewModel
+                {
+                    Id = s.SessionId,
+                    MovieTitle = s.MovieTitle,
+                    Date = s.ShowingDate.ToString("dd.MM.yyyy"),
+                    Time = s.ShowingDate.ToString("HH:mm")
+                }).ToList();
+            }
+
             return vm;
         }
 

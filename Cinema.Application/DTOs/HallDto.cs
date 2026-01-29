@@ -1,4 +1,5 @@
-﻿using System;
+﻿using onlineCinema.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,5 +17,7 @@ namespace onlineCinema.Application.DTOs
         public int TotalSeats => RowCount * SeatInRowCount;
         public List<string> FeatureNames { get; set; } = new();
         public List<int> FeatureIds { get; set; } = new();
+
+        public List<SessionSeatMapDto> Sessions { get; set; } = new();
     }
 }

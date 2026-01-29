@@ -108,5 +108,47 @@ namespace onlineCinema.Infrastructure.Repositories
                 })
                 .ToListAsync();
         }
+
+        public async Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId)
+        {
+            var now = DateTime.Now;
+            var threeDaysLater = now.AddDays(3);
+
+            return await _db.Halls
+                .Where(h => h.HallId == hallId)
+                .Select(h => new HallDto
+                {
+                    Id = h.HallId,
+                    HallNumber = h.HallNumber,
+                    RowCount = h.RowCount,
+                    SeatInRowCount = h.SeatInRowCount,
+
+                    FeatureNames = h.HallFeatures
+                        .Select(hf => hf.Feature.Name)
+                        .ToList(),
+
+                    Sessions = h.Sessions
+                        .Where(s => s.ShowingDateTime >= now && s.ShowingDateTime <= threeDaysLater)
+                        .OrderBy(s => s.ShowingDateTime)
+                        .Select(s => new SessionSeatMapDto
+                        {
+                            SessionId = s.SessionId,
+                            ShowingDate = s.ShowingDateTime,
+                            MovieTitle = s.Movie.Title,
+
+                            //Seats = s.Seats
+                            //    .Select(ss => new SeatDto
+                            //    {
+                            //        SeatId = ss.SeatId,
+                            //        Row = ss.RowNumber,
+                            //        Number = ss.SeatNumber,
+                            //        IsBooked = ss.IsBooked
+                            //    })
+                            //    .ToList()
+                        }).ToList()
+
+                })
+                .FirstOrDefaultAsync();
+        }
     }
 }

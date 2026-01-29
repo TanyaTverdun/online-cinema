@@ -21,5 +21,8 @@ namespace onlineCinema.ViewModels
 
         [Display(Name = "Особливості")]
         public string FeaturesList { get; set; } = string.Empty;
+
+        [Display(Name = "Сессії")]
+        public List<SessionViewModel> Sessions { get; set; } = new();
     }
 }

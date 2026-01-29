@@ -3,6 +3,7 @@ using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
+using onlineCinema.Domain.Enums;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,15 +32,19 @@ namespace onlineCinema.Application.Services
 
             var hallEntity = _mapper.MapToEntity(hallDto);
             // TODO: Remove hardcoded cinema ID
-            hallEntity.CinemaId = 3; // Temporary hardcoded cinema ID
+            hallEntity.CinemaId = 1; // Temporary hardcoded cinema ID FROM INITIALIZER
 
             await _unitOfWork.Hall.AddAsync(hallEntity);
             await _unitOfWork.SaveAsync();
 
-            if(hallDto.FeatureIds != null && hallDto.FeatureIds.Any())
+            await GenerateSeatsForHall(hallEntity);
+
+            if (hallDto.FeatureIds != null && hallDto.FeatureIds.Any())
             {
                 await _unitOfWork.Hall.UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
             }
+
+            await _unitOfWork.SaveAsync();
 
             return await GetHallByIdAsync(hallEntity.HallId);
         }
@@ -88,6 +93,37 @@ namespace onlineCinema.Application.Services
         public async Task<IEnumerable<Feature>> GetAllFeaturesAsync()
         {
             return await _unitOfWork.Feature.GetAllAsync();
+        }
+
+        public async Task<HallDto?> GetHallDetailsAsync(int id)
+        {
+            var dto = await _unitOfWork.Hall.GetHallWithFutureSessionsAsync(id);
+
+            if (dto == null) throw new KeyNotFoundException("Зал не знайдено");
+
+            return dto;
+        }
+
+        // seats
+
+        private async Task GenerateSeatsForHall(Hall hall)
+        {
+            for (byte row = 1; row <= hall.RowCount; row++)
+            {
+                for (byte number = 1; number <= hall.SeatInRowCount; number++)
+                {
+                    var seat = new Seat
+                    {
+                        HallId = hall.HallId,
+                        RowNumber = row,
+                        SeatNumber = number,
+                        Type = SeatType.Standard,
+                        Coefficient = 1.0f
+                    };
+
+                    await _unitOfWork.Seat.AddAsync(seat);
+                }
+            }
         }
     }
 }
