@@ -1,0 +1,179 @@
+﻿@model onlineCinema.ViewModels.MovieScheduleViewModel
+
+@{
+    ViewData["Title"] = Model.MovieTitle + " - Розклад";
+}
+
+<div class="container mt-5">
+    <!-- Секція заголовку фільму -->
+    <div class="row mb-5 align-items-center">
+        @if (!string.IsNullOrEmpty(Model.PosterUrl))
+        {
+            <div class="col-md-2">
+                <img src="@Model.PosterUrl" class="img-fluid rounded shadow" alt="@Model.MovieTitle">
+            </div>
+        }
+        <div class="col-md-10">
+            <h1 class="display-4 text-white fw-bold">@Model.MovieTitle</h1>
+            <p class="text-muted">
+                <i class="bi bi-clock"></i> @Model.Runtime хв • Жанр (можна додати)
+            </p>
+        </div>
+    </div>
+
+    <h3 class="text-white border-start border-danger border-4 ps-3 mb-4">Сеанси</h3>
+
+    @if (Model.Days == null || !Model.Days.Any())
+    {
+        <div class="alert alert-dark text-center py-5">
+            <h4 class="text-muted">На жаль, на цей фільм поки немає запланованих сеансів.</h4>
+            <a asp-action="Index" class="btn btn-outline-danger mt-3">Повернутися до списку фільмів</a>
+        </div>
+    }
+    else
+    {
+        <!-- Перемикач дат (Таби) -->
+        <ul class="nav nav-pills mb-4 d-flex gap-2" id="pills-tab" role="tablist">
+            @foreach (var day in Model.Days)
+            {
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link py-2 px-4 @(day.IsActive ? "active" : "")"
+                            id="tab-@day.TabId"
+                            data-bs-toggle="pill"
+                            data-bs-target="#@day.TabId"
+                            type="button"
+                            role="tab"
+                            aria-controls="@day.TabId"
+                            aria-selected="@(day.IsActive ? "true" : "false")">
+                        @day.DateLabel
+                    </button>
+                </li>
+            }
+        </ul>
+
+        <!-- Контент табів (Список сеансів) -->
+        <div class="tab-content" id="pills-tabContent">
+            @foreach (var day in Model.Days)
+            {
+                <div class="tab-pane fade @(day.IsActive ? "show active" : "")"
+                     id="@day.TabId"
+                     role="tabpanel"
+                     aria-labelledby="tab-@day.TabId">
+
+                    <div class="row g-3">
+                        @foreach (var session in day.Sessions)
+                        {
+                            <div class="col-12">
+                                <div class="card bg-dark text-white border-secondary hover-shadow">
+                                    <div class="card-body d-flex justify-content-between align-items-center py-3">
+                                        <!-- Ліва частина: Час та Зал -->
+                                        <div>
+                                            <div class="d-flex align-items-center gap-3">
+                                                <h4 class="mb-0 fw-bold">@session.Time</h4>
+                                                <div>
+                                                    <span class="text-muted small d-block">@session.HallName</span>
+                                                    <div class="mt-1">
+                                                        @foreach (var feature in session.Features)
+                                                        {
+                                                            <span class="badge bg-secondary opacity-75 me-1" style="font-size: 0.7rem;">@feature</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Права частина: Ціна та Кнопка -->
+                                        <div class="text-end d-flex align-items-center gap-4">
+                                            <div>
+                                                <span class="text-muted small d-block">Ціна від</span>
+                                                <span class="fw-bold fs-5">@session.Price</span>
+                                            </div>
+                                            <a asp-controller="Booking"
+                                               asp-action="SelectSeats"
+                                               asp-route-sessionId="@session.SessionId"
+                                               class="btn btn-light px-4 fw-bold shadow-sm">
+                                                Обрати
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Styles {
+    <style>
+        body {
+            background-color: #0f0f0f;
+        }
+
+        .nav-pills .nav-link {
+            border-radius: 8px;
+            background-color: #1a1a1a;
+            border: 1px solid #333;
+            transition: all 0.3s ease;
+            color: white !important;
+        }
+
+            .nav-pills .nav-link.active {
+                background-color: #e50914 !important;
+                border-color: #e50914;
+                color: white !important;
+            }
+
+            .nav-pills .nav-link:hover {
+                color: white !important;
+                background-color: #333;
+            }
+
+        .card {
+            background-color: #1a1a1a !important;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .card:hover {
+            background-color: #252525 !important;
+            transform: translateY(-2px);
+            border-color: #444;
+        }
+
+        .btn-light {
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .btn-light:hover {
+            background-color: #e50914;
+            color: white;
+            border-color: #e50914;
+        }
+
+        .badge {
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .card {
+            background-color: #1a1a1a !important;
+            border: none !important;
+            box-shadow: none !important;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+            .card:hover {
+                background-color: #252525 !important;
+                transform: translateY(-2px);
+                border: 1px solid #444 !important;
+            }
+
+        footer {
+            display: none !important;
+        }
+
+    </style>
+}

@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Domain.Enums;
 
@@ -13,178 +13,162 @@ namespace onlineCinema.Infrastructure.Data
     {
         public static async Task Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
-            //context.Tickets.RemoveRange(context.Tickets);
-            //context.Bookings.RemoveRange(context.Bookings);
-            //context.Sessions.RemoveRange(context.Sessions);
-            //context.Seats.RemoveRange(context.Seats);
-            //context.Halls.RemoveRange(context.Halls);
-            //context.Cinemas.RemoveRange(context.Cinemas);
-            //context.Movies.RemoveRange(context.Movies);
-            //context.Snacks.RemoveRange(context.Snacks);
+            // --- 1. ОЧИЩЕННЯ БАЗИ ДАНИХ (Твій перевірений метод) ---
+            await context.Database.ExecuteSqlRawAsync("EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'");
 
-            if (!context.Features.Any())
+            try
             {
-                context.Features.AddRange(new List<Feature>
-                {
-                    new Feature { Name = "IMAX", Description = "Величезний екран та кришталево чисте зображення" },
-                    new Feature { Name = "Dolby Atmos", Description = "Революційна система об'ємного звуку" },
-                    new Feature { Name = "3D", Description = "Підтримка перегляду в 3D окулярах" },
-                    new Feature { Name = "4DX", Description = "Рухомі крісла та ефекти навколишнього середовища" },
-                    new Feature { Name = "VIP-крісла", Description = "Крісла-реклайнери з підвищеним комфортом" },
-                    new Feature { Name = "Laser", Description = "Лазерна проекція високої чіткості" }
-                });
-                await context.SaveChangesAsync();
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Tickets]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [SnackBooking]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Bookings]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Payments]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Sessions]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Seats]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [MovieGenre]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [MovieCast]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [DirectorMovie]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [LanguageMovie]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [MovieFeature]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [HallFeature]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Movies]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Halls]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Cinemas]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Snacks]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Features]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Genres]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [CastMembers]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Directors]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [Languages]");
+                await context.Database.ExecuteSqlRawAsync("DELETE FROM [AspNetUsers]");
+
+                await context.Database.ExecuteSqlRawAsync("EXEC sp_MSforeachtable 'IF OBJECTPROPERTY(OBJECT_ID(''?''), ''TableHasIdentity'') = 1 DBCC CHECKIDENT (''?'', RESEED, 0)'");
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Помилка при очищенні: {ex.Message}");
+            }
+            finally
+            {
+                await context.Database.ExecuteSqlRawAsync("EXEC sp_MSforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'");
             }
 
-            // Видаляємо тестового користувача, якщо він існує
-            var existingUser = await userManager.FindByEmailAsync("test@user.com");
-            if (existingUser != null)
+            // --- 2. ЗАПОВНЕННЯ ДАНИМИ ---
+
+            var features = new List<Feature>
             {
-                await userManager.DeleteAsync(existingUser);
-            }
+                new Feature { Name = "IMAX", Description = "Величезний екран" },
+                new Feature { Name = "Dolby Atmos", Description = "Об'ємний звук" },
+                new Feature { Name = "VIP-крісла", Description = "Реклайнери" }
+            };
+            await context.Features.AddRangeAsync(features);
+
+            await context.Snacks.AddRangeAsync(new List<Snack>
+            {
+                new Snack { SnackName = "Попкорн Солоний (L)", Price = 150.00m },
+                new Snack { SnackName = "Coca-Cola 0.5", Price = 60.00m },
+                new Snack { SnackName = "Nachos з сиром", Price = 140.00m }
+            });
+
+            var genres = new List<Genre> { new Genre { GenreName = "Science Fiction" }, new Genre { GenreName = "Action" }, new Genre { GenreName = "Biography" } };
+            await context.Genres.AddRangeAsync(genres);
+
+            var directors = new List<Director> { new Director { DirectorFirstName = "Denis", DirectorLastName = "Villeneuve" }, new Director { DirectorFirstName = "Christopher", DirectorLastName = "Nolan" } };
+            await context.Directors.AddRangeAsync(directors);
+
+            var cast = new List<CastMember> { new CastMember { CastFirstName = "Timothée", CastLastName = "Chalamet" }, new CastMember { CastFirstName = "Cillian", CastLastName = "Murphy" } };
+            await context.CastMembers.AddRangeAsync(cast);
 
             await context.SaveChangesAsync();
-            if (!context.Snacks.Any())
-            {
-                context.Snacks.AddRange(new List<Snack>
-                {
-                    new Snack { SnackName = "Попкорн Солоний (L)", Price = 150.00m },
-                    new Snack { SnackName = "Попкорн Сирний (M)", Price = 120.00m },
-                    new Snack { SnackName = "Coca-Cola 0.5", Price = 60.00m },
-                    new Snack { SnackName = "Nachos з сиром", Price = 140.00m }
-                });
-                await context.SaveChangesAsync();
-            }
 
-            if (context.Cinemas.Any())
-            {
-                return;
-            }
+            // --- 3. ФІЛЬМИ ---
 
-            // 2. Створюємо Кінотеатр
-            var cinema = new Cinema
+            var duneMovie = new Movie
             {
-                CinemaName = "Київська Русь",
-                City = "Київ",
-                Street = "Січових Стрільців",
-                Building = 93,
-                TimeOpen = new TimeSpan(9, 0, 0),
-                TimeClose = new TimeSpan(23, 0, 0)
+                Title = "Дюна: Частина друга",
+                Status = MovieStatus.Released,
+                AgeRating = AgeRating.Age12,
+                Runtime = 166,
+                ReleaseDate = new DateTime(2024, 2, 29),
+                TrailerLink = "https://www.youtube.com/watch?v=Way9Dexny3w",
+                Description = "Пол Атрід об'єднується з Чані та фрименами...",
+                PosterImage = "/images/movies/dune2.jpg"
             };
+            var oppenheimerMovie = new Movie
+            {
+                Title = "Оппенгеймер",
+                Status = MovieStatus.Released,
+                AgeRating = AgeRating.Age16,
+                Runtime = 180,
+                ReleaseDate = new DateTime(2023, 7, 20),
+                TrailerLink = "https://www.youtube.com/watch?v=uYPbbksJxIg",
+                Description = "Історія створення атомної бомби.",
+                PosterImage = "/images/movies/oppenheimer.jpg"
+            };
+            await context.Movies.AddRangeAsync(duneMovie, oppenheimerMovie);
+            await context.SaveChangesAsync();
+
+            // Зв'язки
+            duneMovie.MovieGenres.Add(new MovieGenre { GenreId = genres[0].GenreId });
+            oppenheimerMovie.MovieGenres.Add(new MovieGenre { GenreId = genres[2].GenreId });
+
+            // --- 4. КІНОТЕАТР ТА ЗАЛ ---
+
+            var cinema = new Cinema { CinemaName = "CinePrime Plaza", City = "Kyiv", Street = "Khreshchatyk", Building = 22, TimeOpen = new TimeSpan(9, 0, 0), TimeClose = new TimeSpan(23, 59, 0) };
             context.Cinemas.Add(cinema);
             await context.SaveChangesAsync();
 
-            // 3. Створюємо Зал
-            var hall = new Hall
-            {
-                CinemaId = cinema.CinemaId,
-                HallNumber = 1,
-                RowCount = 5,
-                SeatInRowCount = 8
-            };
+            var hall = new Hall { CinemaId = cinema.CinemaId, HallNumber = 1, RowCount = 8, SeatInRowCount = 12 };
             context.Halls.Add(hall);
             await context.SaveChangesAsync();
 
-            // 4. ГЕНЕРУЄМО МІСЦЯ (Найважливіше!)
-            // Робимо 5 рядів по 8 місць
+            // Місця
             var seats = new List<Seat>();
-            for (byte row = 1; row <= hall.RowCount; row++)
-            {
-                for (byte number = 1; number <= hall.SeatInRowCount; number++)
-                {
-                    var seat = new Seat
-                    {
-                        HallId = hall.HallId,
-                        RowNumber = row,
-                        SeatNumber = number,
-                        Type = SeatType.Standard,
-                        Coefficient = 1.0f
-                    };
+            for (byte r = 1; r <= hall.RowCount; r++)
+                for (byte n = 1; n <= hall.SeatInRowCount; n++)
+                    seats.Add(new Seat { HallId = hall.HallId, RowNumber = r, SeatNumber = n, Type = r > 6 ? SeatType.VIP : SeatType.Standard, Coefficient = r > 6 ? 1.5f : 1.0f });
 
-                    // Зробимо 5-й ряд VIP місцями
-                    if (row == 5)
-                    {
-                        seat.Type = SeatType.VIP;
-                        seat.Coefficient = 1.5f;
-                    }
-
-                    seats.Add(seat);
-                }
-            }
             context.Seats.AddRange(seats);
             await context.SaveChangesAsync();
 
-            // 5. Створюємо Фільм
-            var movie = new Movie
+            // --- 5. ГЕНЕРАЦІЯ БАГАТЬОХ СЕАНСІВ (на 7 днів) ---
+
+            var sessions = new List<Session>();
+            var today = DateTime.Now.Date;
+
+            for (int i = 0; i < 7; i++)
             {
-                Title = "Дюна: Частина Друга",
-                Description = "Пол Атрід об'єднується з Чані та фрименами...",
-                Runtime = 166,
-                ReleaseDate = DateTime.Now.AddDays(-10),
-                Status = MovieStatus.Released,
-                AgeRating = AgeRating.Age12
-            };
-            context.Movies.Add(movie);
+                var date = today.AddDays(i);
+
+                // Сеанси для Дюни
+                sessions.Add(new Session { MovieId = duneMovie.Id, HallId = hall.HallId, ShowingDateTime = date.AddHours(10).AddMinutes(0), BasePrice = 160 });
+                sessions.Add(new Session { MovieId = duneMovie.Id, HallId = hall.HallId, ShowingDateTime = date.AddHours(14).AddMinutes(30), BasePrice = 190 });
+                sessions.Add(new Session { MovieId = duneMovie.Id, HallId = hall.HallId, ShowingDateTime = date.AddHours(19).AddMinutes(0), BasePrice = 220 });
+                sessions.Add(new Session { MovieId = duneMovie.Id, HallId = hall.HallId, ShowingDateTime = date.AddHours(22).AddMinutes(15), BasePrice = 180 });
+
+                // Сеанси для Оппенгеймера
+                sessions.Add(new Session { MovieId = oppenheimerMovie.Id, HallId = hall.HallId, ShowingDateTime = date.AddHours(12).AddMinutes(0), BasePrice = 150 });
+                sessions.Add(new Session { MovieId = oppenheimerMovie.Id, HallId = hall.HallId, ShowingDateTime = date.AddHours(17).AddMinutes(0), BasePrice = 200 });
+                sessions.Add(new Session { MovieId = oppenheimerMovie.Id, HallId = hall.HallId, ShowingDateTime = date.AddHours(21).AddMinutes(45), BasePrice = 210 });
+            }
+
+            await context.Sessions.AddRangeAsync(sessions);
             await context.SaveChangesAsync();
 
-            // 6. Створюємо Сеанс (На завтра)
-            var session = new Session
-            {
-                MovieId = movie.Id,
-                HallId = hall.HallId,
-                ShowingDateTime = DateTime.Now.AddDays(10).Date.AddHours(19), // Завтра о 19:00
-                BasePrice = 200.00m
-            };
-            context.Sessions.Add(session);
-            await context.SaveChangesAsync();
+            // --- 6. КОРИСТУВАЧІ ТА ТЕСТОВА БРОНЬ ---
 
-            // 7. Створюємо Тестового Юзера (для імітації зайнятих місць)
-            var user1 = new ApplicationUser
-            {
-                UserName = "user1@test.com",
-                Email = "user1@test.com",
-                FirstName = "Користувач",
-                LastName = "Один",
-                DateOfBirth = new DateTime(1990, 1, 1),
-                EmailConfirmed = true
-            };
+            var user1 = new ApplicationUser { UserName = "user1@test.com", Email = "user1@test.com", FirstName = "Ivan", LastName = "User", EmailConfirmed = true, DateOfBirth = new DateTime(1995, 1, 1) };
             await userManager.CreateAsync(user1, "Pa$$w0rd");
 
-            // Користувач 2
-            var user2 = new ApplicationUser
-            {
-                UserName = "user2@test.com",
-                Email = "user2@test.com",
-                FirstName = "Користувач",
-                LastName = "Два",
-                DateOfBirth = new DateTime(1995, 1, 1),
-                EmailConfirmed = true
-            };
-            await userManager.CreateAsync(user2, "Pa$$w0rd");
-
-            // 8. Створюємо Бронь (Імітуємо, що хтось вже купив квитки)
-            var booking = new Booking
-            {
-                ApplicationUserId = user1.Id,
-                CreatedDateTime = DateTime.Now,
-                EmailAddress = user1.Email
-            };
-            context.Bookings.Add(booking);
+            var booking = new Booking { ApplicationUserId = user1.Id, CreatedDateTime = DateTime.Now, EmailAddress = user1.Email };
+            await context.Bookings.AddAsync(booking);
             await context.SaveChangesAsync();
 
-            // Займемо 1 ряд, місця 3 і 4
-            var bookedSeats = seats.Where(s => s.RowNumber == 1 && (s.SeatNumber == 3 || s.SeatNumber == 4)).ToList();
+            // Бронюємо місця на перший сеанс Дюни сьогодні
+            var targetSession = sessions.First(s => s.MovieId == duneMovie.Id);
+            var bookedSeats = seats.Where(s => s.RowNumber == 4 && (s.SeatNumber == 5 || s.SeatNumber == 6)).ToList();
+            foreach (var s in bookedSeats)
+                context.Tickets.Add(new Ticket { SessionId = targetSession.SessionId, SeatId = s.SeatId, BookingId = booking.BookingId, Price = targetSession.BasePrice });
 
-            foreach (var seat in bookedSeats)
-            {
-                context.Tickets.Add(new Ticket
-                {
-                    SessionId = session.SessionId,
-                    SeatId = seat.SeatId,
-                    BookingId = booking.BookingId,
-                    Price = session.BasePrice // Ціна квитка
-                });
-            }
             await context.SaveChangesAsync();
         }
     }

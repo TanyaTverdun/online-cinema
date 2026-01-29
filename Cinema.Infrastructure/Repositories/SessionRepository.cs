@@ -23,8 +23,10 @@ namespace onlineCinema.Infrastructure.Repositories
         {
             return await _db.Sessions
                 .Where(s => s.MovieId == movieId && s.ShowingDateTime > DateTime.Now)
-                .Include(s => s.Hall) 
-                .OrderBy(s => s.ShowingDateTime) 
+                .Include(s => s.Hall)
+                    .ThenInclude(hf => hf.HallFeatures)
+                        .ThenInclude(f => f.Feature)
+                .OrderBy(s => s.ShowingDateTime)
                 .ToListAsync();
         }
 

@@ -11,6 +11,8 @@ using onlineCinema.Mapping;
 using FluentValidation;
 using onlineCinema.Validators;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using Microsoft.AspNetCore.Localization;
+using System.Globalization;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +34,9 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddScoped<PaymentMapper>();
+builder.Services.AddScoped<MovieScheduleViewModelMapper>();
+builder.Services.AddSingleton<SessionMapper>();
+builder.Services.AddSingleton<PaymentMapper>();
 builder.Services.AddSingleton<BookingMapper>();
 builder.Services.AddSingleton<SnackMapper>();
 builder.Services.AddSingleton<BookingViewModelMapper>();
@@ -43,6 +47,7 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
+builder.Services.AddScoped<ISessionService, SessionService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<BookingInputViewModelValidator>();
 
@@ -68,6 +73,15 @@ using (var scope = app.Services.CreateScope())
     }
 }
 ////////////////////////////////////////////////////////////////////
+
+// Налаштування локалізації
+var supportedCultures = new[] { new CultureInfo("uk-UA") };
+app.UseRequestLocalization(new RequestLocalizationOptions
+{
+    DefaultRequestCulture = new RequestCulture("uk-UA"),
+    SupportedCultures = supportedCultures,
+    SupportedUICultures = supportedCultures
+});
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
