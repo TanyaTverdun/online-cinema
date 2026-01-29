@@ -2,25 +2,24 @@
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.ViewModels;
 using onlineCinema.Mapping;
-using Microsoft.AspNetCore.Authorization;
 namespace onlineCinema.Controllers
 {
     //[Authorize(Roles = "Admin")]
     public class AdminSessionsController : Controller
     {
         private readonly ISessionService _sessionService;
+        private readonly SessionViewModelMapper _sessionMapper;
 
-        public AdminSessionsController(ISessionService sessionService)
+        public AdminSessionsController(ISessionService sessionService, SessionViewModelMapper sessionMapper)
         {
             _sessionService = sessionService;
+            _sessionMapper = sessionMapper;
         }
 
         public IActionResult Index()
         {
             return View();
         }
-
-        // ================= CREATE =================
 
         [HttpGet]
         public IActionResult Create()
@@ -32,11 +31,14 @@ namespace onlineCinema.Controllers
         public async Task<IActionResult> Create(SessionCreateViewModel vm)
         {
             if (!ModelState.IsValid)
+            {
                 return View(vm);
+            }
 
             try
             {
-                await _sessionService.CreateSessionAsync(vm.ToDto());
+                var dto = _sessionMapper.MapToCreateDto(vm);
+                await _sessionService.CreateSessionAsync(dto);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -46,28 +48,28 @@ namespace onlineCinema.Controllers
             }
         }
 
-        // ================= EDIT =================
-
-        // ✅ ВІДКРИТИ СТОРІНКУ
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             var session = await _sessionService.GetByIdAsync(id);
 
             if (session == null)
+            {
                 return NotFound();
+            }
 
-            var vm = session.ToEditViewModel();
+            var editViewModel = _sessionMapper.MapToEditViewModel(session);
 
-            return View(vm);
+            return View(editViewModel);
         }
 
-        // ✅ ЗБЕРЕГТИ ЗМІНИ
         [HttpPost]
         public async Task<IActionResult> Edit(SessionEditViewModel model)
         {
             if (!ModelState.IsValid)
+            {
                 return View(model);
+            }
 
             var conflict = await _sessionService.HallHasSessionAtTime(
                 model.HallId,
@@ -83,7 +85,8 @@ namespace onlineCinema.Controllers
                 return View(model);
             }
 
-            await _sessionService.UpdateSessionAsync(model.ToDto());
+            var updateDto = _sessionMapper.MapToUpdateDto(model);
+            await _sessionService.UpdateSessionAsync(updateDto);
 
             return RedirectToAction(nameof(Index));
         }

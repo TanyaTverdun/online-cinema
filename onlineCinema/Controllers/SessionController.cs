@@ -38,21 +38,5 @@ namespace onlineCinema.Controllers
                 return NotFound();
             }
         }
-        public async Task<IActionResult> Edit(int id)
-        {
-            var session = await _sessionService.GetByIdAsync(id);
-
-            var vm = new SessionEditViewModel
-            {
-                Id = session.Id,
-                MovieId = session.MovieId,
-                HallId = session.HallId,
-                ShowingDateTime = session.ShowingDateTime,
-                BasePrice = session.BasePrice
-            };
-
-            return View(vm);
-        }
-
     }
 }

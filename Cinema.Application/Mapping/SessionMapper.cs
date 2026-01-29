@@ -8,17 +8,11 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class SessionMapper
     {
-
-        public Session MapToSession(SessionCreateDto dto)
-        {
-            return new Session
-            {
-                MovieId = dto.MovieId,
-                HallId = dto.HallId,
-                ShowingDateTime = dto.ShowingDateTime,
-                BasePrice = dto.BasePrice
-            };
-        }
+        [MapperIgnoreTarget(nameof(Session.SessionId))]
+        [MapperIgnoreTarget(nameof(Session.Movie))]
+        [MapperIgnoreTarget(nameof(Session.Hall))]
+        [MapperIgnoreTarget(nameof(Session.Tickets))]
+        public partial Session MapToSession(SessionCreateDto dto);
             
         public MovieScheduleDto MapToMovieSchedule(
             Movie movie,
@@ -59,5 +53,11 @@ namespace onlineCinema.Application.Mapping
             => hallFeatures
                 .Select(hf => hf.Feature.Name)
                 .ToList();
+
+        [MapProperty(nameof(Session.SessionId), nameof(SessionDto.Id))]
+        public partial SessionDto MapToDto(Session session);
+
+        [MapperIgnoreTarget(nameof(Session.Tickets))]
+        public partial void UpdateEntityFromDto(SessionUpdateDto dto, Session session);
     }
 }

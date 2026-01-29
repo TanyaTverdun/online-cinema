@@ -27,11 +27,10 @@ namespace onlineCinema.Infrastructure.Repositories
         public async Task<IEnumerable<Session>> GetFutureSessionsByMovieIdAsync(int movieId)
         {
             return await _db.Sessions
-                .Include(s => s.Movie)
+                .Where(s => s.MovieId == movieId && s.ShowingDateTime > DateTime.Now)
                 .Include(s => s.Hall)
-                .Where(s =>
-                    s.MovieId == movieId &&
-                    s.ShowingDateTime > DateTime.Now)
+                    .ThenInclude(hf => hf.HallFeatures)
+                        .ThenInclude(f => f.Feature)
                 .OrderBy(s => s.ShowingDateTime)
                 .ToListAsync();
         }
@@ -49,8 +48,8 @@ namespace onlineCinema.Infrastructure.Repositories
             DateTime showingDateTime,
             int movieDurationMinutes)
         {
-            var newSessionEnd =
-                showingDateTime.AddMinutes(movieDurationMinutes);
+            var newSessionEnd = showingDateTime
+                .AddMinutes(movieDurationMinutes);
 
             return await _db.Sessions
                 .Include(s => s.Movie)
@@ -63,10 +62,10 @@ namespace onlineCinema.Infrastructure.Repositories
         }
 
         public async Task<bool> HallHasSessionAtTimeAsync(
-      int hallId,
-      DateTime showingDateTime,
-      int movieDurationMinutes,
-      int excludeSessionId = 0)
+            int hallId,
+            DateTime showingDateTime,
+            int movieDurationMinutes,
+            int excludeSessionId = 0)
         {
             var newEnd = showingDateTime.AddMinutes(movieDurationMinutes);
             var date = showingDateTime.Date;
@@ -76,7 +75,7 @@ namespace onlineCinema.Infrastructure.Repositories
                 .Where(s =>
                     s.HallId == hallId &&
                     s.SessionId != excludeSessionId &&
-                    s.ShowingDateTime.Date == date   // 🔥 КЛЮЧОВЕ
+                    s.ShowingDateTime.Date == date
                 )
                 .AnyAsync(s =>
                     showingDateTime < s.ShowingDateTime.AddMinutes(s.Movie.Runtime) &&

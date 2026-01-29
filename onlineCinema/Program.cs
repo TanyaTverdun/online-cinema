@@ -60,23 +60,6 @@ builder.Services.AddFluentValidationAutoValidation();
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<ApplicationDbContext>();
-        var userManager = services.GetRequiredService<UserManager<ApplicationUser>>();
-
-        await DbInitializer.Initialize(context, userManager);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Сталася помилка під час заповнення БД.");
-    }
-}
-
 var supportedCultures = new[] { new CultureInfo("uk-UA") };
 app.UseRequestLocalization(new RequestLocalizationOptions
 {
