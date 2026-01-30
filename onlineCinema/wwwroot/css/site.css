@@ -1,22 +1,189 @@
-html {
-  font-size: 14px;
+/* ================================
+   DESIGN TOKENS
+================================ */
+
+:root {
+    --bg-main: #000000;
+    --bg-secondary: #0d0d0d;
+    --bg-card: #181818;
+    --text-main: #ffffff;
+    --text-muted: #9a9a9a;
+    --accent: #e50914;
+    --accent-hover: #ff2a2a;
+    --border-soft: rgba(255,255,255,0.08);
 }
 
-@media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
-}
+/* ================================
+   BASE
+================================ */
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+    height: 100%;
+    margin: 0;
 }
 
 body {
-  margin-bottom: 60px;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    font-family: "Segoe UI", Tahoma, sans-serif;
+}
+
+/* ================================
+   LINKS
+================================ */
+
+a {
+    color: var(--text-muted);
+    text-decoration: none;
+}
+
+    a:hover {
+        color: var(--accent);
+    }
+
+/* ================================
+   NAVBAR
+================================ */
+
+.navbar {
+    background-color: var(--bg-main) !important;
+}
+
+.nav-gray {
+    color: var(--text-muted) !important;
+    font-weight: 500;
+}
+
+    .nav-gray:hover {
+        color: var(--accent) !important;
+    }
+
+.navbar .nav-link {
+    color: var(--text-muted) !important;
+}
+
+    .navbar .nav-link:hover {
+        color: var(--accent) !important;
+    }
+
+/* ================================
+   BUTTONS
+================================ */
+
+.btn-primary {
+    background-color: var(--accent);
+    border-color: var(--accent);
+}
+
+    .btn-primary:hover {
+        background-color: var(--accent-hover);
+        border-color: var(--accent-hover);
+    }
+
+.btn-outline-light {
+    color: var(--text-muted);
+    border-color: var(--border-soft);
+}
+
+    .btn-outline-light:hover {
+        background-color: var(--accent);
+        border-color: var(--accent);
+        color: #fff;
+    }
+
+/* ================================
+   CARDS (Movies, Admin, Details)
+================================ */
+
+.card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft);
+    color: var(--text-main);
+}
+
+.card-title {
+    color: #fff;
+}
+
+.card-text {
+    color: var(--text-muted);
+}
+
+/* Movie posters */
+.movie-poster {
+    border-radius: 6px;
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+    .movie-poster:hover {
+        transform: scale(1.03);
+        box-shadow: 0 10px 30px rgba(229, 9, 20, 0.35);
+    }
+
+/* ================================
+   TABLES (Admin, Sessions)
+================================ */
+
+.table {
+    color: var(--text-main);
+}
+
+    .table thead {
+        background-color: var(--bg-secondary);
+    }
+
+    .table th,
+    .table td {
+        border-color: var(--border-soft);
+    }
+
+.table-hover tbody tr:hover {
+    background-color: rgba(229, 9, 20, 0.08);
+}
+
+/* ================================
+   FORMS (Login, Register, CRUD)
+================================ */
+
+.form-control,
+.form-select {
+    background-color: #0f0f0f;
+    color: #fff;
+    border: 1px solid var(--border-soft);
+}
+
+    .form-control::placeholder {
+        color: #777;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        background-color: #0f0f0f;
+        color: #fff;
+        box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.5);
+        border-color: var(--accent);
+    }
+
+/* ================================
+   FOOTER
+================================ */
+
+footer {
+    background-color: var(--bg-main);
+}
+
+    footer a:hover {
+        color: #ffffff !important;
+    }
+
+/* ================================
+   UTILS
+================================ */
+
+.text-muted {
+    color: var(--text-muted) !important;
+}
+
+.border-soft {
+    border-color: var(--border-soft) !important;
 }
