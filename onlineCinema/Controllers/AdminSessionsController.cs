@@ -26,16 +26,15 @@ namespace onlineCinema.Controllers
             var sessionDtos = await _sessionService.GetAllSessionsAsync();
             var viewModels = _sessionMapper.MapToListViewModelList(sessionDtos);
 
-            return View(viewModels);
+            return View("AllSessions", viewModels);
         }
 
         [HttpGet]
         public async Task<IActionResult> Create()
         {
             var viewModel = new SessionCreateViewModel();
-            // Зберігаємо цей виклик
             await PopulateViewModelDropdowns(viewModel);
-            return View(viewModel);
+            return View("CreateSession", viewModel);
         }
 
         [HttpPost]
@@ -44,7 +43,7 @@ namespace onlineCinema.Controllers
             if (!ModelState.IsValid)
             {
                 await PopulateViewModelDropdowns(vm);
-                return View(vm);
+                return View("CreateSession", vm);
             }
 
             try
@@ -57,14 +56,14 @@ namespace onlineCinema.Controllers
                 ModelState.AddModelError("ShowingDateTime", ex.Message);
 
                 await PopulateViewModelDropdowns(vm);
-                return View(vm);
+                return View("CreateSession", vm);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
 
                 await PopulateViewModelDropdowns(vm);
-                return View(vm);
+                return View("CreateSession", vm);
             }
         }
 
@@ -81,7 +80,7 @@ namespace onlineCinema.Controllers
 
             await PopulateViewModelDropdowns(editViewModel);
 
-            return View(editViewModel);
+            return View("EditSession", editViewModel);
         }
 
         [HttpPost]
@@ -95,7 +94,7 @@ namespace onlineCinema.Controllers
             if (!ModelState.IsValid)
             {
                 await PopulateViewModelDropdowns(model);
-                return View(model);
+                return View("EditSession", model);
             }
 
             var conflict = await _sessionService.HallHasSessionAtTime(
@@ -109,7 +108,7 @@ namespace onlineCinema.Controllers
                 ModelState.AddModelError("ShowingDateTime", "У цьому залі вже є інший сеанс у цей час");
 
                 await PopulateViewModelDropdowns(model);
-                return View(model);
+                return View("EditSession", model);
             }
 
             var updateDto = _sessionMapper.MapToUpdateDto(model);
@@ -139,7 +138,6 @@ namespace onlineCinema.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                // Помилка бізнес-логіки (наприклад, є квитки)
                 TempData["ErrorMessage"] = ex.Message;
             }
             catch (Exception)
