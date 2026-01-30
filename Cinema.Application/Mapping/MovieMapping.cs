@@ -16,6 +16,7 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Movie.MovieGenres), nameof(MovieCardDto.GenreSummary), Use = nameof(MapGenreSummary))]
         [MapProperty(nameof(Movie.ReleaseDate), nameof(MovieCardDto.ReleaseYear), Use = nameof(MapReleaseYear))]
         [MapProperty(nameof(Movie.AgeRating), nameof(MovieCardDto.AgeRating))]
+        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieCardDto.Features), Use = nameof(MapFeaturesList))] 
         public partial MovieCardDto ToCardDto(Movie movie);
 
         [MapProperty(nameof(Movie.PosterImage), nameof(MovieDetailsDto.PosterUrl), Use = nameof(MapPosterUrl))]
@@ -23,6 +24,7 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Movie.MovieCasts), nameof(MovieDetailsDto.Actors), Use = nameof(MapActorsList))]
         [MapProperty(nameof(Movie.MovieDirectors), nameof(MovieDetailsDto.Directors), Use = nameof(MapDirectorsList))]
         [MapProperty(nameof(Movie.MovieLanguages), nameof(MovieDetailsDto.Languages), Use = nameof(MapLanguagesList))]
+        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieDetailsDto.Features), Use = nameof(MapFeaturesList))] 
         public partial MovieDetailsDto ToDetailsDto(Movie movie);
 
         [MapProperty(nameof(Movie.PosterImage), nameof(MovieFormDto.PosterUrl))]
@@ -30,6 +32,7 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Movie.MovieCasts), nameof(MovieFormDto.CastIds), Use = nameof(MapCastIds))]
         [MapProperty(nameof(Movie.MovieDirectors), nameof(MovieFormDto.DirectorIds), Use = nameof(MapDirectorIds))]
         [MapProperty(nameof(Movie.MovieLanguages), nameof(MovieFormDto.LanguageIds), Use = nameof(MapLanguageIds))]
+        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieFormDto.FeatureIds), Use = nameof(MapFeatureIds))]
         public partial MovieFormDto ToFormDto(Movie movie);
 
         public partial Movie ToEntity(MovieFormDto dto);
@@ -44,6 +47,10 @@ namespace onlineCinema.Application.Mapping
             movie.AgeRating = dto.AgeRating;
             movie.TrailerLink = dto.TrailerLink;
         }
+
+        [MapProperty(nameof(Feature.Id), nameof(FeatureDto.Id))]
+        [MapProperty(nameof(Feature.Name), nameof(FeatureDto.Name))]
+        public partial FeatureDto ToFeatureDto(Feature feature);
 
         [MapProperty(nameof(Genre.GenreId), nameof(GenreDto.Id))]
         [MapProperty(nameof(Genre.GenreName), nameof(GenreDto.Name))]
@@ -77,6 +84,9 @@ namespace onlineCinema.Application.Mapping
         private List<string> MapLanguagesList(ICollection<LanguageMovie> languages) =>
             languages.Select(ml => ml.Language.LanguageName).ToList();
 
+        private List<string> MapFeaturesList(ICollection<MovieFeature> features) =>
+            features?.Select(mf => mf.Feature.Name).ToList() ?? new List<string>();
+
         private List<int> MapGenreIds(ICollection<MovieGenre> genres) =>
             genres.Select(x => x.GenreId).ToList();
 
@@ -88,6 +98,9 @@ namespace onlineCinema.Application.Mapping
 
         private List<int> MapLanguageIds(ICollection<LanguageMovie> languages) =>
             languages.Select(x => x.LanguageId).ToList();
+
+        private List<int> MapFeatureIds(ICollection<MovieFeature> features) =>
+            features.Select(x => x.FeatureId).ToList();
 
         private int MapReleaseYear(DateTime date) => date.Year;
     }

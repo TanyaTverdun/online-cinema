@@ -30,6 +30,8 @@ namespace onlineCinema.Infrastructure.Repositories
                     .ThenInclude(md => md.Director)
                 .Include(m => m.MovieLanguages)
                     .ThenInclude(ml => ml.Language)
+                .Include(m => m.MovieFeatures)
+                    .ThenInclude(mf => mf.Feature)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
     }

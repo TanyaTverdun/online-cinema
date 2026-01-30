@@ -85,6 +85,12 @@
                                 <span asp-validation-for="LanguageIds" class="text-danger small"></span>
                                 <input asp-for="LanguagesInput" class="form-control mt-2 form-control-sm" placeholder="Add new language" />
                             </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Features (Technologies)</label>
+                                <select asp-for="FeatureIds" asp-items="Model.FeaturesList" class="form-select" multiple size="3"></select>
+                                <div class="form-text text-muted small">Hold Ctrl to select multiple</div>
+                                <input asp-for="FeaturesInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new (comma separated)" />
+                            </div>
                         </div>
                     </div>
                 </div>

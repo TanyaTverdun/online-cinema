@@ -13,6 +13,7 @@ namespace onlineCinema.Mapping
 
         [MapperIgnoreSource(nameof(MovieFormDto.Runtime))]
         private partial MovieFormViewModel MapToViewModelBase(MovieFormDto dto);
+
         public MovieFormDto ToDto(MovieFormViewModel viewModel)
         {
             var dto = MapToDtoBase(viewModel);
@@ -36,7 +37,11 @@ namespace onlineCinema.Mapping
         [MapProperty(nameof(MovieDropdownsDto.Actors), nameof(MovieFormViewModel.ActorsList))]
         [MapProperty(nameof(MovieDropdownsDto.Directors), nameof(MovieFormViewModel.DirectorsList))]
         [MapProperty(nameof(MovieDropdownsDto.Languages), nameof(MovieFormViewModel.LanguagesList))]
+        [MapProperty(nameof(MovieDropdownsDto.Features), nameof(MovieFormViewModel.FeaturesList))]
         public partial void Fill(MovieDropdownsDto dto, MovieFormViewModel vm);
+
+        private SelectListItem MapFeatureToItem(FeatureDto source)
+            => new SelectListItem(source.Name, source.Id.ToString());
 
         private SelectListItem MapGenreToItem(GenreDto source)
             => new SelectListItem(source.Name, source.Id.ToString());

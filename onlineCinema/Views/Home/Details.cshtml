@@ -52,7 +52,26 @@
                                 <small class="text-muted d-block mb-1">LANGUAGES</small>
                                 <span class="text-white">@string.Join(", ", Model.Languages)</span>
                             </div>
-                            <div class="col-12">
+                            <div class="col-6 mt-3">
+                                <small class="text-muted d-block mb-2">FEATURES</small>
+                                @if (Model.Features.Any())
+                                {
+                                    <div class="d-flex flex-wrap gap-2">
+                                        @foreach (var feature in Model.Features)
+                                        {
+                                            <span class="badge border border-secondary text-white px-3 py-2">
+                                                @feature
+                                            </span>
+                                        }
+                                    </div>
+                                }
+                                else
+                                {
+                                    <span class="badge border border-secondary text-white px-3 py-2 ">Standard Format</span>
+                                }
+                            </div>
+
+                            <div class="col-6 mt-3">
                                 <small class="text-muted d-block mb-1">CAST</small>
                                 <span class="text-white">@string.Join(", ", Model.Actors.Take(5))</span>
                             </div>

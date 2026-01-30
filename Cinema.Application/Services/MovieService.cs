@@ -77,6 +77,9 @@ namespace onlineCinema.Application.Services
             var languages = await _unitOfWork.Language.GetAllAsync();
             response.Languages = languages.Select(l => _mapper.ToLanguageDto(l)).ToList();
 
+            var features = await _unitOfWork.Feature.GetAllAsync();
+            response.Features = features.Select(f => _mapper.ToFeatureDto(f)).ToList();
+
             return response;
         }
 
@@ -93,6 +96,7 @@ namespace onlineCinema.Application.Services
             await ProcessActorsAsync(movie, model);
             await ProcessDirectorsAsync(movie, model);
             await ProcessLanguagesAsync(movie, model);
+            await ProcessFeaturesAsync(movie, model);
 
             await _unitOfWork.Movie.AddAsync(movie);
             await _unitOfWork.SaveAsync();
@@ -128,6 +132,9 @@ namespace onlineCinema.Application.Services
 
             movieFromDb.MovieLanguages.Clear();
             await ProcessLanguagesAsync(movieFromDb, model);
+
+            movieFromDb.MovieFeatures.Clear();
+            await ProcessFeaturesAsync(movieFromDb, model);
 
             _unitOfWork.Movie.Update(movieFromDb);
             await _unitOfWork.SaveAsync();
@@ -316,6 +323,35 @@ namespace onlineCinema.Application.Services
             if (File.Exists(imagePath))
             {
                 File.Delete(imagePath);
+            }
+        }
+        private async Task ProcessFeaturesAsync(Movie movie, MovieFormDto model)
+        {
+            var allIds = new HashSet<int>(model.FeatureIds);
+
+            if (!string.IsNullOrWhiteSpace(model.FeaturesInput))
+            {
+                var names = SplitInput(model.FeaturesInput);
+                foreach (var name in names)
+                {
+                    var existing = (await _unitOfWork.Feature.GetAllAsync(x => x.Name.ToLower() == name.ToLower())).FirstOrDefault();
+                    if (existing != null)
+                    {
+                        allIds.Add(existing.Id);
+                    }
+                    else
+                    {
+                        var newEntity = new Feature { Name = name };
+                        await _unitOfWork.Feature.AddAsync(newEntity);
+                        await _unitOfWork.SaveAsync();
+                        allIds.Add(newEntity.Id);
+                    }
+                }
+            }
+
+            foreach (var id in allIds)
+            {
+                movie.MovieFeatures.Add(new MovieFeature { FeatureId = id });
             }
         }
     }

@@ -81,6 +81,14 @@
                             <p class="card-text text-muted small mb-3">
                                 @movie.GenreSummary
                             </p>
+                            <div class="mb-3">
+                                @foreach (var feature in movie.Features.Take(3)) 
+                                {
+                                    <span class="badge bg-secondary bg-opacity-25 text-white me-1 border border-secondary border-opacity-25" style="font-size: 0.7em;">
+                                        @feature
+                                    </span>
+                                }
+                            </div>
                             <a asp-action="Details" asp-route-id="@movie.Id"
                                class="btn btn-sm btn-primary w-100">
                                 Buy Ticket

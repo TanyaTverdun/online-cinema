@@ -28,7 +28,10 @@ namespace onlineCinema.Areas.Admin.Models
         public string? ActorsInput { get; set; }
         public string? DirectorsInput { get; set; }
         public string? LanguagesInput { get; set; }
+        public List<int> FeatureIds { get; set; } = new();
+        public string? FeaturesInput { get; set; }
 
+        public IEnumerable<SelectListItem> FeaturesList { get; set; } = Enumerable.Empty<SelectListItem>();
         public IEnumerable<SelectListItem> GenresList { get; set; } = Enumerable.Empty<SelectListItem>();
         public IEnumerable<SelectListItem> ActorsList { get; set; } = Enumerable.Empty<SelectListItem>();
         public IEnumerable<SelectListItem> DirectorsList { get; set; } = Enumerable.Empty<SelectListItem>();

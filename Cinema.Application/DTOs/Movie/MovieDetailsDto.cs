@@ -24,5 +24,6 @@ namespace onlineCinema.Application.DTOs.Movie
         public List<string> Directors { get; set; } = new List<string>();
         public List<string> Actors { get; set; } = new List<string>();
         public List<string> Languages { get; set; } = new List<string>();
+        public List<string> Features { get; set; } = new();
     }
 }
