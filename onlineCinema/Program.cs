@@ -40,6 +40,7 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
 builder.Services.AddControllersWithViews();
 
 builder.Services.AddScoped<MovieScheduleViewModelMapper>();
+builder.Services.AddSingleton<MovieMapper>();
 builder.Services.AddSingleton<SessionMapper>();
 builder.Services.AddSingleton<PaymentMapper>();
 builder.Services.AddSingleton<BookingMapper>();
@@ -48,15 +49,20 @@ builder.Services.AddSingleton<BookingViewModelMapper>();
 builder.Services.AddSingleton<SnackViewModelMapper>();
 builder.Services.AddSingleton<HallMapper>();
 builder.Services.AddSingleton<HallViewModelMapper>();
+builder.Services.AddSingleton<SessionViewModelMapper>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IMovieService, MovieService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<BookingInputViewModelValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<SessionCreateViewModelValidator>();
+
 builder.Services.AddFluentValidationAutoValidation();
+FluentValidation.AspNetCore.FluentValidationMvcExtensions.AddFluentValidationClientsideAdapters(builder.Services);
 
 var app = builder.Build();
 

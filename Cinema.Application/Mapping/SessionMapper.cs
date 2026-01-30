@@ -55,7 +55,11 @@ namespace onlineCinema.Application.Mapping
                 .ToList();
 
         [MapProperty(nameof(Session.SessionId), nameof(SessionDto.Id))]
+        [MapProperty(nameof(Session.Movie.Title), nameof(SessionDto.MovieTitle))]
+        [MapProperty(nameof(Session.Hall.HallNumber), nameof(SessionDto.HallNumber))]
         public partial SessionDto MapToDto(Session session);
+
+        public partial IEnumerable<SessionDto> MapToDtoList(IEnumerable<Session> sessions);
 
         [MapperIgnoreTarget(nameof(Session.Tickets))]
         public partial void UpdateEntityFromDto(SessionUpdateDto dto, Session session);

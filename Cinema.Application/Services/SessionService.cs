@@ -21,7 +21,7 @@ namespace onlineCinema.Application.Services
 
         public async Task<SessionDto> GetByIdAsync(int id)
         {
-            var session = await _unitOfWork.Session.GetByIdAsync(id);
+            var session = await _unitOfWork.Session.GetByIdWithMovieAndHallAsync(id);
 
             if (session == null)
             {
@@ -108,32 +108,53 @@ namespace onlineCinema.Application.Services
         }
 
         public async Task<bool> HallHasSessionAtTime(
-            int hallId,
-            DateTime dateTime,
-            int excludeSessionId)
+                int hallId,
+                DateTime dateTime,
+                int movieId,
+                int excludeSessionId = 0)
         {
-            var session = await _unitOfWork.Session.GetByIdAsync(excludeSessionId);
-
-            if (session == null)
-            {
-                return false;
-            }
-
-            var movie = await _unitOfWork.Movie.GetByIdAsync(session.MovieId);
+            var movie = await _unitOfWork.Movie.GetByIdAsync(movieId);
 
             if (movie == null)
             {
-                return false;
+                return false; 
             }
 
-            bool isHallHasSessionAtTime = await _unitOfWork.Session
+            return await _unitOfWork.Session
                 .HallHasSessionAtTimeAsync(
                     hallId,
                     dateTime,
                     movie.Runtime,
                     excludeSessionId);
+        }
 
-            return isHallHasSessionAtTime;
+        public async Task<IEnumerable<SessionDto>> GetAllSessionsAsync()
+        {
+            var sessions = await _unitOfWork.Session.GetAllAsync(
+                includeProperties: "Movie,Hall"
+            );
+
+            return _mapper.MapToDtoList(sessions);
+        }
+
+        public async Task DeleteSessionAsync(int id)
+        {
+            var session = await _unitOfWork.Session.GetByIdAsync(id);
+
+            if (session == null)
+            {
+                throw new KeyNotFoundException("Сеанс не знайдено");
+            }
+
+            var hasTickets = (await _unitOfWork.Ticket.GetAllAsync(t => t.SessionId == id)).Any();
+
+            if (hasTickets)
+            {
+                throw new InvalidOperationException("Не можна видалити сеанс, на який вже існують квитки.");
+            }
+
+            _unitOfWork.Session.Remove(session);
+            await _unitOfWork.SaveAsync();
         }
     }
 }
