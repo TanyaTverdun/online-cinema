@@ -8,6 +8,11 @@ using onlineCinema.Infrastructure.Repositories;
 using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using onlineCinema.Validators;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Application.DTOs.Movie;
+using onlineCinema.Mapping;
+using onlineCinema.Application.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,21 +31,17 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IDirectorService, DirectorService>();
 
-builder.Services.AddScoped<onlineCinema.Application.Mapping.MovieMapping>();
-builder.Services.AddScoped<onlineCinema.Mapping.AdminMovieMapper>();
+builder.Services.AddScoped<DirectorMapping>();
+builder.Services.AddScoped<MovieMapping>();
+builder.Services.AddScoped<AdminMovieMapper>();
+builder.Services.AddSingleton<AdminDirectorMapper>();
 
-//builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<MovieFormValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<DirectorFormValidator>();
 
-//builder.Services.AddFluentValidationAutoValidation(configuration =>
-//{
-//    // Обов'язково вмикаємо перевірку даних з форм
-//    configuration.EnableFormBindingSource = true;
-//});
-
-// FluentValidation.AspNetCore.FluentValidationMvcExtensions.AddFluentValidationClientsideAdapters(builder.Services);
 
 
 builder.Services.AddControllersWithViews(options =>
