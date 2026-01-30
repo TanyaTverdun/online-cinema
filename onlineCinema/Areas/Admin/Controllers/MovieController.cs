@@ -2,6 +2,7 @@
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -36,6 +37,17 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(MovieFormViewModel viewModel)
         {
+            var validator = new Validators.MovieFormValidator();
+            var validationResult = await validator.ValidateAsync(viewModel);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try
@@ -46,7 +58,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", $"Error: {ex.Message}");
+                    ModelState.AddModelError("", $"Помилка збереження: {ex.Message}");
                 }
             }
 
@@ -72,6 +84,17 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(MovieFormViewModel viewModel)
         {
+            var validator = new Validators.MovieFormValidator();
+            var validationResult = await validator.ValidateAsync(viewModel);
+
+            if (!validationResult.IsValid)
+            {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
+            }
+
             if (ModelState.IsValid)
             {
                 try

@@ -9,23 +9,14 @@ namespace onlineCinema.Areas.Admin.Models
     public class MovieFormViewModel
     {
         public int Id { get; set; }
-
         public string Title { get; set; } = string.Empty;
-
         public string? Description { get; set; }
-
         public MovieStatus Status { get; set; } = MovieStatus.ComingSoon;
-
         public AgeRating AgeRating { get; set; }
-
-        public int Runtime { get; set; }
-
+        public TimeSpan? Runtime { get; set; }
         public DateTime ReleaseDate { get; set; } = DateTime.Today;
-
         public string? TrailerLink { get; set; }
-
         public string? PosterUrl { get; set; }
-
         public IFormFile? PosterFile { get; set; }
 
         public List<int> GenreIds { get; set; } = new();

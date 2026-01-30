@@ -8,9 +8,27 @@ namespace onlineCinema.Mapping
     [Mapper]
     public partial class AdminMovieMapper
     {
-        public partial MovieFormDto ToDto(MovieFormViewModel viewModel);
+        [MapperIgnoreTarget(nameof(MovieFormDto.Runtime))]
+        private partial MovieFormDto MapToDtoBase(MovieFormViewModel viewModel);
 
-        public partial MovieFormViewModel ToViewModel(MovieFormDto dto);
+        [MapperIgnoreSource(nameof(MovieFormDto.Runtime))]
+        private partial MovieFormViewModel MapToViewModelBase(MovieFormDto dto);
+        public MovieFormDto ToDto(MovieFormViewModel viewModel)
+        {
+            var dto = MapToDtoBase(viewModel);
+            if (viewModel.Runtime.HasValue)
+            {
+                dto.Runtime = (int)viewModel.Runtime.Value.TotalMinutes;
+            }
+            return dto;
+        }
+
+        public MovieFormViewModel ToViewModel(MovieFormDto dto)
+        {
+            var vm = MapToViewModelBase(dto);
+            vm.Runtime = TimeSpan.FromMinutes(dto.Runtime);
+            return vm;
+        }
 
         public partial MovieItemViewModel ToViewModel(MovieCardDto dto);
 

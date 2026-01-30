@@ -15,7 +15,9 @@ namespace onlineCinema.Validators
                 .NotEmpty().WithMessage("Опис є обов'язковим");
 
             RuleFor(x => x.Runtime)
-                .InclusiveBetween(1, 1000).WithMessage("Тривалість має бути коректною (1-1000 хв)");
+                .NotEmpty().WithMessage("Вкажіть тривалість фільму")
+                .Must(t => t > TimeSpan.Zero).WithMessage("Тривалість має бути більшою за 0")
+                .LessThanOrEqualTo(TimeSpan.FromHours(5)).WithMessage("Фільм не може тривати довше 5 годин");
 
             RuleFor(x => x.ReleaseDate)
                 .NotEmpty().WithMessage("Вкажіть дату виходу");

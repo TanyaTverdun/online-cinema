@@ -7,6 +7,7 @@ using onlineCinema.Infrastructure.Data;
 using onlineCinema.Infrastructure.Repositories;
 using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using onlineCinema.Validators;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,8 +30,17 @@ builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<onlineCinema.Application.Mapping.MovieMapping>();
 builder.Services.AddScoped<onlineCinema.Mapping.AdminMovieMapper>();
 
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
+//builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddValidatorsFromAssemblyContaining<MovieFormValidator>();
+
+//builder.Services.AddFluentValidationAutoValidation(configuration =>
+//{
+//    // Обов'язково вмикаємо перевірку даних з форм
+//    configuration.EnableFormBindingSource = true;
+//});
+
+// FluentValidation.AspNetCore.FluentValidationMvcExtensions.AddFluentValidationClientsideAdapters(builder.Services);
 
 
 builder.Services.AddControllersWithViews(options =>

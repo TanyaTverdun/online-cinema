@@ -19,14 +19,6 @@
         <input type="hidden" asp-for="Id" />
         <input type="hidden" asp-for="PosterUrl" />
 
-       
-        @if (hasErrors)
-        {
-            <div asp-validation-summary="All" class="alert alert-danger text-white mb-4 border-danger">
-                <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please fix the following errors:</h5>
-            </div>
-        }
-
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="card border-secondary movie-table mb-4">
@@ -114,8 +106,13 @@
                         </div>
                         <div class="row g-2">
                             <div class="col-6">
-                                <label asp-for="Runtime" class="form-label text-muted small text-uppercase">Runtime (min)</label>
-                                <input asp-for="Runtime" type="number" class="form-control" />
+                                <label asp-for="Runtime" class="form-label text-white small text-uppercase">Тривалість (год:хв)</label>
+
+                                <input asp-for="Runtime"
+                                       type="time"
+                                       class="form-control"
+                                       value="@(Model.Runtime?.ToString(@"hh\:mm"))" />
+
                                 <span asp-validation-for="Runtime" class="text-danger small"></span>
                             </div>
                             <div class="col-6">

@@ -18,14 +18,6 @@
 
     <form asp-action="Create" method="post" enctype="multipart/form-data">
 
-        
-        @if (hasErrors)
-        {
-            <div asp-validation-summary="All" class="alert alert-danger text-white mb-4 border-danger">
-                <h5 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Please fix the following errors:</h5>
-            </div>
-        }
-
         <div class="row g-4">
             <div class="col-lg-8">
                 <div class="card border-secondary movie-table mb-4">
@@ -68,11 +60,11 @@
                     </div>
                     <div class="card-body">
                         <div class="row g-3">
+                            <div class="form-text text-white fw-bold small">Hold Ctrl to select multiple</div>
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Genres</label>
                                 <select asp-for="GenreIds" asp-items="Model.GenresList" class="form-select" multiple size="4"></select>
                                 <span asp-validation-for="GenreIds" class="text-danger small"></span>
-                                <div class="form-text text-white small">Hold Ctrl to select multiple</div>
                                 <input asp-for="GenresInput" class="form-control mt-2 form-control-sm" placeholder="Add new (comma separated)" />
                             </div>
                             <div class="col-md-6">
@@ -110,8 +102,13 @@
                         </div>
                         <div class="row g-2">
                             <div class="col-6">
-                                <label asp-for="Runtime" class="form-label text-white small text-uppercase">Runtime (min)</label>
-                                <input asp-for="Runtime" type="number" class="form-control" />
+                                <label asp-for="Runtime" class="form-label text-white small text-uppercase">Тривалість (год:хв)</label>
+
+                                <input asp-for="Runtime"
+                                       type="time"
+                                       class="form-control"
+                                       value="@(Model.Runtime?.ToString(@"hh\:mm"))" />
+
                                 <span asp-validation-for="Runtime" class="text-danger small"></span>
                             </div>
                             <div class="col-6">
