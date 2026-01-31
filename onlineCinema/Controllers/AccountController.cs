@@ -60,7 +60,7 @@ namespace onlineCinema.Controllers
 
             var user = _userMapping.ToApplicationUser(model);
 
-            var result = await _userManager.CreateAsync(user, model.Password);
+            var result = await _userManager.CreateAsync(user, model.Password ?? string.Empty);
 
             if (result.Succeeded)
             {
@@ -106,8 +106,8 @@ namespace onlineCinema.Controllers
             }
 
             var result = await _signInManager.PasswordSignInAsync(
-                model.Email,
-                model.Password,
+                model.Email ?? string.Empty,
+                model.Password ?? string.Empty,
                 model.RememberMe,
                 lockoutOnFailure: false);
 
