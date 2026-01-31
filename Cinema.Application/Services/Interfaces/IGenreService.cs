@@ -1,12 +1,18 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using onlineCinema.Application.DTOs.Genre;
 
-namespace onlineCinema.Application.Services.Interfaces;
-
-public interface IGenreService
+namespace onlineCinema.Application.Services.Interfaces
 {
-    Task<IEnumerable<GenreDto>> GetAllAsync();
-    Task<GenreDto?> GetByIdAsync(int id);
-    Task CreateAsync(GenreDto dto);
-    Task UpdateAsync(GenreDto dto);
-    Task DeleteAsync(int id);
+    public interface IGenreService
+    {
+        Task<IEnumerable<GenreFormDto>> GetAllAsync();
+        Task<GenreFormDto?> GetByIdAsync(int id);
+        Task AddAsync(GenreFormDto dto);
+        Task UpdateAsync(GenreFormDto dto);
+        Task DeleteAsync(int id);
+    }
 }

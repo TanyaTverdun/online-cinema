@@ -1,24 +1,20 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using onlineCinema.Application.DTOs.Genre;
 using onlineCinema.Domain.Entities;
+using Riok.Mapperly.Abstractions;
 
-namespace onlineCinema.Application.Mapping;
-
-public class GenreMapping
+namespace onlineCinema.Application.Mapping
 {
-    public GenreDto MapToDto(Genre entity) => new()
+    [Mapper]
+    public partial class GenreMapping
     {
-        GenreId = entity.GenreId,
-        GenreName = entity.GenreName
-    };
-
-    public Genre MapToEntity(GenreDto dto) => new()
-    {
-        GenreId = dto.GenreId,
-        GenreName = dto.GenreName
-    };
-
-    public void UpdateEntityFromDto(GenreDto dto, Genre entity)
-    {
-        entity.GenreName = dto.GenreName;
+        public partial GenreFormDto? ToDto(Genre? genre);
+        public partial Genre ToEntity(GenreFormDto dto);
+        public partial void UpdateEntityFromDto(GenreFormDto dto, Genre genre);
+        public partial IEnumerable<GenreFormDto> ToDtoList(IEnumerable<Genre> genres);
     }
 }

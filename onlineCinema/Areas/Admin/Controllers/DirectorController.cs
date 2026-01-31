@@ -23,8 +23,8 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var directorsDto = await _directorService.GetAllAsync();
-            var viewModels = directorsDto.Select(d => _mapper.ToViewModel(d));
-            return View(viewModels);
+            var viewModel = _mapper.ToViewModelList(directorsDto);
+            return View(viewModel);
         }
 
         [HttpGet]
