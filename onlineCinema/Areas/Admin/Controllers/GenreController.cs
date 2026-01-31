@@ -21,19 +21,29 @@ public class GenreController : Controller
     public async Task<IActionResult> Index()
     {
         var genresDto = await _genreService.GetAllAsync();
-        return View(_mapper.ToViewModelList(genresDto));
+        var viewModel = _mapper.ToViewModelList(genresDto);
+        return View(viewModel);
     }
 
     [HttpGet]
-    public IActionResult Create() => View("GenreValueInput", new GenreFormViewModel());
+    public IActionResult Create()
+    {
+        var viewModel = new GenreFormViewModel();
+        return View("GenreValueInput", viewModel);
+    }
 
     [HttpGet]
     public async Task<IActionResult> Edit(int id)
     {
         var dto = await _genreService.GetByIdAsync(id);
-        if (dto == null) return NotFound();
+        if (dto == null)
+        {
+            return NotFound();
+        }
 
-        return View("GenreValueInput", _mapper.ToViewModel(dto));
+        var viewModel = _mapper.ToViewModel(dto);
+
+        return View("GenreValueInput", viewModel);
     }
 
     [HttpPost]
@@ -52,19 +62,25 @@ public class GenreController : Controller
         if (!result.IsValid)
         {
             foreach (var error in result.Errors)
+            {
                 ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            }
         }
 
         if (ModelState.IsValid)
         {
             if (viewModel.GenreId == 0)
+            {
                 await _genreService.AddAsync(_mapper.ToDto(viewModel));
+            }
             else
+            {
                 await _genreService.UpdateAsync(_mapper.ToDto(viewModel));
+            }
 
             return RedirectToAction(nameof(Index));
         }
-        return View("Upsert", viewModel);
+        return View("GenreValueInput", viewModel);
     }
 
     [HttpPost]

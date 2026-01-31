@@ -24,13 +24,15 @@ namespace onlineCinema.Application.Services
         public async Task<IEnumerable<GenreFormDto>> GetAllAsync()
         {
             var genres = await _unitOfWork.Genre.GetAllAsync();
-            return genres.Select(g => _mapper.ToDto(g)!);
+            var dtos = _mapper.ToDtoList(genres);
+            return dtos;
         }
 
         public async Task<GenreFormDto?> GetByIdAsync(int id)
         {
             var genre = await _unitOfWork.Genre.GetByIdAsync(id);
-            return _mapper.ToDto(genre);
+            var dto = genre == null ? null : _mapper.ToDto(genre);
+            return dto;
         }
 
         public async Task AddAsync(GenreFormDto dto)

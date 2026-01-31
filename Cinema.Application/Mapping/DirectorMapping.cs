@@ -17,5 +17,6 @@ namespace onlineCinema.Application.Mapping
         public partial Director ToEntity(DirectorFormDto dto);
 
         public partial void UpdateEntityFromDto(DirectorFormDto dto, Director director);
+        public partial IEnumerable<DirectorFormDto> ToDtoList(IEnumerable<Director> directors);
     }
 }

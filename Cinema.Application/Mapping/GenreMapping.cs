@@ -15,5 +15,6 @@ namespace onlineCinema.Application.Mapping
         public partial GenreFormDto? ToDto(Genre? genre);
         public partial Genre ToEntity(GenreFormDto dto);
         public partial void UpdateEntityFromDto(GenreFormDto dto, Genre genre);
+        public partial IEnumerable<GenreFormDto> ToDtoList(IEnumerable<Genre> genres);
     }
 }
