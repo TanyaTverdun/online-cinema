@@ -16,11 +16,13 @@ namespace onlineCinema.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly HallMapper _mapper;
+        private readonly SeatMapper _seatMapper;
 
-        public HallService(IUnitOfWork unitOfWork, HallMapper hallMapper)
+        public HallService(IUnitOfWork unitOfWork, HallMapper hallMapper, SeatMapper seatMapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = hallMapper;
+            _seatMapper = seatMapper;
         }
 
         public async Task<HallDto?> CreateHallAsync(HallDto hallDto)
@@ -99,7 +101,9 @@ namespace onlineCinema.Application.Services
         {
             var dto = await _unitOfWork.Hall.GetHallWithFutureSessionsAsync(id);
 
-            if (dto == null) throw new KeyNotFoundException("Зал не знайдено");
+            if (dto == null) {
+                throw new KeyNotFoundException($"Зал з id {id} не знайдено."); 
+            }
 
             return dto;
         }
@@ -112,14 +116,7 @@ namespace onlineCinema.Application.Services
             {
                 for (byte number = 1; number <= hall.SeatInRowCount; number++)
                 {
-                    var seat = new Seat
-                    {
-                        HallId = hall.HallId,
-                        RowNumber = row,
-                        SeatNumber = number,
-                        Type = SeatType.Standard,
-                        Coefficient = 1.0f
-                    };
+                    var seat = _seatMapper.CreateSeatEntity(hall.HallId, row, number);
 
                     await _unitOfWork.Seat.AddAsync(seat);
                 }

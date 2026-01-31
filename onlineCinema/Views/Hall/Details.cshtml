@@ -67,7 +67,6 @@
                                     <th>Дата</th>
                                     <th>Час</th>
                                     <th>Фільм</th>
-                                    <th></th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -77,12 +76,6 @@
                                         <td>@session.Date</td>
                                         <td class="fw-bold text-success">@session.Time</td>
                                         <td>@session.MovieTitle</td>
-                                        <td class="text-end">
-                                            <a asp-controller="Booking" asp-action="SelectSeats" asp-route-sessionId="@session.Id"
-                                               class="btn btn-sm btn-outline-primary">
-                                                Купити квиток
-                                            </a>
-                                        </td>
                                     </tr>
                                 }
                             </tbody>
