@@ -30,7 +30,10 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IDirectorService, DirectorService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
 
+builder.Services.AddScoped<GenreMapping>();
+builder.Services.AddSingleton<AdminGenreMapper>();
 builder.Services.AddScoped<DirectorMapping>();
 builder.Services.AddScoped<MovieMapping>();
 builder.Services.AddSingleton<AdminDirectorMapper>();
