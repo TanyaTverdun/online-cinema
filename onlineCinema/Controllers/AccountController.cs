@@ -12,6 +12,7 @@ namespace onlineCinema.Controllers
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
         private readonly UserMapping _userMapping;
         private readonly IBookingService _bookingService;
@@ -19,12 +20,14 @@ namespace onlineCinema.Controllers
         public AccountController(
             UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
+            RoleManager<IdentityRole> roleManager,
             ILogger<AccountController> logger,
             UserMapping userMapping,
             IBookingService bookingService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _roleManager = roleManager;
             _logger = logger;
             _userMapping = userMapping;
             _bookingService = bookingService;
@@ -49,13 +52,21 @@ namespace onlineCinema.Controllers
                 return View(model);
             }
 
+            const string userRoleName = "User";
+            if (!await _roleManager.RoleExistsAsync(userRoleName))
+            {
+                await _roleManager.CreateAsync(new IdentityRole(userRoleName));
+            }
+
             var user = _userMapping.ToApplicationUser(model);
 
             var result = await _userManager.CreateAsync(user, model.Password);
 
             if (result.Succeeded)
             {
-                _logger.LogInformation("Користувач {Email} успішно зареєстрований", model.Email);
+                await _userManager.AddToRoleAsync(user, userRoleName);
+
+                _logger.LogInformation("Користувач {Email} успішно зареєстрований з роллю {Role}", model.Email, userRoleName);
                 
                 await _signInManager.SignInAsync(user, isPersistent: false);
                 
