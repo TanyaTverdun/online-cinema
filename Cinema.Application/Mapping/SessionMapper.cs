@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using onlineCinema.Application.DTOs;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
@@ -12,7 +8,15 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class SessionMapper
     {
-        public MovieScheduleDto MapToMovieSchedule(Movie movie, IEnumerable<Session> sessions)
+        [MapperIgnoreTarget(nameof(Session.SessionId))]
+        [MapperIgnoreTarget(nameof(Session.Movie))]
+        [MapperIgnoreTarget(nameof(Session.Hall))]
+        [MapperIgnoreTarget(nameof(Session.Tickets))]
+        public partial Session MapToSession(SessionCreateDto dto);
+            
+        public MovieScheduleDto MapToMovieSchedule(
+            Movie movie,
+            IEnumerable<Session> sessions)
         {
             var scheduleDto = MapMovieToScheduleDtoBase(movie);
 
@@ -33,7 +37,7 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Movie.Id), nameof(MovieScheduleDto.MovieId))]
         [MapProperty(nameof(Movie.Title), nameof(MovieScheduleDto.MovieTitle))]
         [MapProperty(nameof(Movie.Runtime), nameof(MovieScheduleDto.Runtime))]
-        private partial MovieScheduleDto MapMovieToScheduleDtoBase(Movie movie);
+        public partial MovieScheduleDto MapMovieToScheduleDtoBase(Movie movie);
 
         [MapProperty(nameof(Session.ShowingDateTime), nameof(SessionScheduleDto.StartDateTime))]
         [MapProperty(nameof(Session.BasePrice), nameof(SessionScheduleDto.BasePrice))]
@@ -41,8 +45,23 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Session.Hall.HallFeatures), nameof(SessionScheduleDto.FeatureNames))]
         public partial SessionScheduleDto MapSessionToDto(Session session);
 
-        private string MapHallToName(Hall hall) => $"Hall {hall.HallNumber}";
+        private string MapHallToHallName(Hall hall)
+            => $"Зал {hall.HallNumber}";
 
-        private string MapFeatureToName(HallFeature feature) => feature.Feature.Name;
+        private List<string> MapHallFeaturesToFeatureNames(
+            ICollection<HallFeature> hallFeatures)
+            => hallFeatures
+                .Select(hf => hf.Feature.Name)
+                .ToList();
+
+        [MapProperty(nameof(Session.SessionId), nameof(SessionDto.Id))]
+        [MapProperty(nameof(Session.Movie.Title), nameof(SessionDto.MovieTitle))]
+        [MapProperty(nameof(Session.Hall.HallNumber), nameof(SessionDto.HallNumber))]
+        public partial SessionDto MapToDto(Session session);
+
+        public partial IEnumerable<SessionDto> MapToDtoList(IEnumerable<Session> sessions);
+
+        [MapperIgnoreTarget(nameof(Session.Tickets))]
+        public partial void UpdateEntityFromDto(SessionUpdateDto dto, Session session);
     }
 }

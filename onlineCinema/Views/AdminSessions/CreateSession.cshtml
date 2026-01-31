@@ -1,0 +1,90 @@
+﻿@model onlineCinema.ViewModels.SessionCreateViewModel
+
+@{
+    ViewData["Title"] = "Add New Session";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CreateSession.css" asp-append-version="true" />
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Add New Session</h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
+            <i class="bi bi-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+
+    <form asp-action="Create" method="post">
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-secondary bg-dark movie-table mb-4">
+                    <div class="card-header bg-black border-bottom text-white fw-bold">
+                        <i class="bi bi-info-circle me-2"></i>General Information
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label asp-for="MovieId" class="form-label text-white small text-uppercase">Movie</label>
+                            <select asp-for="MovieId" asp-items="@Model.AvailableMovies" class="form-select">
+                                <option value="">-- Select Movie --</option>
+                            </select>
+                            <span asp-validation-for="MovieId" class="text-danger-custom"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="HallId" class="form-label text-white small text-uppercase">Cinema Hall</label>
+                                <select asp-for="HallId" asp-items="@Model.AvailableHalls" class="form-select">
+                                    <option value="">-- Select Hall --</option>
+                                </select>
+                                <span asp-validation-for="HallId" class="text-danger-custom"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ShowingDateTime" class="form-label text-white small text-uppercase">Showing Date & Time</label>
+                                <input asp-for="ShowingDateTime" type="datetime-local" class="form-control bg-black text-white border-secondary" />
+                                <span asp-validation-for="ShowingDateTime" class="text-danger-custom"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card bg-dark movie-table mb-4">
+                    <div class="card-header bg-black border-bottom text-white fw-bold">
+                        <i class="bi bi-cash-stack me-2"></i>Pricing Settings
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="BasePrice" class="form-label text-white small text-uppercase">Ticket Base Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white">₴</span>
+                                <input asp-for="BasePrice"
+                                       type="text"
+                                       inputmode="decimal"
+                                       data-val-number="Введіть коректне число (використовуйте кому для копійок)"
+                                       class="form-control bg-black text-white border-secondary"
+                                       placeholder="0,00"
+                                       autocomplete="off" />
+                            </div>
+                            <span asp-validation-for="BasePrice" class="text-danger-custom"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-danger fw-bold py-2 shadow-sm">
+                        <i class="bi bi-check-lg me-2"></i>Create Session
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

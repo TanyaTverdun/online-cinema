@@ -11,7 +11,7 @@ namespace onlineCinema.Validators
                 .GreaterThan(0).WithMessage("Некоректний ідентифікатор сеансу.");
 
             RuleFor(x => x.SelectedSeatIds)
-                .NotEmpty().WithMessage("Ви не обрали жодного місця!") // Замінює вашу ручну перевірку в контролері
+                .NotEmpty().WithMessage("Ви не обрали жодного місця!")
                 .Must(list => list != null && list.Count <= 10)
                 .WithMessage("За один раз можна забронювати не більше 10 місць.");
         }

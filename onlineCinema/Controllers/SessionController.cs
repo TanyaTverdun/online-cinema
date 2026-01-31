@@ -22,7 +22,6 @@ namespace onlineCinema.Controllers
             _sessionMapper = sessionMapper;
         }
 
-        // GET: Movies/Schedule/MovieId
         [HttpGet]
         public async Task<IActionResult> Schedule(int id)
         {
