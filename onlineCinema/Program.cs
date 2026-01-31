@@ -31,6 +31,21 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IDirectorService, DirectorService>();
 
+builder.Services.AddScoped<ICastMemberService, CastMemberService>();
+builder.Services.AddScoped<CastMemberMapping>();
+
+builder.Services.AddScoped<IFeatureService, FeatureService>();
+builder.Services.AddScoped<FeatureMapping>();
+
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<GenreMapping>();
+
+builder.Services.AddScoped<ILanguageService, LanguageService>();
+builder.Services.AddScoped<LanguageMapping>();
+
+builder.Services.AddScoped<ISnackService, SnackService>();
+builder.Services.AddScoped<SnackMapping>();
+
 builder.Services.AddScoped<DirectorMapping>();
 builder.Services.AddScoped<MovieMapping>();
 builder.Services.AddSingleton<AdminDirectorMapper>();

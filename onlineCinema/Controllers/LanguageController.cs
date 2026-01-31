@@ -1,19 +1,64 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.Interfaces;
+﻿using Microsoft.AspNetCore.Mvc;
+using onlineCinema.Application.DTOs;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Models.ViewModels;
 
-namespace onlineCinema.Controllers
+namespace onlineCinema.Controllers;
+
+public class LanguageController : Controller
 {
-    public class LanguageController
-    {
-        private readonly IUnitOfWork _unitOfWork;
+    private readonly ILanguageService _languageService;
 
-        public LanguageController(IUnitOfWork unitOfWork)
+    public LanguageController(ILanguageService languageService)
+    {
+        _languageService = languageService;
+    }
+
+    public async Task<IActionResult> Index()
+    {
+        var dtos = await _languageService.GetAllAsync();
+        var viewModels = dtos.Select(d => new LanguageViewModel
         {
-            _unitOfWork = unitOfWork;
+            LanguageId = d.LanguageId,
+            LanguageName = d.LanguageName
+        });
+        return View(viewModels);
+    }
+
+    public IActionResult Create() => View();
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create(LanguageViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var dto = new LanguageDto { LanguageName = model.LanguageName };
+            await _languageService.CreateAsync(dto);
+            return RedirectToAction(nameof(Index));
         }
+        return View(model);
+    }
+
+    public async Task<IActionResult> Edit(int id)
+    {
+        var dto = await _languageService.GetByIdAsync(id);
+        if (dto == null) return NotFound();
+
+        var model = new LanguageViewModel { LanguageId = dto.LanguageId, LanguageName = dto.LanguageName };
+        return View(model);
+    }
+
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Edit(LanguageViewModel model)
+    {
+        if (ModelState.IsValid)
+        {
+            var dto = new LanguageDto { LanguageId = model.LanguageId, LanguageName = model.LanguageName };
+            await _languageService.UpdateAsync(dto);
+            return RedirectToAction(nameof(Index));
+        }
+        return View(model);
     }
 }

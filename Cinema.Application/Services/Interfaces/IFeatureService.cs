@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using onlineCinema.Application.DTOs;
 
-namespace onlineCinema.Application.Services.Interfaces
+namespace onlineCinema.Application.Services.Interfaces;
+
+public interface IFeatureService
 {
-    public interface IFeatureService
-    {
-    }
+    Task<IEnumerable<FeatureDto>> GetAllAsync();
+    Task<FeatureDto?> GetByIdAsync(int id);
+    Task CreateAsync(FeatureDto dto);
+    Task UpdateAsync(FeatureDto dto);
+    Task DeleteAsync(int id);
 }
