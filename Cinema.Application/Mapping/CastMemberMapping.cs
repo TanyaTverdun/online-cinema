@@ -1,36 +1,22 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using System.Collections.Generic;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Domain.Entities;
+using Riok.Mapperly.Abstractions;
 
-namespace onlineCinema.Application.Mapping;
-
-public class CastMemberMapping
+namespace onlineCinema.Application.Mapping
 {
-    public CastMemberDto MapToDto(CastMember entity)
+    [Mapper]
+    public partial class CastMemberMapping
     {
-        return new CastMemberDto
-        {
-            CastId = entity.CastId,
-            CastFirstName = entity.CastFirstName,
-            CastLastName = entity.CastLastName,
-            CastMiddleName = entity.CastMiddleName
-        };
-    }
+        [MapperIgnoreSource(nameof(CastMember.MovieCasts))]
+        public partial CastMemberDto MapToDto(CastMember entity);
 
-    public CastMember MapToEntity(CastMemberCreateUpdateDto dto)
-    {
-        return new CastMember
-        {
-            CastId = dto.CastId,
-            CastFirstName = dto.CastFirstName,
-            CastLastName = dto.CastLastName,
-            CastMiddleName = dto.CastMiddleName
-        };
-    }
+        [MapperIgnoreTarget(nameof(CastMember.MovieCasts))]
+        public partial CastMember MapToEntity(CastMemberCreateUpdateDto dto);
 
-    public void UpdateEntityFromDto(CastMemberCreateUpdateDto dto, CastMember entity)
-    {
-        entity.CastFirstName = dto.CastFirstName;
-        entity.CastLastName = dto.CastLastName;
-        entity.CastMiddleName = dto.CastMiddleName;
+        [MapperIgnoreTarget(nameof(CastMember.MovieCasts))]
+        public partial void UpdateEntityFromDto(CastMemberCreateUpdateDto dto, CastMember entity);
+
+        public partial IEnumerable<CastMemberDto> MapToDtoList(IEnumerable<CastMember> entities);
     }
 }

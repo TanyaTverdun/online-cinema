@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.Genre;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Models.ViewModels;
+using onlineCinema.Areas.Admin.Models;
 
 namespace onlineCinema.Controllers;
 
@@ -33,7 +34,7 @@ public class GenreController : Controller
     {
         if (ModelState.IsValid)
         {
-            var dto = new GenreDto { GenreName = model.GenreName };
+            var dto = new GenreFormDto { GenreName = model.GenreName };
             await _genreService.CreateAsync(dto);
             return RedirectToAction(nameof(Index));
         }
@@ -55,8 +56,11 @@ public class GenreController : Controller
     {
         if (ModelState.IsValid)
         {
-            var dto = new GenreDto { GenreId = model.GenreId, GenreName = model.GenreName };
+
+            var dto = new GenreFormDto { GenreName = model.GenreName };
+
             await _genreService.UpdateAsync(dto);
+
             return RedirectToAction(nameof(Index));
         }
         return View(model);

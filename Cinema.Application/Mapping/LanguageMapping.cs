@@ -1,24 +1,27 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using System.Collections.Generic;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Domain.Entities;
+using Riok.Mapperly.Abstractions;
 
-namespace onlineCinema.Application.Mapping;
-
-public class LanguageMapping
+namespace onlineCinema.Application.Mapping
 {
-    public LanguageDto MapToDto(Language entity) => new()
+    [Mapper]
+    public partial class LanguageMapping
     {
-        LanguageId = entity.LanguageId,
-        LanguageName = entity.LanguageName
-    };
+        [MapperIgnoreSource(nameof(Language.Movies))]
+        [MapperIgnoreSource(nameof(Language.LanguageMovies))]
+        public partial LanguageDto MapToDto(Language entity);
 
-    public Language MapToEntity(LanguageDto dto) => new()
-    {
-        LanguageId = dto.LanguageId,
-        LanguageName = dto.LanguageName
-    };
+        [MapperIgnoreTarget(nameof(Language.Movies))]
+        [MapperIgnoreTarget(nameof(Language.LanguageMovies))]
+        public partial Language MapToEntity(LanguageDto dto);
 
-    public void UpdateEntityFromDto(LanguageDto dto, Language entity)
-    {
-        entity.LanguageName = dto.LanguageName;
+        [MapperIgnoreTarget(nameof(Language.Movies))]
+        [MapperIgnoreTarget(nameof(Language.LanguageMovies))]
+        [MapperIgnoreTarget(nameof(Language.LanguageId))]
+        [MapperIgnoreSource(nameof(LanguageDto.LanguageId))]
+        public partial void UpdateEntityFromDto(LanguageDto dto, Language entity);
+
+        public partial IEnumerable<LanguageDto> MapToDtoList(IEnumerable<Language> entities);
     }
 }
