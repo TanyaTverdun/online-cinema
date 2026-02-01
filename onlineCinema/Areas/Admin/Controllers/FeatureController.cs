@@ -14,7 +14,10 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IValidator<FeatureViewModel> _validator;
         private readonly AdminFeatureMapper _mapper;
 
-        public FeatureController(IFeatureService featureService, IValidator<FeatureViewModel> validator, AdminFeatureMapper mapper)
+        public FeatureController(
+            IFeatureService featureService,
+            IValidator<FeatureViewModel> validator,
+            AdminFeatureMapper mapper)
         {
             _featureService = featureService;
             _validator = validator;
@@ -28,16 +31,23 @@ namespace onlineCinema.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create() => View(new FeatureViewModel());
+        public IActionResult Create()
+        {
+            return View(new FeatureViewModel());
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FeatureViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
+
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
@@ -50,6 +60,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         {
             var dto = await _featureService.GetByIdAsync(id);
             if (dto == null) return NotFound();
+
             return View(_mapper.ToViewModel(dto));
         }
 
@@ -58,9 +69,13 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(FeatureViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
+
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 

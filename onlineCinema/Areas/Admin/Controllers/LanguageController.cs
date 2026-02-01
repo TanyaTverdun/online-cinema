@@ -13,7 +13,10 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IValidator<LanguageViewModel> _validator;
         private readonly AdminLanguageMapper _mapper;
 
-        public LanguageController(ILanguageService languageService, IValidator<LanguageViewModel> validator, AdminLanguageMapper mapper)
+        public LanguageController(
+            ILanguageService languageService,
+            IValidator<LanguageViewModel> validator,
+            AdminLanguageMapper mapper)
         {
             _languageService = languageService;
             _validator = validator;
@@ -27,16 +30,23 @@ namespace onlineCinema.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create() => View(new LanguageViewModel());
+        public IActionResult Create()
+        {
+            return View(new LanguageViewModel());
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LanguageViewModel model)
         {
             var result = await _validator.ValidateAsync(model);
+
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
@@ -49,6 +59,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         {
             var dto = await _languageService.GetByIdAsync(id);
             if (dto == null) return NotFound();
+
             return View(_mapper.ToViewModel(dto));
         }
 
@@ -57,9 +68,13 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(LanguageViewModel model)
         {
             var result = await _validator.ValidateAsync(model);
+
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 

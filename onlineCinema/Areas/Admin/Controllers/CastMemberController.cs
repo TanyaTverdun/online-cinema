@@ -32,16 +32,23 @@ namespace onlineCinema.Areas.Admin.Controllers
         }
 
         [HttpGet]
-        public IActionResult Create() => View(new CastMemberViewModel());
+        public IActionResult Create()
+        {
+            return View(new CastMemberViewModel());
+        }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CastMemberViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
+
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
@@ -66,9 +73,13 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(CastMemberViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
+
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
