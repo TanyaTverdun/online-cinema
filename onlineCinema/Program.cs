@@ -88,6 +88,6 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
-app.MapRazorPages(); // Тепер сервіси знайдуться і помилки не буде
+app.MapRazorPages();
 
 app.Run();
