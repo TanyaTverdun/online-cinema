@@ -58,7 +58,11 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dto = await _languageService.GetByIdAsync(id);
-            if (dto == null) return NotFound();
+
+            if (dto == null)
+            {
+                return NotFound();
+            }
 
             return View(_mapper.ToViewModel(dto));
         }
