@@ -6,7 +6,6 @@ using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using onlineCinema.Validators;
 using onlineCinema.Mapping;
-using System.Reflection;
 using FluentValidation.AspNetCore;
 using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Application.Interfaces;
@@ -80,16 +79,25 @@ builder.Services.AddSingleton<SnackMapper>();
 builder.Services.AddSingleton<HallMapper>();
 builder.Services.AddSingleton<SeatMapper>();
 builder.Services.AddSingleton<AdminDirectorMapper>();
-
+builder.Services.AddScoped<CastMemberMapping>();
+builder.Services.AddScoped<FeatureMapping>();
+builder.Services.AddScoped<GenreMapping>();
+builder.Services.AddScoped<LanguageMapping>();
+builder.Services.AddScoped<SnackMapping>();
+builder.Services.AddScoped<DirectorMapping>();
+builder.Services.AddScoped<MovieMapping>();
 builder.Services.AddScoped<MovieScheduleViewModelMapper>();
 builder.Services.AddScoped<BookingViewModelMapper>();
 builder.Services.AddScoped<SnackViewModelMapper>();
 builder.Services.AddScoped<HallViewModelMapper>();
 builder.Services.AddScoped<SessionViewModelMapper>();
-builder.Services.AddScoped<DirectorMapping>();
-builder.Services.AddScoped<MovieMapping>();
 builder.Services.AddScoped<AdminMovieMapper>();
 builder.Services.AddScoped<UserMapping>();
+builder.Services.AddScoped<AdminGenreMapper>();
+builder.Services.AddScoped<AdminCastMemberMapper>();
+builder.Services.AddScoped<AdminFeatureMapper>();
+builder.Services.AddScoped<AdminLanguageMapper>();
+builder.Services.AddScoped<AdminSnackMapper>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMovieService, MovieService>();
@@ -98,6 +106,10 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
+builder.Services.AddScoped<IGenreService, GenreService>();
+builder.Services.AddScoped<ICastMemberService, CastMemberService>();
+builder.Services.AddScoped<IFeatureService, FeatureService>();
+builder.Services.AddScoped<ILanguageService, LanguageService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
 

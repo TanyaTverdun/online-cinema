@@ -1,4 +1,5 @@
-﻿using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Genre;
+using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Areas.Admin.Models;
 using Riok.Mapperly.Abstractions;
 
@@ -9,5 +10,6 @@ namespace onlineCinema.Mapping
     {
         public partial DirectorFormDto ToDto(DirectorFormViewModel viewModel);
         public partial DirectorFormViewModel ToViewModel(DirectorFormDto dto);
+        public partial IEnumerable<DirectorFormViewModel> ToViewModelList(IEnumerable<DirectorFormDto> dtos);
     }
 }

@@ -57,12 +57,12 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Feature.Name), nameof(FeatureDto.Name))]
         public partial FeatureDto ToFeatureDto(Feature feature);
 
-        [MapProperty(nameof(Genre.GenreId), nameof(GenreDto.Id))]
-        [MapProperty(nameof(Genre.GenreName), nameof(GenreDto.Name))]
+        [MapProperty(nameof(Genre.GenreId), nameof(GenreDto.GenreId))]
+        [MapProperty(nameof(Genre.GenreName), nameof(GenreDto.GenreName))]
         public partial GenreDto ToGenreDto(Genre genre);
 
-        [MapProperty(nameof(Language.LanguageId), nameof(LanguageDto.Id))]
-        [MapProperty(nameof(Language.LanguageName), nameof(LanguageDto.Name))]
+        [MapProperty(nameof(Language.LanguageId), nameof(LanguageDto.LanguageId))]
+        [MapProperty(nameof(Language.LanguageName), nameof(LanguageDto.LanguageName))]
         public partial LanguageDto ToLanguageDto(Language language);
 
         public PersonDto ToPersonDto(CastMember actor) =>

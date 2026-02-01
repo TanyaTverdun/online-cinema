@@ -8337,6 +8337,7 @@ textarea.form-control-lg {
 .border-bottom {
     border-bottom: var(--bs-border-width) var(--bs-border-style) var(--bs-border-color) !important;
 }
+
 .movie-table {
     --bs-table-bg: #1b1f23; /* темно-сірий */
     --bs-table-striped-bg: #20252b;
@@ -8344,6 +8345,7 @@ textarea.form-control-lg {
     --bs-table-border-color: #30363d;
     color: #e6e6e6;
 }
+
 .border-bottom-0 {
     border-bottom: 0 !important;
 }

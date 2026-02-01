@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Areas.Admin.Models;
 using Riok.Mapperly.Abstractions;
@@ -44,12 +45,12 @@ namespace onlineCinema.Mapping
             => new SelectListItem(source.Name, source.Id.ToString());
 
         private SelectListItem MapGenreToItem(GenreDto source)
-            => new SelectListItem(source.Name, source.Id.ToString());
+            => new SelectListItem(source.GenreName, source.GenreId.ToString());
 
         private SelectListItem MapPersonToItem(PersonDto source)
             => new SelectListItem(source.FullName, source.Id.ToString());
 
         private SelectListItem MapLanguageToItem(LanguageDto source)
-            => new SelectListItem(source.Name, source.Id.ToString());
+            => new SelectListItem(source.LanguageName, source.LanguageId.ToString());
     }
 }
