@@ -33,12 +33,13 @@ namespace onlineCinema.Validators
 
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("Номер телефону є обов'язковим")
-                .Matches(@"^\+?\d{10,13}$").WithMessage("Невірний формат телефону");
+                .Matches(@"^\+380\d{9}$").WithMessage("Формат телефону має бути +380XXXXXXXXX");
 
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty().WithMessage("Дата народження є обов'язковою")
-                .Must(d => !d.HasValue || d <= DateTime.Now)
-                .WithMessage("Дата народження не може бути в майбутньому");
+                .Must(d => !d.HasValue || d <= DateTime.Now).WithMessage("Дата народження не може бути в майбутньому")
+                .Must(d => !d.HasValue || d >= new DateTime(1900, 1, 1)).WithMessage("Дата народження не може бути раніше 01.01.1900");
+
         }
     }
 }

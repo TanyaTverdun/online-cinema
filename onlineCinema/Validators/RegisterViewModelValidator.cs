@@ -45,7 +45,8 @@ namespace onlineCinema.Validators
 
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty().WithMessage("Дата народження є обов'язковою")
-                .Must(d => !d.HasValue || d <= DateTime.Now).WithMessage("Дата народження не може бути в майбутньому");
+                .Must(d => !d.HasValue || d <= DateTime.Now).WithMessage("Дата народження не може бути в майбутньому")
+                .Must(d => !d.HasValue || d >= new DateTime(1900, 1, 1)).WithMessage("Дата народження не може бути раніше 01.01.1900");
         }
     }
 }
