@@ -14,5 +14,10 @@ namespace onlineCinema.Application.Interfaces
 
         
         Task UpdateWithDetailsAsync(Booking booking);
+
+        /// <summary>
+        /// Отримує всі замовлення користувача з деталями (квитки, сесії, фільми, місця)
+        /// </summary>
+        Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId);
     }
 }

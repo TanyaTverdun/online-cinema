@@ -4,19 +4,17 @@ using Microsoft.AspNetCore.Localization;
 using System.Globalization;
 using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
-
-using onlineCinema.Infrastructure.Data;
-using onlineCinema.Application.Interfaces;
-using onlineCinema.Application.Services;
-using onlineCinema.Domain.Entities;
-using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Validators;
-using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Areas.Admin.Models;
-using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Mapping;
+using System.Reflection;
+using FluentValidation.AspNetCore;
+using onlineCinema.Infrastructure.Repositories;
+using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Application.Services;
 using onlineCinema.Application.Mapping;
-using System.ComponentModel.Design;
+using onlineCinema.Infrastructure.Data;
+using onlineCinema.Domain.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -36,37 +34,62 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
-    options.SignIn.RequireConfirmedAccount = true)
-    .AddEntityFrameworkStores<ApplicationDbContext>();
+builder.Services.AddIdentity<ApplicationUser, Microsoft.AspNetCore.Identity.IdentityRole>(options =>
+{
+    // Налаштування паролів
+    options.Password.RequireDigit = true;
+    options.Password.RequireLowercase = true;
+    options.Password.RequireUppercase = true;
+    options.Password.RequireNonAlphanumeric = false;
+    options.Password.RequiredLength = 6;
 
+    // Налаштування входу
+    options.SignIn.RequireConfirmedAccount = false;
+    options.SignIn.RequireConfirmedEmail = false;
+
+    // Налаштування користувача
+    options.User.RequireUniqueEmail = true;
+    options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+
+    // Налаштування блокування
+    options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+    options.Lockout.MaxFailedAccessAttempts = 5;
+    options.Lockout.AllowedForNewUsers = true;
+})
+.AddEntityFrameworkStores<ApplicationDbContext>()
+.AddDefaultTokenProviders();
 
 builder.Services.AddControllersWithViews(options =>
 {
     options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
 });
 
-builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddRazorPages();
 
-builder.Services.AddValidatorsFromAssemblyContaining<MovieFormValidator>();
-FluentValidation.AspNetCore.FluentValidationMvcExtensions.AddFluentValidationClientsideAdapters(builder.Services);
+builder.Services.AddFluentValidationAutoValidation(options =>
+{
+    options.DisableDataAnnotationsValidation = true;
+});
+builder.Services.AddFluentValidationClientsideAdapters();
 
-builder.Services.AddScoped<MovieScheduleViewModelMapper>();
 builder.Services.AddSingleton<MovieMapper>();
 builder.Services.AddSingleton<SessionMapper>();
 builder.Services.AddSingleton<PaymentMapper>();
 builder.Services.AddSingleton<BookingMapper>();
 builder.Services.AddSingleton<SnackMapper>();
-builder.Services.AddSingleton<BookingViewModelMapper>();
-builder.Services.AddSingleton<SnackViewModelMapper>();
 builder.Services.AddSingleton<HallMapper>();
-builder.Services.AddSingleton<HallViewModelMapper>();
 builder.Services.AddSingleton<SeatMapper>();
-builder.Services.AddSingleton<SessionViewModelMapper>();
+builder.Services.AddSingleton<AdminDirectorMapper>();
+
+builder.Services.AddScoped<MovieScheduleViewModelMapper>();
+builder.Services.AddScoped<BookingViewModelMapper>();
+builder.Services.AddScoped<SnackViewModelMapper>();
+builder.Services.AddScoped<HallViewModelMapper>();
+builder.Services.AddScoped<SessionViewModelMapper>();
 builder.Services.AddScoped<DirectorMapping>();
 builder.Services.AddScoped<MovieMapping>();
 builder.Services.AddScoped<AdminMovieMapper>();
-builder.Services.AddSingleton<AdminDirectorMapper>();
+builder.Services.AddScoped<UserMapping>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMovieService, MovieService>();
@@ -75,6 +98,8 @@ builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
+
+builder.Services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
 
 var app = builder.Build();
 
@@ -101,7 +126,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthorization();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
