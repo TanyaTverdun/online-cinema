@@ -1,0 +1,77 @@
+@model onlineCinema.ViewModels.RegisterViewModel
+@{
+    ViewData["Title"] = "Реєстрація";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <h2 class="text-center mb-4">@ViewData["Title"]</h2>
+        
+        <form asp-action="Register" method="post">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+            
+            <input asp-for="ReturnUrl" type="hidden" />
+            
+            <div class="mb-3">
+                <label asp-for="FirstName" class="form-label">Ім'я</label>
+                <input asp-for="FirstName" class="form-control" />
+                <span asp-validation-for="FirstName" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="LastName" class="form-label">Прізвище</label>
+                <input asp-for="LastName" class="form-control" />
+                <span asp-validation-for="LastName" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="MiddleName" class="form-label">По батькові</label>
+                <input asp-for="MiddleName" class="form-control" />
+                <span asp-validation-for="MiddleName" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Email" class="form-label">Електронна пошта</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="PhoneNumber" class="form-label">Номер телефону</label>
+                <input asp-for="PhoneNumber" class="form-control" />
+                <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="DateOfBirth" class="form-label">Дата народження</label>
+                <input asp-for="DateOfBirth" class="form-control" type="date" />
+                <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="Password" class="form-label">Пароль</label>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            
+            <div class="mb-3">
+                <label asp-for="ConfirmPassword" class="form-label">Підтвердження паролю</label>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+            
+            <div class="d-grid">
+                <button type="submit" class="btn btn-primary">Зареєструватися</button>
+            </div>
+            
+            <div class="text-center mt-3">
+                <p>Вже маєте акаунт? <a asp-action="Login" asp-route-returnUrl="@Model.ReturnUrl">Увійти</a></p>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+

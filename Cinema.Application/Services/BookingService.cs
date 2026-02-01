@@ -14,6 +14,7 @@ namespace onlineCinema.Application.Services
         private readonly BookingMapper _mapper;
         private readonly SnackMapper _snackMapper;
         private readonly PaymentMapper _paymentMapper;
+        private readonly BookingMapper _bookingMapper;
 
         private const int BookingLockMinutes = 15;
 
@@ -174,6 +175,18 @@ namespace onlineCinema.Application.Services
             booking.PaymentId = payment.PaymentId;
             await this._unitOfWork.Booking.UpdateWithDetailsAsync(booking);
             await this._unitOfWork.SaveAsync();
+        }
+
+        public async Task<IEnumerable<BookingHistoryDto>> GetBookingHistoryAsync(string userId)
+        {
+            var bookings = await _unitOfWork.Booking.GetUserBookingsWithDetailsAsync(userId);
+
+            if (bookings == null)
+            {
+                throw new KeyNotFoundException($"Bookings not found for user with ID: {userId}");
+            }
+
+            return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
         }
     }
 }

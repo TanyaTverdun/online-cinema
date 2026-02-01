@@ -90,5 +90,22 @@ namespace onlineCinema.Infrastructure.Repositories
                 }
             }
         }
+
+        public async Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId)
+        {
+            return await _db.Bookings
+                .Where(b => b.ApplicationUserId == userId)
+                .Include(b => b.Payment)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Seat)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Session)
+                        .ThenInclude(s => s.Movie)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Session)
+                        .ThenInclude(s => s.Hall)
+                .OrderByDescending(b => b.CreatedDateTime)
+                .ToListAsync();
+        }
     }
 }

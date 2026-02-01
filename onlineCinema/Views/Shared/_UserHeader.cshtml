@@ -21,21 +21,28 @@
             <div class="d-flex align-items-center gap-3">
                 @if (User.Identity?.IsAuthenticated == true)
                 {
-                    @if (User.IsInRole("Admin")) // Якщо адмін зайшов як юзер, даємо кнопку входу в адмінку
+                    @if (User.IsInRole("Admin"))
                     {
                         <a asp-area="Admin" asp-controller="Movie" asp-action="Index" class="btn btn-sm btn-outline-danger">Адмін-панель</a>
                     }
-                    <a asp-controller="Profile" asp-action="MyProfile" class="user-badge px-3 py-1 rounded-pill text-decoration-none">
+
+                    @* Посилання на ваш профіль у AccountController *@
+                    <a asp-area="" asp-controller="Account" asp-action="Profile" class="user-badge px-3 py-1 rounded-pill text-decoration-none">
                         <span class="text-white small fw-bold">@User.Identity.Name</span>
                     </a>
-                    <form asp-area="Identity" asp-page="/Account/Logout" method="post">
-                        <button type="submit" class="btn btn-link text-white-50 p-0"><i class="bi bi-box-arrow-right fs-5"></i></button>
+
+                    @* Форма виходу, що веде на ваш AccountController *@
+                    <form asp-area="" asp-controller="Account" asp-action="Logout" method="post" class="m-0">
+                        <button type="submit" class="btn btn-link text-white-50 p-0">
+                            <i class="bi bi-box-arrow-right fs-5"></i>
+                        </button>
                     </form>
                 }
                 else
                 {
-                    <a class="btn btn-login px-4" asp-area="Identity" asp-page="/Account/Login">Вхід</a>
-                    <a class="btn btn-signup px-4" asp-area="Identity" asp-page="/Account/Register">Реєстрація</a>
+                    @* Кнопки Входу та Реєстрації для вашого AccountController *@
+                    <a class="btn btn-login px-4" asp-area="" asp-controller="Account" asp-action="Login">Вхід</a>
+                    <a class="btn btn-signup px-4" asp-area="" asp-controller="Account" asp-action="Register">Реєстрація</a>
                 }
             </div>
         </div>
