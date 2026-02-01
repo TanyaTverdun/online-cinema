@@ -1,0 +1,80 @@
+﻿@model onlineCinema.ViewModels.BookingViewModel
+
+@{
+    ViewData["Title"] = "Вибір місць";
+    ViewData["UseFullWidthLayout"] = true;
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/SelectSeats.css" asp-append-version="true" />
+}
+
+<div class="row g-0 w-100">
+    <!-- ЛІВА КОЛОНКА -->
+    <div class="col-lg-9 hall-section">
+        <div class="text-center mb-4 mt-2">
+            <h2 class="text-white mb-1 text-uppercase fw-bold fs-3">@Model.MovieTitle</h2>
+            <p class="small" style="color: var(--bs-gray-500)">@Model.HallName • @Model.ShowingDate.ToString("dd.MM.yyyy, HH:mm")</p>
+        </div>
+
+        <div class="hall-scroll-container">
+            <div class="hall-layout">
+                <div class="screen-text">Screen</div>
+                <div class="cinema-screen"></div>
+
+                <div class="seats-container">
+                    @foreach (var rowGroup in Model.Seats.GroupBy(s => s.Row))
+                    {
+                        <div class="seat-row">
+                            @foreach (var seat in rowGroup.OrderBy(s => s.Number))
+                            {
+                                <div class="seat @seat.CssClass"
+                                     data-id="@seat.SeatId"
+                                     data-price="@seat.Price"
+                                     data-row="@rowGroup.Key"
+                                     data-num="@seat.Number">
+                                </div>
+                            }
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <div class="legend-box">
+            <div class="legend-item"><span class="legend-dot l-available"></span><span class="legend-text">Available</span></div>
+            <div class="legend-item"><span class="legend-dot l-selected"></span><span class="legend-text">Selected</span></div>
+            <div class="legend-item"><span class="legend-dot l-booked"></span><span class="legend-text">Booked</span></div>
+            <div class="legend-item"><span class="legend-dot l-vip"></span><span class="legend-text">Premium</span></div>
+        </div>
+    </div>
+
+    <!-- ПРАВА КОЛОНКА -->
+    <div class="col-lg-3 summary-sidebar">
+        <h4 class="text-white mb-4 text-uppercase fs-5 fw-bold" style="letter-spacing: 2px;">Booking</h4>
+
+        <div id="selectedSeatsList" class="summary-list">
+            <p id="empty-msg" class="small fst-italic" style="color: var(--bs-gray-600)">Select seats to proceed...</p>
+        </div>
+
+        <div class="total-section">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-uppercase small" style="color: var(--bs-gray-500)">Total</span>
+                <h3 class="mb-0 fw-bold text-white fs-2">$<span id="priceDisplay">0.00</span></h3>
+            </div>
+
+            <form asp-action="BookSeats" method="post">
+                <input type="hidden" name="sessionId" value="@Model.SessionId" />
+                <div id="selectedSeatsContainer"></div>
+
+                <button type="submit" id="submitBtn" class="btn btn-confirm w-100 py-3" disabled>
+                    Confirm Seats
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/SelectSeats.js" asp-append-version="true"></script>
+}

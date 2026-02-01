@@ -1,0 +1,76 @@
+﻿@using onlineCinema.ViewModels
+@model IEnumerable<HallViewModel>
+
+@{
+    ViewData["Title"] = "Зали";
+}
+
+<div class="container mt-4">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2>Керування залами</h2>
+        <a asp-action="Create" class="btn btn-primary">
+            <i class="bi bi-plus-lg"></i> + Додати зал
+        </a>
+    </div>
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info">
+            Список залів порожній.
+        </div>
+    }
+    else
+    {
+        <table class="table table-striped table-hover table-bordered align-middle">
+            <thead class="table-dark">
+                <tr>
+                    <th># Залу</th>
+                    <th>Рядів</th>
+                    <th>Місць у ряду</th>
+                    <th>Всього місць</th>
+                    <th>Особливості</th>
+                    <th style="width: 180px;">Дії</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td class="fw-bold">@item.HallNumber</td>
+                        <td>@item.RowCount</td>
+                        <td>@item.SeatInRowCount</td>
+                        <td>
+                            <span class="badge bg-info text-dark">@item.TotalSeats</span>
+                        </td>
+                        <td>
+                            @if (!string.IsNullOrEmpty(item.FeaturesList))
+                            {
+                                <span class="text-secondary">@item.FeaturesList</span>
+                            }
+                            else
+                            {
+                                <span class="text-muted small">-</span>
+                            }
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group">
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-info text-white" title="Деталі та розклад">
+                                    Інфо
+                                </a>
+
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-warning">
+                                    Ред.
+                                </a>
+
+                                <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;"
+                                      onsubmit="return confirm('Ви дійсно хочете видалити зал №@item.HallNumber?');">
+                                    <button type="submit" class="btn btn-sm btn-danger">Вид.</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

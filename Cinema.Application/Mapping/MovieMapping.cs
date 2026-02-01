@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
@@ -10,6 +11,10 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class MovieMapping
     {
+        public partial MovieDto MapToDto(Movie movie);
+
+        public partial IEnumerable<MovieDto> MapToDtoList(IEnumerable<Movie> movies);
+
         private const string PlaceholderImage = "/images/no-poster.png";
 
         [MapProperty(nameof(Movie.PosterImage), nameof(MovieCardDto.PosterUrl), Use = nameof(MapPosterUrl))]

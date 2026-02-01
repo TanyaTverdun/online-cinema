@@ -1,7 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Interfaces;
 using System.Diagnostics;
-using onlineCinema.Models; 
+using onlineCinema.Models;
+using onlineCinema.Application.Services.Interfaces;
 
 namespace onlineCinema.Controllers
 {
@@ -9,20 +10,17 @@ namespace onlineCinema.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMovieService _movieService;
-
         public HomeController(ILogger<HomeController> logger, IMovieService movieService)
         {
             _logger = logger;
             _movieService = movieService;
         }
-
         
         public async Task<IActionResult> Index()
         {
             var movies = await _movieService.GetMoviesForShowcaseAsync();
             return View(movies);
         }
-
        
         public async Task<IActionResult> Details(int id)
         {
