@@ -1,22 +1,88 @@
-html {
-  font-size: 14px;
+﻿html {
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
-html {
-  position: relative;
-  min-height: 100%;
+html, body {
+    height: 100%; 
+    margin: 0;
 }
 
-body {
-  margin-bottom: 60px;
+.footer {
+    position: static !important; 
+    width: auto;
+    line-height: inherit;
+    white-space: normal;
+}
+
+.form-control,
+.form-select,
+.input-group-text {
+    background-color: var(--bs-body-bg) !important;
+    color: var(--bs-body-color) !important;
+    border-color: var(--bs-gray-800) !important;
+}
+
+    .form-control::placeholder {
+        color: var(--bs-secondary-color) !important;
+        opacity: 0.6;
+    }
+
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+    filter: invert(1);
+    cursor: pointer;
+}
+
+.input-validation-error {
+    border: 2px solid var(--bs-danger) !important;
+    background-color: rgba(var(--bs-danger-rgb), 0.05) !important;
+}
+
+.field-validation-error {
+    color: var(--bs-danger) !important;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: block;
+}
+
+.input-validation-error:focus {
+    box-shadow: 0 0 0 0.25rem rgba(var(--bs-danger-rgb), 0.25) !important;
+}
+
+* {
+    scrollbar-width: thin;
+    scrollbar-color: var(--bs-gray-700) var(--bs-body-bg);
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--bs-body-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--bs-gray-700);
+    border-radius: 10px;
+    border: 2px solid var(--bs-body-bg);
+}
+
+    ::-webkit-scrollbar-thumb:hover {
+        background: var(--bs-gray-600);
+    }
+
+select[multiple]::-webkit-scrollbar-thumb {
+    background: var(--bs-gray-800);
 }

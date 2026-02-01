@@ -6,18 +6,21 @@ using FluentValidation;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 
 using onlineCinema.Infrastructure.Data;
-using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Application.Interfaces;
-using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services;
-using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
-using onlineCinema.Mapping;
+using onlineCinema.Infrastructure.Repositories;
 using onlineCinema.Validators;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Application.DTOs.Movie;
+using onlineCinema.Mapping;
+using onlineCinema.Application.Mapping;
+using System.ComponentModel.Design;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -37,7 +40,16 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options =>
     options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
-builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews(options =>
+{
+    options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+});
+
+builder.Services.AddFluentValidationAutoValidation();
+
+builder.Services.AddValidatorsFromAssemblyContaining<MovieFormValidator>();
+FluentValidation.AspNetCore.FluentValidationMvcExtensions.AddFluentValidationClientsideAdapters(builder.Services);
 
 builder.Services.AddScoped<MovieScheduleViewModelMapper>();
 builder.Services.AddSingleton<MovieMapper>();
@@ -51,19 +63,18 @@ builder.Services.AddSingleton<HallMapper>();
 builder.Services.AddSingleton<HallViewModelMapper>();
 builder.Services.AddSingleton<SeatMapper>();
 builder.Services.AddSingleton<SessionViewModelMapper>();
+builder.Services.AddScoped<DirectorMapping>();
+builder.Services.AddScoped<MovieMapping>();
+builder.Services.AddScoped<AdminMovieMapper>();
+builder.Services.AddSingleton<AdminDirectorMapper>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+builder.Services.AddScoped<IMovieService, MovieService>();
+builder.Services.AddScoped<IDirectorService, DirectorService>();
 builder.Services.AddScoped<IBookingService, BookingService>();
 builder.Services.AddScoped<ISnackService, SnackService>();
 builder.Services.AddScoped<IHallService, HallService>();
 builder.Services.AddScoped<ISessionService, SessionService>();
-builder.Services.AddScoped<IMovieService, MovieService>();
-
-builder.Services.AddValidatorsFromAssemblyContaining<BookingInputViewModelValidator>();
-builder.Services.AddValidatorsFromAssemblyContaining<SessionCreateViewModelValidator>();
-
-builder.Services.AddFluentValidationAutoValidation();
-FluentValidation.AspNetCore.FluentValidationMvcExtensions.AddFluentValidationClientsideAdapters(builder.Services);
 
 var app = builder.Build();
 
@@ -91,10 +102,15 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+app.UseAuthorization();
 
 app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    name: "areas",
+    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+	name: "default",
+	pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.MapRazorPages();
 

@@ -1,0 +1,153 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@using onlineCinema.Domain.Enums
+@model MovieFormViewModel
+
+@{
+    ViewData["Title"] = "Add New Movie";
+  
+    var hasErrors = !ViewData.ModelState.IsValid;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Add New Movie</h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white ">
+            <i class="bi bi-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-secondary movie-table mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-info-circle me-2"></i>General Information
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label text-white small text-uppercase">Movie Title</label>
+                            <input asp-for="Title" class="form-control" placeholder="e.g. Interstellar" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label text-white small text-uppercase">Description</label>
+                            <textarea asp-for="Description" class="form-control" rows="5" placeholder="Enter movie description..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ReleaseDate" class="form-label text-white small text-uppercase">Release Date</label>
+                                <input asp-for="ReleaseDate" type="date" class="form-control" />
+                                <span asp-validation-for="ReleaseDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TrailerLink" class="form-label text-white small text-uppercase">YouTube Trailer URL</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-secondary border-secondary text-white"><i class="bi bi-youtube"></i></span>
+                                    <input asp-for="TrailerLink" class="form-control" placeholder="https://..." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-secondary movie-table">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-people me-2"></i>Cast & Crew
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="form-text text-white fw-bold small">Hold Ctrl to select multiple</div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Genres</label>
+                                <select asp-for="GenreIds" asp-items="Model.GenresList" class="form-select" multiple size="4"></select>
+                                <span asp-validation-for="GenreIds" class="text-danger small"></span>
+                                <input asp-for="GenresInput" class="form-control mt-2 form-control-sm" placeholder="Add new (comma separated)" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Actors</label>
+                                <select asp-for="CastIds" asp-items="Model.ActorsList" class="form-select" multiple size="4"></select>
+                                <span asp-validation-for="CastIds" class="text-danger small"></span>
+                                <input asp-for="ActorsInput" class="form-control mt-2 form-control-sm" placeholder="Add new (First Lastname)" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Directors</label>
+                                <select asp-for="DirectorIds" asp-items="Model.DirectorsList" class="form-select" multiple size="3"></select>
+                                <span asp-validation-for="DirectorIds" class="text-danger small"></span>
+                                <input asp-for="DirectorsInput" class="form-control mt-2 form-control-sm" placeholder="Add new director" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Languages</label>
+                                <select asp-for="LanguageIds" asp-items="Model.LanguagesList" class="form-select" multiple size="3"></select>
+                                <span asp-validation-for="LanguageIds" class="text-danger small"></span>
+                                <input asp-for="LanguagesInput" class="form-control mt-2 form-control-sm" placeholder="Add new language" />
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Features (Technologies)</label>
+                                <select asp-for="FeatureIds" asp-items="Model.FeaturesList" class="form-select" multiple size="3"></select>
+                                <div class="form-text text-muted small">Hold Ctrl to select multiple</div>
+                                <input asp-for="FeaturesInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new (comma separated)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-secondary movie-table mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-gear me-2"></i>Settings
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label text-white small text-uppercase">Status</label>
+                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<MovieStatus>()" class="form-select mb-3"></select>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label asp-for="Runtime" class="form-label text-white small text-uppercase">Тривалість (год:хв)</label>
+
+                                <input asp-for="Runtime"
+                                       type="time"
+                                       class="form-control"
+                                       value="@(Model.Runtime?.ToString(@"hh\:mm"))" />
+
+                                <span asp-validation-for="Runtime" class="text-danger small"></span>
+                            </div>
+                            <div class="col-6">
+                                <label asp-for="AgeRating" class="form-label text-white small text-uppercase ">Age Rating</label>
+                                <select asp-for="AgeRating" asp-items="Html.GetEnumSelectList<AgeRating>()" class="form-select border-secondary"></select>
+                                <span asp-validation-for="AgeRating" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-secondary movie-table">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-image me-2"></i>Poster
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <div class="ratio ratio-2x3 bg-black border border-secondary rounded mb-3 d-flex align-items-center justify-content-center">
+                                <i class="bi  display-4 text-secondary"></i>
+                            </div>
+                            <input asp-for="PosterFile" type="file" class="form-control form-control-sm" accept="image/*" />
+                            <span asp-validation-for="PosterFile" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold py-2 shadow-sm">
+                        <i class="bi bi-check-lg me-2"></i>Create Movie
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
