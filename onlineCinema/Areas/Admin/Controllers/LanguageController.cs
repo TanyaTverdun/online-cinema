@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Mapping;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -11,48 +11,36 @@ namespace onlineCinema.Areas.Admin.Controllers
     {
         private readonly ILanguageService _languageService;
         private readonly IValidator<LanguageViewModel> _validator;
+        private readonly AdminLanguageMapper _mapper;
 
-        public LanguageController(ILanguageService languageService, IValidator<LanguageViewModel> validator)
+        public LanguageController(ILanguageService languageService, IValidator<LanguageViewModel> validator, AdminLanguageMapper mapper)
         {
             _languageService = languageService;
             _validator = validator;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
             var dtos = await _languageService.GetAllAsync();
-            var viewModels = dtos.Select(d => new LanguageViewModel
-            {
-                LanguageId = d.LanguageId,
-                LanguageName = d.LanguageName
-            }).ToList();
-            return View(viewModels);
+            return View(_mapper.ToViewModelList(dtos));
         }
 
         [HttpGet]
-        public IActionResult Create()
-        {
-            return View(new LanguageViewModel());
-        }
+        public IActionResult Create() => View(new LanguageViewModel());
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LanguageViewModel model)
         {
-            var validationResult = await _validator.ValidateAsync(model);
-
-            if (!validationResult.IsValid)
+            var result = await _validator.ValidateAsync(model);
+            if (!result.IsValid)
             {
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
+                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 return View(model);
             }
 
-            var dto = new LanguageDto { LanguageName = model.LanguageName };
-            await _languageService.CreateAsync(dto);
-
+            await _languageService.CreateAsync(_mapper.ToDto(model));
             return RedirectToAction(nameof(Index));
         }
 
@@ -61,38 +49,21 @@ namespace onlineCinema.Areas.Admin.Controllers
         {
             var dto = await _languageService.GetByIdAsync(id);
             if (dto == null) return NotFound();
-
-            var viewModel = new LanguageViewModel
-            {
-                LanguageId = dto.LanguageId,
-                LanguageName = dto.LanguageName
-            };
-            return View(viewModel);
+            return View(_mapper.ToViewModel(dto));
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(LanguageViewModel model)
         {
-            var validationResult = await _validator.ValidateAsync(model);
-
-            if (!validationResult.IsValid)
+            var result = await _validator.ValidateAsync(model);
+            if (!result.IsValid)
             {
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
+                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 return View(model);
             }
 
-            var dto = new LanguageDto
-            {
-                LanguageId = model.LanguageId,
-                LanguageName = model.LanguageName
-            };
-
-            await _languageService.UpdateAsync(dto);
-
+            await _languageService.UpdateAsync(_mapper.ToDto(model));
             return RedirectToAction(nameof(Index));
         }
 

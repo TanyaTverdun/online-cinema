@@ -4,56 +4,57 @@ using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Domain.Entities;
 
-namespace onlineCinema.Application.Services;
-
-public class SnackService : ISnackService
+namespace onlineCinema.Application.Services
 {
-    private readonly IUnitOfWork _unitOfWork;
-    private readonly SnackMapping _mapper;
-
-    public SnackService(IUnitOfWork unitOfWork, SnackMapping mapper)
+    public class SnackService : ISnackService
     {
-        _unitOfWork = unitOfWork;
-        _mapper = mapper;
-    }
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly SnackMapping _mapper;
 
-    public async Task<IEnumerable<SnackDto>> GetAllAsync()
-    {
-        var entities = await _unitOfWork.Snack.GetAllAsync();
-        return entities.Select(e => _mapper.MapToDto(e));
-    }
-
-    public async Task<SnackDto?> GetByIdAsync(int id)
-    {
-        var entity = await _unitOfWork.Snack.GetByIdAsync(id);
-        return entity != null ? _mapper.MapToDto(entity) : null;
-    }
-
-    public async Task CreateAsync(SnackDto dto)
-    {
-        var entity = _mapper.MapToEntity(dto);
-        await _unitOfWork.Snack.AddAsync(entity);
-        await _unitOfWork.SaveAsync();
-    }
-
-    public async Task UpdateAsync(SnackDto dto)
-    {
-        var entity = await _unitOfWork.Snack.GetByIdAsync(dto.SnackId);
-        if (entity != null)
+        public SnackService(IUnitOfWork unitOfWork, SnackMapping mapper)
         {
-            _mapper.UpdateEntityFromDto(dto, entity);
-            _unitOfWork.Snack.Update(entity);
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<SnackDto>> GetAllAsync()
+        {
+            var entities = await _unitOfWork.Snack.GetAllAsync();
+            return _mapper.MapToDtoList(entities);
+        }
+
+        public async Task<SnackDto?> GetByIdAsync(int id)
+        {
+            var entity = await _unitOfWork.Snack.GetByIdAsync(id);
+            return entity != null ? _mapper.MapToDto(entity) : null;
+        }
+
+        public async Task CreateAsync(SnackDto dto)
+        {
+            var entity = _mapper.MapToEntity(dto);
+            await _unitOfWork.Snack.AddAsync(entity);
             await _unitOfWork.SaveAsync();
         }
-    }
 
-    public async Task DeleteAsync(int id)
-    {
-        var entity = await _unitOfWork.Snack.GetByIdAsync(id);
-        if (entity != null)
+        public async Task UpdateAsync(SnackDto dto)
         {
-            _unitOfWork.Snack.Remove(entity);
-            await _unitOfWork.SaveAsync();
+            var entity = await _unitOfWork.Snack.GetByIdAsync(dto.SnackId);
+            if (entity != null)
+            {
+                _mapper.UpdateEntityFromDto(dto, entity);
+                _unitOfWork.Snack.Update(entity);
+                await _unitOfWork.SaveAsync();
+            }
+        }
+
+        public async Task DeleteAsync(int id)
+        {
+            var entity = await _unitOfWork.Snack.GetByIdAsync(id);
+            if (entity != null)
+            {
+                _unitOfWork.Snack.Remove(entity);
+                await _unitOfWork.SaveAsync();
+            }
         }
     }
 }

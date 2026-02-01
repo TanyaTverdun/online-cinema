@@ -20,7 +20,7 @@ public class LanguageService : ILanguageService
     public async Task<IEnumerable<LanguageDto>> GetAllAsync()
     {
         var entities = await _unitOfWork.Language.GetAllAsync();
-        return entities.Select(e => _mapper.MapToDto(e));
+        return _mapper.MapToDtoList(entities);
     }
 
     public async Task<LanguageDto?> GetByIdAsync(int id)

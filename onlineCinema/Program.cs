@@ -34,6 +34,10 @@ builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Сервіси
 builder.Services.AddScoped<AdminGenreMapper>();
+builder.Services.AddScoped<AdminCastMemberMapper>();
+builder.Services.AddScoped<AdminFeatureMapper>();
+builder.Services.AddScoped<AdminLanguageMapper>();
+builder.Services.AddScoped<AdminSnackMapper>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IDirectorService, DirectorService>();
 builder.Services.AddScoped<IGenreService, GenreService>();
@@ -51,6 +55,7 @@ builder.Services.AddScoped<LanguageMapping>();
 builder.Services.AddScoped<SnackMapping>();
 builder.Services.AddScoped<DirectorMapping>();
 builder.Services.AddScoped<MovieMapping>();
+
 
 // Ручні мапери
 builder.Services.AddScoped<AdminDirectorMapper>();

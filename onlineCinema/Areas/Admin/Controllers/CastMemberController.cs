@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Mapping;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -12,56 +12,40 @@ namespace onlineCinema.Areas.Admin.Controllers
     {
         private readonly ICastMemberService _castMemberService;
         private readonly IValidator<CastMemberViewModel> _validator;
+        private readonly AdminCastMemberMapper _mapper;
 
-        public CastMemberController(ICastMemberService castMemberService, IValidator<CastMemberViewModel> validator)
+        public CastMemberController(
+            ICastMemberService castMemberService,
+            IValidator<CastMemberViewModel> validator,
+            AdminCastMemberMapper mapper)
         {
             _castMemberService = castMemberService;
             _validator = validator;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
             var dtos = await _castMemberService.GetAllAsync();
-
-            var viewModels = dtos.Select(d => new CastMemberViewModel
-            {
-                CastId = d.CastId,
-                CastFirstName = d.CastFirstName,
-                CastLastName = d.CastLastName,
-                CastMiddleName = d.CastMiddleName
-            }).ToList();
-
+            var viewModels = _mapper.ToViewModelList(dtos);
             return View(viewModels);
         }
 
         [HttpGet]
-        public IActionResult Create()
-        {
-            return View(new CastMemberViewModel());
-        }
+        public IActionResult Create() => View(new CastMemberViewModel());
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CastMemberViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
-
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
+                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 return View(model);
             }
 
-            var dto = new CastMemberCreateUpdateDto
-            {
-                CastFirstName = model.CastFirstName,
-                CastLastName = model.CastLastName,
-                CastMiddleName = model.CastMiddleName
-            };
-
+            var dto = _mapper.ToCreateUpdateDto(model);
             await _castMemberService.CreateAsync(dto);
 
             return RedirectToAction(nameof(Index));
@@ -73,14 +57,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             var dto = await _castMemberService.GetByIdAsync(id);
             if (dto == null) return NotFound();
 
-            var viewModel = new CastMemberViewModel
-            {
-                CastId = dto.CastId,
-                CastFirstName = dto.CastFirstName,
-                CastLastName = dto.CastLastName,
-                CastMiddleName = dto.CastMiddleName
-            };
-
+            var viewModel = _mapper.ToViewModel(dto);
             return View(viewModel);
         }
 
@@ -89,24 +66,13 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(CastMemberViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
-
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
+                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 return View(model);
             }
 
-            var dto = new CastMemberCreateUpdateDto
-            {
-                CastId = model.CastId,
-                CastFirstName = model.CastFirstName,
-                CastLastName = model.CastLastName,
-                CastMiddleName = model.CastMiddleName
-            };
-
+            var dto = _mapper.ToCreateUpdateDto(model);
             await _castMemberService.UpdateAsync(dto);
 
             return RedirectToAction(nameof(Index));

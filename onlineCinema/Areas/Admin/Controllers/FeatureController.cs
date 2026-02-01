@@ -1,9 +1,9 @@
 ﻿using FluentValidation;
 using FluentValidation.Results;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Mapping;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -12,56 +12,36 @@ namespace onlineCinema.Areas.Admin.Controllers
     {
         private readonly IFeatureService _featureService;
         private readonly IValidator<FeatureViewModel> _validator;
+        private readonly AdminFeatureMapper _mapper;
 
-        public FeatureController(IFeatureService featureService, IValidator<FeatureViewModel> validator)
+        public FeatureController(IFeatureService featureService, IValidator<FeatureViewModel> validator, AdminFeatureMapper mapper)
         {
             _featureService = featureService;
             _validator = validator;
+            _mapper = mapper;
         }
 
         public async Task<IActionResult> Index()
         {
             var dtos = await _featureService.GetAllAsync();
-
-            var viewModels = dtos.Select(d => new FeatureViewModel
-            {
-                FeatureId = d.FeatureId,
-                FeatureName = d.FeatureName,
-                FeatureDescription = d.FeatureDescription
-            }).ToList();
-
-            return View(viewModels);
+            return View(_mapper.ToViewModelList(dtos));
         }
 
         [HttpGet]
-        public IActionResult Create()
-        {
-            return View(new FeatureViewModel());
-        }
+        public IActionResult Create() => View(new FeatureViewModel());
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FeatureViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
-
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
+                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 return View(model);
             }
 
-            var dto = new FeatureDto
-            {
-                FeatureName = model.FeatureName,
-                FeatureDescription = model.FeatureDescription
-            };
-
-            await _featureService.CreateAsync(dto);
-
+            await _featureService.CreateAsync(_mapper.ToDto(model));
             return RedirectToAction(nameof(Index));
         }
 
@@ -69,20 +49,8 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             var dto = await _featureService.GetByIdAsync(id);
-
-            if (dto == null)
-            {
-                return NotFound();
-            }
-
-            var viewModel = new FeatureViewModel
-            {
-                FeatureId = dto.FeatureId,
-                FeatureName = dto.FeatureName,
-                FeatureDescription = dto.FeatureDescription
-            };
-
-            return View(viewModel);
+            if (dto == null) return NotFound();
+            return View(_mapper.ToViewModel(dto));
         }
 
         [HttpPost]
@@ -90,25 +58,13 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(FeatureViewModel model)
         {
             ValidationResult result = await _validator.ValidateAsync(model);
-
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
-                }
+                foreach (var error in result.Errors) ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
                 return View(model);
             }
 
-            var dto = new FeatureDto
-            {
-                FeatureId = model.FeatureId,
-                FeatureName = model.FeatureName,
-                FeatureDescription = model.FeatureDescription
-            };
-
-            await _featureService.UpdateAsync(dto);
-
+            await _featureService.UpdateAsync(_mapper.ToDto(model));
             return RedirectToAction(nameof(Index));
         }
 
