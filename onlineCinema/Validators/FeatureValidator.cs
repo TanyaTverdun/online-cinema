@@ -9,10 +9,10 @@ namespace onlineCinema.Validators
         {
             RuleFor(x => x.FeatureName)
                 .NotEmpty().WithMessage("Назва характеристики обов'язкова")
-                .MaximumLength(50).WithMessage("Назва занадто довга (макс 50 символів)");
+                .MaximumLength(100).WithMessage("Назва занадто довга");
 
             RuleFor(x => x.FeatureDescription)
-                .MaximumLength(500).WithMessage("Опис не може перевищувати 500 символів");
+                .MaximumLength(500).WithMessage("Опис занадто довгий");
         }
     }
 }

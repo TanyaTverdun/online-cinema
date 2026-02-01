@@ -1,27 +1,28 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.DTOs;
-using onlineCinema.Application.Services.Interfaces; // Тут лежить IFeatureService
-using onlineCinema.Areas.Admin.Models; // Тут лежить FeatureViewModel
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Areas.Admin.Models;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
-    [Area("Admin")] // <--- ЦЕЙ АТРИБУТ ОБОВ'ЯЗКОВИЙ
+    [Area("Admin")]
     public class FeatureController : Controller
     {
         private readonly IFeatureService _featureService;
+        private readonly IValidator<FeatureViewModel> _validator;
 
-        public FeatureController(IFeatureService featureService)
+        public FeatureController(IFeatureService featureService, IValidator<FeatureViewModel> validator)
         {
             _featureService = featureService;
+            _validator = validator;
         }
 
-        // GET: Admin/Feature/Index
         public async Task<IActionResult> Index()
         {
-            // 1. Отримуємо дані (DTO) з сервісу
             var dtos = await _featureService.GetAllAsync();
 
-            // 2. Перетворюємо DTO у ViewModel для відображення
             var viewModels = dtos.Select(d => new FeatureViewModel
             {
                 FeatureId = d.FeatureId,
@@ -32,25 +33,27 @@ namespace onlineCinema.Areas.Admin.Controllers
             return View(viewModels);
         }
 
-        // GET: Admin/Feature/Create
         [HttpGet]
         public IActionResult Create()
         {
-            // Відкриваємо порожню форму
             return View(new FeatureViewModel());
         }
 
-        // POST: Admin/Feature/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(FeatureViewModel model)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(model);
+
+            if (!result.IsValid)
             {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
-            // Мапимо ViewModel -> DTO для відправки в сервіс
             var dto = new FeatureDto
             {
                 FeatureName = model.FeatureName,
@@ -62,7 +65,6 @@ namespace onlineCinema.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // GET: Admin/Feature/Edit/5
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
@@ -73,7 +75,6 @@ namespace onlineCinema.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            // Мапимо DTO -> ViewModel для форми редагування
             var viewModel = new FeatureViewModel
             {
                 FeatureId = dto.FeatureId,
@@ -84,17 +85,21 @@ namespace onlineCinema.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        // POST: Admin/Feature/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(FeatureViewModel model)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(model);
+
+            if (!result.IsValid)
             {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
-            // Мапимо ViewModel -> DTO
             var dto = new FeatureDto
             {
                 FeatureId = model.FeatureId,
@@ -107,7 +112,6 @@ namespace onlineCinema.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        // POST: Admin/Feature/Delete/5
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)

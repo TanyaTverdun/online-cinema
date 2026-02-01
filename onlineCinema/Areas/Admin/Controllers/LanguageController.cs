@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
@@ -9,22 +10,22 @@ namespace onlineCinema.Areas.Admin.Controllers
     public class LanguageController : Controller
     {
         private readonly ILanguageService _languageService;
+        private readonly IValidator<LanguageViewModel> _validator;
 
-        public LanguageController(ILanguageService languageService)
+        public LanguageController(ILanguageService languageService, IValidator<LanguageViewModel> validator)
         {
             _languageService = languageService;
+            _validator = validator;
         }
 
         public async Task<IActionResult> Index()
         {
             var dtos = await _languageService.GetAllAsync();
-
             var viewModels = dtos.Select(d => new LanguageViewModel
             {
                 LanguageId = d.LanguageId,
                 LanguageName = d.LanguageName
             }).ToList();
-
             return View(viewModels);
         }
 
@@ -38,16 +39,18 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(LanguageViewModel model)
         {
-            if (!ModelState.IsValid)
+            var validationResult = await _validator.ValidateAsync(model);
+
+            if (!validationResult.IsValid)
             {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
-            var dto = new LanguageDto
-            {
-                LanguageName = model.LanguageName
-            };
-
+            var dto = new LanguageDto { LanguageName = model.LanguageName };
             await _languageService.CreateAsync(dto);
 
             return RedirectToAction(nameof(Index));
@@ -64,7 +67,6 @@ namespace onlineCinema.Areas.Admin.Controllers
                 LanguageId = dto.LanguageId,
                 LanguageName = dto.LanguageName
             };
-
             return View(viewModel);
         }
 
@@ -72,8 +74,14 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(LanguageViewModel model)
         {
-            if (!ModelState.IsValid)
+            var validationResult = await _validator.ValidateAsync(model);
+
+            if (!validationResult.IsValid)
             {
+                foreach (var error in validationResult.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 

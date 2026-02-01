@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
@@ -9,10 +11,12 @@ namespace onlineCinema.Areas.Admin.Controllers
     public class CastMemberController : Controller
     {
         private readonly ICastMemberService _castMemberService;
+        private readonly IValidator<CastMemberViewModel> _validator;
 
-        public CastMemberController(ICastMemberService castMemberService)
+        public CastMemberController(ICastMemberService castMemberService, IValidator<CastMemberViewModel> validator)
         {
             _castMemberService = castMemberService;
+            _validator = validator;
         }
 
         public async Task<IActionResult> Index()
@@ -40,15 +44,19 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(CastMemberViewModel model)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(model);
+
+            if (!result.IsValid)
             {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
-            // ВИПРАВЛЕННЯ 1: Використовуємо CastMemberCreateUpdateDto
             var dto = new CastMemberCreateUpdateDto
             {
-                // CastId при створенні зазвичай не потрібен, або 0
                 CastFirstName = model.CastFirstName,
                 CastLastName = model.CastLastName,
                 CastMiddleName = model.CastMiddleName
@@ -80,12 +88,17 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(CastMemberViewModel model)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(model);
+
+            if (!result.IsValid)
             {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
-            // ВИПРАВЛЕННЯ 2: Використовуємо CastMemberCreateUpdateDto
             var dto = new CastMemberCreateUpdateDto
             {
                 CastId = model.CastId,

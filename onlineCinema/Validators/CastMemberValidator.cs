@@ -16,6 +16,7 @@ namespace onlineCinema.Validators
                 .MaximumLength(100).WithMessage("Прізвище не може перевищувати 100 символів");
 
             RuleFor(x => x.CastMiddleName)
+                .NotEmpty().WithMessage("По батькові обов'язкове")
                 .MaximumLength(100).WithMessage("По батькові не може перевищувати 100 символів");
         }
     }

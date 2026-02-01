@@ -23,17 +23,14 @@ namespace onlineCinema.Areas.Admin.Controllers
 
         public async Task<IActionResult> Index()
         {
-            // 1. Отримуємо GenreDto (читання)
             var genresDto = await _genreService.GetAllAsync();
 
-            // 2. АДАПТАЦІЯ: Мапер очікує GenreFormDto, тому конвертуємо вручну
             var formDtos = genresDto.Select(g => new GenreFormDto
             {
                 GenreId = g.GenreId,
                 GenreName = g.GenreName
             });
 
-            // 3. Тепер мапер щасливий
             var viewModel = _mapper.ToViewModelList(formDtos);
             return View(viewModel);
         }
@@ -48,14 +45,12 @@ namespace onlineCinema.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            // 1. Отримуємо GenreDto
             var dto = await _genreService.GetByIdAsync(id);
             if (dto == null)
             {
                 return NotFound();
             }
 
-            // 2. АДАПТАЦІЯ: Конвертуємо в GenreFormDto для мапера
             var formDto = new GenreFormDto
             {
                 GenreId = dto.GenreId,
@@ -92,7 +87,6 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 if (viewModel.GenreId == 0)
                 {
-                    // ВИПРАВЛЕНО: AddAsync -> CreateAsync
                     await _genreService.CreateAsync(_mapper.ToDto(viewModel));
                 }
                 else

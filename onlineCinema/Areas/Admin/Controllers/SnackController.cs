@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
@@ -9,10 +11,11 @@ namespace onlineCinema.Areas.Admin.Controllers
     public class SnackController : Controller
     {
         private readonly ISnackService _snackService;
-
-        public SnackController(ISnackService snackService)
+        private readonly IValidator<SnackViewModel> _validator;
+        public SnackController(ISnackService snackService, IValidator<SnackViewModel> validator)
         {
             _snackService = snackService;
+            _validator = validator;
         }
 
         public async Task<IActionResult> Index()
@@ -39,8 +42,14 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SnackViewModel model)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(model);
+
+            if (!result.IsValid)
             {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 
@@ -50,7 +59,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 Price = model.Price
             };
 
-            await _snackService.CreateAsync(dto); // Використовуємо CreateAsync
+            await _snackService.CreateAsync(dto);
 
             return RedirectToAction(nameof(Index));
         }
@@ -75,8 +84,14 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(SnackViewModel model)
         {
-            if (!ModelState.IsValid)
+            ValidationResult result = await _validator.ValidateAsync(model);
+
+            if (!result.IsValid)
             {
+                foreach (var error in result.Errors)
+                {
+                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                }
                 return View(model);
             }
 

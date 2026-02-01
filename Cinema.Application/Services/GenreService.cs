@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using onlineCinema.Application.DTOs;        // Для GenreDto
-using onlineCinema.Application.DTOs.Genre;  // Для GenreFormDto
+using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.Genre;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -22,12 +22,10 @@ namespace onlineCinema.Application.Services
             _mapper = mapper;
         }
 
-        // ВИПРАВЛЕНО: Повертаємо GenreDto (як в інтерфейсі)
         public async Task<IEnumerable<GenreDto>> GetAllAsync()
         {
             var genres = await _unitOfWork.Genre.GetAllAsync();
 
-            // Ручний мапінг в GenreDto, щоб гарантувати повернення ID та Name
             var dtos = genres.Select(g => new GenreDto
             {
                 GenreId = g.GenreId,
@@ -37,13 +35,11 @@ namespace onlineCinema.Application.Services
             return dtos;
         }
 
-        // ВИПРАВЛЕНО: Повертаємо GenreDto (як в інтерфейсі)
         public async Task<GenreDto?> GetByIdAsync(int id)
         {
             var genre = await _unitOfWork.Genre.GetByIdAsync(id);
             if (genre == null) return null;
 
-            // Ручний мапінг
             return new GenreDto
             {
                 GenreId = genre.GenreId,
@@ -51,7 +47,6 @@ namespace onlineCinema.Application.Services
             };
         }
 
-        // ВИПРАВЛЕНО: Перейменовано з AddAsync на CreateAsync
         public async Task CreateAsync(GenreFormDto dto)
         {
             var genre = _mapper.ToEntity(dto);

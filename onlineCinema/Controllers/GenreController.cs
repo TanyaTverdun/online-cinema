@@ -1,68 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.Genre;
-using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Areas.Admin.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using onlineCinema.Application.Interfaces;
 
-namespace onlineCinema.Controllers;
-
-public class GenreController : Controller
+namespace onlineCinema.Controllers
 {
-    private readonly IGenreService _genreService;
-
-    public GenreController(IGenreService genreService)
+    public class GenreController
     {
-        _genreService = genreService;
-    }
+        private readonly IUnitOfWork _unitOfWork;
 
-    public async Task<IActionResult> Index()
-    {
-        var dtos = await _genreService.GetAllAsync();
-        var viewModels = dtos.Select(d => new GenreViewModel
+        public GenreController(IUnitOfWork unitOfWork)
         {
-            GenreId = d.GenreId,
-            GenreName = d.GenreName
-        });
-        return View(viewModels);
-    }
-
-    public IActionResult Create() => View();
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(GenreViewModel model)
-    {
-        if (ModelState.IsValid)
-        {
-            var dto = new GenreFormDto { GenreName = model.GenreName };
-            await _genreService.CreateAsync(dto);
-            return RedirectToAction(nameof(Index));
+            _unitOfWork = unitOfWork;
         }
-        return View(model);
-    }
-
-    public async Task<IActionResult> Edit(int id)
-    {
-        var dto = await _genreService.GetByIdAsync(id);
-        if (dto == null) return NotFound();
-
-        var model = new GenreViewModel { GenreId = dto.GenreId, GenreName = dto.GenreName };
-        return View(model);
-    }
-
-    [HttpPost]
-    [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(GenreViewModel model)
-    {
-        if (ModelState.IsValid)
-        {
-
-            var dto = new GenreFormDto { GenreName = model.GenreName };
-
-            await _genreService.UpdateAsync(dto);
-
-            return RedirectToAction(nameof(Index));
-        }
-        return View(model);
     }
 }

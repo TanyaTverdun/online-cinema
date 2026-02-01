@@ -33,9 +33,10 @@ builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.R
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 // Сервіси
+builder.Services.AddScoped<AdminGenreMapper>();
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IDirectorService, DirectorService>();
-builder.Services.AddScoped<IGenreService, GenreService>(); // Було дублювання, залишаємо один раз
+builder.Services.AddScoped<IGenreService, GenreService>();
 builder.Services.AddScoped<ICastMemberService, CastMemberService>();
 builder.Services.AddScoped<IFeatureService, FeatureService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
@@ -51,11 +52,14 @@ builder.Services.AddScoped<SnackMapping>();
 builder.Services.AddScoped<DirectorMapping>();
 builder.Services.AddScoped<MovieMapping>();
 
-// Ручні мапери (краще Scoped, щоб уникнути конфліктів з іншими Scoped сервісами)
+// Ручні мапери
 builder.Services.AddScoped<AdminDirectorMapper>();
 
 // 4. Валідація
+// AddFluentValidationAutoValidation - перевіряє дані на сервері.
+// AddFluentValidationClientsideAdapters - дозволяє jQuery Validate розуміти правила FluentValidation (для червоних рамок).
 builder.Services.AddFluentValidationAutoValidation();
+
 builder.Services.AddValidatorsFromAssemblyContaining<DirectorFormValidator>();
 
 builder.Services.AddControllersWithViews(options =>
@@ -81,7 +85,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Важливо: Authentication має бути перед Authorization
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(
