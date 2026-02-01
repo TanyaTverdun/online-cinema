@@ -1,27 +1,24 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using System.Collections.Generic;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Domain.Entities;
+using Riok.Mapperly.Abstractions;
 
-namespace onlineCinema.Application.Mapping;
-
-public class SnackMapping
+namespace onlineCinema.Application.Mapping
 {
-    public SnackDto MapToDto(Snack entity) => new()
+    [Mapper]
+    public partial class SnackMapping
     {
-        SnackId = entity.SnackId,
-        SnackName = entity.SnackName,
-        Price = entity.Price
-    };
+        [MapperIgnoreSource(nameof(Snack.SnackBookings))]
+        public partial SnackDto MapToDto(Snack entity);
 
-    public Snack MapToEntity(SnackDto dto) => new()
-    {
-        SnackId = dto.SnackId,
-        SnackName = dto.SnackName,
-        Price = dto.Price
-    };
+        [MapperIgnoreTarget(nameof(Snack.SnackBookings))]
+        public partial Snack MapToEntity(SnackDto dto);
 
-    public void UpdateEntityFromDto(SnackDto dto, Snack entity)
-    {
-        entity.SnackName = dto.SnackName;
-        entity.Price = dto.Price;
+        [MapperIgnoreTarget(nameof(Snack.SnackBookings))]
+        [MapperIgnoreTarget(nameof(Snack.SnackId))]
+        [MapperIgnoreSource(nameof(SnackDto.SnackId))]
+        public partial void UpdateEntityFromDto(SnackDto dto, Snack entity);
+
+        public partial IEnumerable<SnackDto> MapToDtoList(IEnumerable<Snack> entities);
     }
 }

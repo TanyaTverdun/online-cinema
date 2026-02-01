@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using onlineCinema.Application.DTOs.Genre;
+using onlineCinema.Application.DTOs;        // Для GenreDto
+using onlineCinema.Application.DTOs.Genre;  // Для GenreFormDto
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Application.Interfaces;
 using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Application.Services
@@ -23,21 +22,37 @@ namespace onlineCinema.Application.Services
             _mapper = mapper;
         }
 
-        public async Task<IEnumerable<GenreFormDto>> GetAllAsync()
+        // ВИПРАВЛЕНО: Повертаємо GenreDto (як в інтерфейсі)
+        public async Task<IEnumerable<GenreDto>> GetAllAsync()
         {
             var genres = await _unitOfWork.Genre.GetAllAsync();
-            var dtos = _mapper.ToDtoList(genres);
+
+            // Ручний мапінг в GenreDto, щоб гарантувати повернення ID та Name
+            var dtos = genres.Select(g => new GenreDto
+            {
+                GenreId = g.GenreId,
+                GenreName = g.GenreName
+            });
+
             return dtos;
         }
 
-        public async Task<GenreFormDto?> GetByIdAsync(int id)
+        // ВИПРАВЛЕНО: Повертаємо GenreDto (як в інтерфейсі)
+        public async Task<GenreDto?> GetByIdAsync(int id)
         {
             var genre = await _unitOfWork.Genre.GetByIdAsync(id);
-            var dto = genre == null ? null : _mapper.ToDto(genre);
-            return dto;
+            if (genre == null) return null;
+
+            // Ручний мапінг
+            return new GenreDto
+            {
+                GenreId = genre.GenreId,
+                GenreName = genre.GenreName
+            };
         }
 
-        public async Task AddAsync(GenreFormDto dto)
+        // ВИПРАВЛЕНО: Перейменовано з AddAsync на CreateAsync
+        public async Task CreateAsync(GenreFormDto dto)
         {
             var genre = _mapper.ToEntity(dto);
             await _unitOfWork.Genre.AddAsync(genre);
@@ -47,6 +62,7 @@ namespace onlineCinema.Application.Services
         public async Task UpdateAsync(GenreFormDto dto)
         {
             var genre = await _unitOfWork.Genre.GetByIdAsync(dto.GenreId);
+
             if (genre != null)
             {
                 _mapper.UpdateEntityFromDto(dto, genre);

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace onlineCinema.Models.ViewModels;
+namespace onlineCinema.Areas.Admin.Models;
 
 public class LanguageViewModel
 {

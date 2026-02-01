@@ -14,47 +14,49 @@ using onlineCinema.Application.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// 1. Налаштування бази даних
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnection")
     ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(
         connectionString,
         b => b.MigrationsAssembly("onlineCinema.Infrastructure")
     ));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
 
+// 2. Реєстрація сервісів (Services & Repositories)
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+// Сервіси
 builder.Services.AddScoped<IMovieService, MovieService>();
 builder.Services.AddScoped<IDirectorService, DirectorService>();
-builder.Services.AddScoped<IGenreService, GenreService>();
-
+builder.Services.AddScoped<IGenreService, GenreService>(); // Було дублювання, залишаємо один раз
 builder.Services.AddScoped<ICastMemberService, CastMemberService>();
-builder.Services.AddScoped<CastMemberMapping>();
-
 builder.Services.AddScoped<IFeatureService, FeatureService>();
-builder.Services.AddScoped<FeatureMapping>();
-
-builder.Services.AddScoped<IGenreService, GenreService>();
-builder.Services.AddScoped<GenreMapping>();
-
 builder.Services.AddScoped<ILanguageService, LanguageService>();
-builder.Services.AddScoped<LanguageMapping>();
-
 builder.Services.AddScoped<ISnackService, SnackService>();
-builder.Services.AddScoped<SnackMapping>();
 
+// 3. Реєстрація Маперів (Mapping)
+// Mapperly мапери
+builder.Services.AddScoped<CastMemberMapping>();
+builder.Services.AddScoped<FeatureMapping>();
+builder.Services.AddScoped<GenreMapping>();
+builder.Services.AddScoped<LanguageMapping>();
+builder.Services.AddScoped<SnackMapping>();
 builder.Services.AddScoped<DirectorMapping>();
 builder.Services.AddScoped<MovieMapping>();
-builder.Services.AddSingleton<AdminDirectorMapper>();
 
+// Ручні мапери (краще Scoped, щоб уникнути конфліктів з іншими Scoped сервісами)
+builder.Services.AddScoped<AdminDirectorMapper>();
+
+// 4. Валідація
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddValidatorsFromAssemblyContaining<DirectorFormValidator>();
-
-
 
 builder.Services.AddControllersWithViews(options =>
 {
@@ -71,7 +73,6 @@ if (app.Environment.IsDevelopment())
 else
 {
     app.UseExceptionHandler("/Home/Error");
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
 
@@ -80,6 +81,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication(); // Важливо: Authentication має бути перед Authorization
 app.UseAuthorization();
 
 app.MapControllerRoute(
@@ -89,6 +91,7 @@ app.MapControllerRoute(
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
 app.MapRazorPages();
 
 app.Run();

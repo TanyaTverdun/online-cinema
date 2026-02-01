@@ -20,7 +20,7 @@ public class CastMemberService : ICastMemberService
     public async Task<IEnumerable<CastMemberDto>> GetAllAsync()
     {
         var entities = await _unitOfWork.CastMember.GetAllAsync();
-        return entities.Select(e => _mapper.MapToDto(e));
+        return _mapper.MapToDtoList(entities);
     }
 
     public async Task<CastMemberDto?> GetByIdAsync(int id)
