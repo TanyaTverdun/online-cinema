@@ -82,6 +82,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 await _directorService.UpdateAsync(_mapper.ToDto(viewModel));
                 return RedirectToAction(nameof(Index));
             }
+
             return View(viewModel);
         }
 

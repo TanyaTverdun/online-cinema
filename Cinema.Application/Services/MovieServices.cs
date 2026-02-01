@@ -5,9 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
+using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Domain.Enums;
 
@@ -24,6 +26,13 @@ namespace onlineCinema.Application.Services
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
             _mapper = mapper;
+        }
+
+        public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
+        {
+            var movies = await _unitOfWork.Movie.GetAllAsync();
+
+            return _mapper.MapToDtoList(movies);
         }
 
         public async Task<IEnumerable<MovieCardDto>> GetMoviesForShowcaseAsync()

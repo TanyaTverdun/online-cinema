@@ -1,0 +1,37 @@
+﻿<nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom border-danger py-3">
+    <div class="container-fluid px-4">
+        <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+            <div class="logo-box bg-danger px-2 rounded">
+                <i class="bi bi-shield-lock-fill text-white"></i>
+            </div>
+            <span class="fw-bold">ADMIN <span class="text-danger">PANEL</span></span>
+        </a>
+
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#adminNavbar">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="adminNavbar">
+            <ul class="navbar-nav mx-auto gap-3">
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Movie" ? "active text-danger" : "")"
+                       asp-area="Admin" asp-controller="Movie" asp-action="Index">Фільми</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link @(ViewContext.RouteData.Values["controller"]?.ToString() == "Director" ? "active text-danger" : "")"
+                       asp-area="Admin" asp-controller="Director" asp-action="Index">Режисери</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" asp-area="Admin" asp-controller="Session" asp-action="Index">Сеанси</a>
+                </li>
+            </ul>
+
+            <div class="d-flex align-items-center gap-3">
+                <span class="badge bg-danger text-uppercase">Адміністратор: @User.Identity?.Name</span>
+                <form asp-area="Identity" asp-page="/Account/Logout" method="post">
+                    <button type="submit" class="btn btn-outline-light btn-sm">Вихід</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</nav>

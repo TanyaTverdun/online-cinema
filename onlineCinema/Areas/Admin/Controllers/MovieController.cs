@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;

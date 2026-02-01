@@ -13,4 +13,6 @@ public class Ticket
 
     public int BookingId { get; set; }
     public Booking Booking { get; set; } = null!;
+
+    public DateTime? LockUntil { get; set; }
 }

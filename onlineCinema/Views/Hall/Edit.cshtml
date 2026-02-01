@@ -1,0 +1,74 @@
+﻿@model onlineCinema.ViewModels.HallInputViewModel
+
+@{
+    ViewData["Title"] = "Редагування залу";
+}
+
+<div class="container mt-4">
+    <h2>Редагування залу №@Model.HallNumber</h2>
+    <hr />
+    <div class="row">
+        <div class="col-md-6">
+            <form asp-action="Edit" method="post">
+                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                <input type="hidden" asp-for="Id" />
+
+                <div class="mb-3">
+                    <label asp-for="HallNumber" class="form-label"></label>
+                    <input asp-for="HallNumber" class="form-control" />
+                    <span asp-validation-for="HallNumber" class="text-danger"></span>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="RowCount" class="form-label"></label>
+                        <input asp-for="RowCount" class="form-control" />
+                        <span asp-validation-for="RowCount" class="text-danger"></span>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label asp-for="SeatInRowCount" class="form-label"></label>
+                        <input asp-for="SeatInRowCount" class="form-control" />
+                        <span asp-validation-for="SeatInRowCount" class="text-danger"></span>
+                    </div>
+                </div>
+
+                <h4 class="mt-3">Особливості</h4>
+                <div class="mb-3 border p-3 rounded">
+                    @if (Model.AvailableFeatures != null && Model.AvailableFeatures.Any())
+                    {
+                        foreach (var feature in Model.AvailableFeatures)
+                        {
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox"
+                                       name="SelectedFeatureIds"
+                                       value="@feature.Id"
+                                       id="edit_f_@feature.Id"
+                                       @(feature.IsSelected ? "checked" : "") />
+
+                                <label class="form-check-label" for="edit_f_@feature.Id">
+                                    @feature.Name
+                                </label>
+                            </div>
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">Особливості відсутні в базі даних.</p>
+                    }
+                </div>
+
+                <div class="mt-4">
+                    <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+                    <a asp-action="Index" class="btn btn-secondary">Скасувати</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

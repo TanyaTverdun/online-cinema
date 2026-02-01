@@ -1,0 +1,75 @@
+﻿@model onlineCinema.ViewModels.SnackSelectionViewModel
+
+@{
+    ViewData["Title"] = "Снеки та напої";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/AddSnacks.css" asp-append-version="true" />
+}
+
+<div id="snackSelectionPage"
+     data-lock-until="@Model.LockUntil.ToString("o")"
+     data-seats-price="@Model.SeatsTotalPrice.ToString().Replace(',', '.')">
+
+    <div class="container py-5 mb-5">
+
+        <!-- ТАЙМЕР -->
+        <div class="timer-box mb-4 animate__animated animate__fadeInDown">
+            <div class="d-flex align-items-center">
+                <i class="bi bi-clock-history me-3 fs-4"></i>
+                <span class="text-uppercase small ls-1">Reservation expires in:</span>
+            </div>
+            <div class="timer-text" id="countdown">15:00</div>
+        </div>
+
+        <!-- ІНФО ПРО КВИТКИ -->
+        <div class="info-bar d-flex justify-content-between align-items-center">
+            <span class="text-white-50 text-uppercase small">Tickets Value</span>
+            <strong class="text-white fs-5" id="seatsTotalDisplay">@Model.SeatsTotalPrice.ToString("F2") $</strong>
+        </div>
+
+        <form asp-action="AddSnacks" method="post">
+            <input type="hidden" asp-for="BookingId" />
+
+            <!-- СІТКА СНЕКІВ -->
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4 mb-5">
+                @for (int i = 0; i < Model.AvailableSnacks.Count; i++)
+                {
+                    <div class="col">
+                        <div class="snack-card">
+                            <div class="text-white-50 mb-3"><i class="bi bi-cup-straw fs-1"></i></div>
+                            <h5 class="snack-title">@Model.AvailableSnacks[i].Name</h5>
+                            <p class="snack-price-display">@Model.AvailableSnacks[i].Price.ToString("F2") $</p>
+                            <input type="hidden" asp-for="AvailableSnacks[i].SnackId" />
+                            <input type="hidden" asp-for="AvailableSnacks[i].Price" class="snack-price" />
+                            <div class="qty-group">
+                                <button type="button" class="btn-qty" onclick="updateQty(this, -1)">-</button>
+                                <input type="number" asp-for="AvailableSnacks[i].Quantity" class="qty-input" value="0" readonly />
+                                <button type="button" class="btn-qty" onclick="updateQty(this, 1)">+</button>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+
+            <!-- НИЖНЯ ПАНЕЛЬ -->
+            <div class="checkout-bar">
+                <div class="container d-flex flex-column flex-md-row justify-content-between align-items-center gap-3">
+                    <div class="text-center text-md-start">
+                        <div class="text-white-50 text-uppercase small" style="letter-spacing: 2px;">Grand Total</div>
+                        <div class="text-white fw-bold fs-2">$<span id="grandTotalDisplay">@Model.SeatsTotalPrice.ToString("F2")</span></div>
+                    </div>
+                    <button type="submit" class="btn btn-confirm btn-lg w-100 w-md-auto">
+                        Complete Order <i class="bi bi-chevron-right ms-2"></i>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+@section Scripts {
+    <script src="~/js/AddSnacks.js" asp-append-version="true"></script>
+}

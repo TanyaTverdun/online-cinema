@@ -1,0 +1,66 @@
+﻿body {
+    background-color: #0f0f0f;
+}
+
+.nav-pills .nav-link {
+    border-radius: 8px;
+    background-color: #1a1a1a;
+    border: 1px solid #333;
+    transition: all 0.3s ease;
+    color: white !important;
+}
+
+    .nav-pills .nav-link.active {
+        background-color: #e50914 !important;
+        border-color: #e50914;
+        color: white !important;
+    }
+
+    .nav-pills .nav-link:hover {
+        color: white !important;
+        background-color: #333;
+    }
+
+.card {
+    background-color: #1a1a1a !important;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+    .card:hover {
+        background-color: #252525 !important;
+        transform: translateY(-2px);
+        border-color: #444;
+    }
+
+.btn-light {
+    border-radius: 6px;
+    transition: all 0.2s;
+}
+
+    .btn-light:hover {
+        background-color: #e50914;
+        color: white;
+        border-color: #e50914;
+    }
+
+.badge {
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.card {
+    background-color: #1a1a1a !important;
+    border: none !important;
+    box-shadow: none !important;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+    .card:hover {
+        background-color: #252525 !important;
+        transform: translateY(-2px);
+        border: 1px solid #444 !important;
+    }
+
+footer {
+    display: none !important;
+}

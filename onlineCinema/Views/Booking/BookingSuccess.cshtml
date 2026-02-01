@@ -1,0 +1,43 @@
+﻿@model int
+
+@{
+    ViewData["Title"] = "Успішне бронювання";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/BookingSuccess.css" asp-append-version="true" />
+}
+
+<div class="container success-wrapper">
+    <div class="success-card">
+
+        <!-- Іконка -->
+        <div class="icon-box">
+            <i class="bi bi-check-circle-fill"></i>
+        </div>
+
+        <!-- Заголовок -->
+        <h1 class="success-title">Success!</h1>
+        <p class="success-desc">
+            Your booking has been successfully confirmed.
+            <br>Check your email for the tickets.
+        </p>
+
+        <!-- Номер замовлення -->
+        <div class="order-number-box">
+            <span class="order-label">Order Number</span>
+            <span class="order-value">#@Model</span>
+        </div>
+
+        <!-- Кнопки -->
+        <div class="d-flex flex-column flex-md-row justify-content-center gap-3">
+            <a href="/" class="btn btn-lux btn-lux-primary">
+                Back to Home
+            </a>
+            <button class="btn btn-lux btn-lux-outline" onclick="window.print()">
+                <i class="bi bi-printer me-2"></i> Print Receipt
+            </button>
+        </div>
+
+    </div>
+</div>

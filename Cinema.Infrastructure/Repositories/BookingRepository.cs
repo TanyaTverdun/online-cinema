@@ -18,7 +18,6 @@ namespace onlineCinema.Infrastructure.Repositories
         {
             _db = db;
         }
-
       
         public async Task<Booking?> GetByIdWithDetailsAsync(int id)
         {
@@ -29,23 +28,17 @@ namespace onlineCinema.Infrastructure.Repositories
                     .ThenInclude(sb => sb.Snack) 
                 .FirstOrDefaultAsync(b => b.BookingId == id);
         }
-
        
         public async Task UpdateWithDetailsAsync(Booking newBookingData)
         {
-            
-            
             var existingBooking = await _db.Bookings
                 .Include(b => b.Tickets)
                 .Include(b => b.SnackBookings)
                 .FirstOrDefaultAsync(b => b.BookingId == newBookingData.BookingId);
 
             if (existingBooking == null) return;
-
            
             existingBooking.PaymentId = newBookingData.PaymentId;
-          
-
           
             foreach (var existingSnack in existingBooking.SnackBookings.ToList())
             {
@@ -54,7 +47,6 @@ namespace onlineCinema.Infrastructure.Repositories
                     _db.Entry(existingSnack).State = EntityState.Deleted; 
                 }
             }
-
            
             foreach (var newSnack in newBookingData.SnackBookings)
             {
@@ -74,10 +66,6 @@ namespace onlineCinema.Infrastructure.Repositories
                 }
             }
 
-           
-           
-
-          
             foreach (var existingTicket in existingBooking.Tickets.ToList())
             {
                 
@@ -96,13 +84,11 @@ namespace onlineCinema.Infrastructure.Repositories
                 {
                     
                     newTicket.BookingId = existingBooking.BookingId;
-                    newTicket.SessionId = existingBooking.Tickets.FirstOrDefault()?.SessionId ?? newTicket.SessionId; 
+                    newTicket.SessionId = existingBooking.Tickets
+                        .FirstOrDefault()?.SessionId ?? newTicket.SessionId; 
                     existingBooking.Tickets.Add(newTicket);
                 }
-               
             }
-
-          
         }
     }
 }

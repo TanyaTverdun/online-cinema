@@ -1,0 +1,253 @@
+﻿    :root {
+        --seat-size: 2rem;
+        --seat-gap: 0.25rem;
+        --seat-radius: 0.2rem;
+        --color-bg: #000;
+        --sidebar-bg: var(--bs-gray-900);
+        --text-main: var(--bs-white);
+        --text-muted: var(--bs-gray-600);
+        --color-available: var(--bs-gray-700);
+        --color-hover: var(--bs-gray-500);
+        --color-selected: var(--bs-danger);
+        --color-vip: var(--bs-purple);
+        --color-booked: var(--bs-gray-800);
+        --screen-shadow: rgba(255, 255, 255, 0.1);
+    }
+
+    .booking-page main,
+    .booking-page .container,
+    .booking-page .container-fluid {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+
+
+    body, html {
+        background-color: var(--color-bg) !important;
+        height: 100%;
+        margin: 0;
+        font-family: 'Nunito Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+
+    /* ЛІВА ЧАСТИНА */
+    .hall-section {
+        background-color: var(--color-bg);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        overflow-x: hidden;
+    }
+
+    .hall-layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        width: max-content;
+        max-width: 100%;
+    }
+
+    .hall-scroll-container {
+        width: 100%;
+        overflow-x: auto;
+        display: flex;
+        justify-content: center;
+        padding-bottom: 2rem;
+    }
+
+    /* ЕКРАН */
+    .cinema-screen {
+        background: linear-gradient(to bottom, var(--bs-gray-600), transparent);
+        height: 0.5rem;
+        width: 100%;
+        margin: 0 auto 3rem;
+        border-radius: 50%;
+        opacity: 0.5;
+        box-shadow: 0 1rem 3rem var(--screen-shadow);
+        position: relative;
+    }
+
+    .screen-text {
+        color: var(--bs-gray-600);
+        letter-spacing: 0.5em;
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+        text-align: center;
+        width: 100%;
+        font-weight: 800;
+    }
+
+    /* МІСЦЯ */
+    .seats-container {
+        display: flex;
+        flex-direction: column;
+        gap: var(--seat-gap);
+    }
+
+    .seat-row {
+        display: flex;
+        justify-content: center;
+        gap: var(--seat-gap);
+    }
+
+    .seat {
+        width: var(--seat-size);
+        height: calc(var(--seat-size) * 1.2);
+        background-color: var(--color-available);
+        border-radius: var(--seat-radius);
+        cursor: pointer;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+        .seat:hover:not(.seat-booked) {
+            transform: scale(1.15);
+            background-color: var(--color-hover);
+            z-index: 2;
+            box-shadow: 0 0 10px rgba(255,255,255,0.2);
+        }
+
+    .seat-vip {
+        background-color: var(--color-vip) !important;
+    }
+
+    .seat-booked {
+        background-color: var(--color-booked) !important;
+        opacity: 0.3;
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+
+    .seat-selected {
+        background-color: var(--color-selected) !important;
+        box-shadow: 0 0 1rem var(--color-selected);
+        border: 1px solid rgba(255,255,255,0.5);
+    }
+
+    /* ПРАВА ПАНЕЛЬ */
+    .summary-sidebar {
+        background-color: var(--sidebar-bg);
+        border-left: 1px solid #222;
+        height: 90vh;
+        position: sticky;
+        top: 0;
+        right: 0;
+        padding: 2rem;
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+    }
+
+    .summary-list {
+        flex-grow: 1;
+        overflow-y: auto;
+        margin-bottom: 1rem;
+        padding-right: 0.5rem;
+    }
+
+        /* Скролбар для списку */
+        .summary-list::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .summary-list::-webkit-scrollbar-thumb {
+            background: var(--bs-gray-700);
+        }
+
+    .total-section {
+        margin-top: auto;
+        padding-top: 1rem;
+    }
+
+    .btn-confirm {
+        background-color: var(--bs-danger);
+        border: none;
+        font-weight: 700;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        border-radius: 0;
+        transition: 0.3s;
+    }
+
+        .btn-confirm:hover:not(:disabled) {
+            background-color: #c9302c; /* Трохи темніший червоний */
+            box-shadow: 0 0 15px rgba(217, 83, 79, 0.4);
+        }
+
+        .btn-confirm:disabled {
+            background-color: var(--bs-gray-700);
+            opacity: 0.5;
+        }
+
+    /* Легенда */
+    .legend-box {
+        display: flex;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 1.5rem;
+        margin-top: 2rem;
+    }
+
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .legend-dot {
+        width: 0.8rem;
+        height: 0.8rem;
+        border-radius: 0.1rem;
+        display: block;
+    }
+
+    .l-available {
+        background-color: var(--color-available);
+    }
+
+    .l-selected {
+        background-color: var(--color-selected);
+    }
+
+    .l-booked {
+        background-color: var(--color-booked);
+        opacity: 0.5;
+    }
+
+    .l-vip {
+        background-color: var(--color-vip);
+    }
+
+    .legend-text {
+        color: var(--text-muted);
+        font-size: 0.75rem;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    footer {
+        display: none !important;
+    }
+
+    /* МОБІЛЬНА АДАПТАЦІЯ */
+    @@media (max-width: 991.98px) {
+        .hall-section {
+            min-height: auto;
+            padding-bottom: 1rem;
+        }
+
+        .summary-sidebar {
+            height: auto;
+            min-height: 300px;
+            position: relative;
+            border-left: none;
+            border-top: 1px solid #222;
+        }
+
+        :root {
+            --seat-size: 1.8rem;
+        }
+    }
