@@ -1,32 +1,50 @@
-using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Models;
+using onlineCinema.Application.Interfaces;
+using System.Diagnostics;
+using onlineCinema.Models; 
 
 namespace onlineCinema.Controllers
 {
-	public class HomeController : Controller
-	{
-		private readonly ILogger<HomeController> _logger;
+    public class HomeController : Controller
+    {
+        private readonly ILogger<HomeController> _logger;
+        private readonly IMovieService _movieService;
 
-		public HomeController(ILogger<HomeController> logger)
-		{
-			_logger = logger;
-		}
+        public HomeController(ILogger<HomeController> logger, IMovieService movieService)
+        {
+            _logger = logger;
+            _movieService = movieService;
+        }
 
-		public IActionResult Index()
-		{
-			return View();
-		}
+        
+        public async Task<IActionResult> Index()
+        {
+            var movies = await _movieService.GetMoviesForShowcaseAsync();
+            return View(movies);
+        }
 
-		public IActionResult Privacy()
-		{
-			return View();
-		}
+       
+        public async Task<IActionResult> Details(int id)
+        {
+            var movie = await _movieService.GetMovieDetailsAsync(id);
 
-		[ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-		public IActionResult Error()
-		{
-			return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
-		}
-	}
+            if (movie == null)
+            {
+                return NotFound();
+            }
+
+            return View(movie);
+        }
+
+        public IActionResult Privacy()
+        {
+            return View();
+        }
+
+        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        public IActionResult Error()
+        {
+            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+    }
 }
