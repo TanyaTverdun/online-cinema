@@ -25,7 +25,8 @@ namespace onlineCinema.Application.Services
         public async Task<IEnumerable<DirectorFormDto>> GetAllAsync()
         {
             var directors = await _unitOfWork.Director.GetAllAsync();
-            return directors.Select(d => _mapper.ToDto(d));
+            var dtos = _mapper.ToDtoList(directors);
+            return dtos;
         }
 
         public async Task<DirectorFormDto?> GetByIdAsync(int id)

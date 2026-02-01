@@ -14,8 +14,4 @@ namespace onlineCinema.Application.DTOs.Movie
         public List<LanguageDto> Languages { get; set; } = new();
         public List<FeatureDto> Features { get; set; } = new(); 
     }
-
-    public class GenreDto { public int Id { get; set; } public string Name { get; set; } = string.Empty; }
-    public class PersonDto { public int Id { get; set; } public string FullName { get; set; } = string.Empty; }
-    public class LanguageDto { public int Id { get; set; } public string Name { get; set; } = string.Empty; }
 }

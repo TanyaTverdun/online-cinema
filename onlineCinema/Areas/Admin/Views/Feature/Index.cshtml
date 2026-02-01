@@ -1,0 +1,42 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@model IEnumerable<FeatureViewModel>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Features Management</h1>
+        <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
+            <i class="bi bi-plus-lg me-1"></i> Add Feature
+        </a>
+    </div>
+
+    <div class="card border-secondary bg-dark">
+        <table class="table table-hover mb-0 align-middle movie-table">
+            <thead class="bg-black text-uppercase small text-muted">
+                <tr>
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th class="text-end">Actions</th>
+                </tr>
+            </thead>
+            <tbody class="text-white">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.FeatureName</td>
+                        <td>@item.FeatureDescription</td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a asp-action="Edit" asp-route-id="@item.FeatureId" class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form asp-action="Delete" asp-route-id="@item.FeatureId" method="post" onsubmit="return confirm('Delete this feature?');" style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

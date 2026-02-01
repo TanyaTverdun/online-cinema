@@ -133,7 +133,7 @@ namespace onlineCinema.Controllers
 
             try
             {
-                var snackDtos = await _snackService.GetAllSnacksAsync();
+                var snackDtos = await _snackService.GetAllAsync();
                 var seatsTotalPrice = await _bookingService.GetTicketsPriceTotalAsync(bookingId);
                 var lockUntil = await _bookingService.GetBookingLockUntilAsync(bookingId);
                 var viewModel = _snackMapper.MapToSelectionViewModel(snackDtos, bookingId, seatsTotalPrice, lockUntil);

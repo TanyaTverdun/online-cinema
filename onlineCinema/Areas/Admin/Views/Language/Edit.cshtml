@@ -1,0 +1,33 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@model LanguageViewModel
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3">@(Model.LanguageId == 0 ? "Add Language" : "Edit Language")</h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">Back to List</a>
+    </div>
+
+    <form asp-action="@(Model.LanguageId == 0 ? "Create" : "Edit")" method="post">
+        <input type="hidden" asp-for="LanguageId" />
+        <div class="card border-secondary movie-table mx-auto" style="max-width: 600px;">
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label asp-for="LanguageName" class="form-label text-white small text-uppercase">Language Name</label>
+                    <input asp-for="LanguageName" class="form-control" placeholder="e.g. English, Ukrainian" />
+                    <span asp-validation-for="LanguageName" class="text-danger small"></span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold">Save Language</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
