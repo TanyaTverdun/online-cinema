@@ -1,9 +1,6 @@
 ﻿html {
     font-size: 14px;
 }
-/* ================================
-   DESIGN TOKENS
-================================ */
 
 :root {
     --bg-main: #000000;
@@ -16,10 +13,6 @@
     --border-soft: rgba(255,255,255,0.08);
 }
 
-/* ================================
-   BASE
-================================ */
-
 html, body {
     height: 100%;
     margin: 0;
@@ -31,10 +24,6 @@ body {
     font-family: "Segoe UI", Tahoma, sans-serif;
 }
 
-/* ================================
-   LINKS
-================================ */
-
 a {
     color: var(--text-muted);
     text-decoration: none;
@@ -43,10 +32,6 @@ a {
     a:hover {
         color: var(--accent);
     }
-
-/* ================================
-   NAVBAR
-================================ */
 
 .navbar {
     background-color: var(--bg-main) !important;
@@ -69,10 +54,6 @@ a {
         color: var(--accent) !important;
     }
 
-/* ================================
-   BUTTONS
-================================ */
-
 .btn-primary {
     background-color: var(--accent);
     border-color: var(--accent);
@@ -94,10 +75,6 @@ a {
         color: #fff;
     }
 
-/* ================================
-   CARDS (Movies, Admin, Details)
-================================ */
-
 .card {
     background-color: var(--bg-card);
     border: 1px solid var(--border-soft);
@@ -112,7 +89,6 @@ a {
     color: var(--text-muted);
 }
 
-/* Movie posters */
 .movie-poster {
     border-radius: 6px;
     transition: transform 0.25s ease, box-shadow 0.25s ease;
@@ -122,10 +98,6 @@ a {
         transform: scale(1.03);
         box-shadow: 0 10px 30px rgba(229, 9, 20, 0.35);
     }
-
-/* ================================
-   TABLES (Admin, Sessions)
-================================ */
 
 .table {
     color: var(--text-main);
@@ -144,25 +116,22 @@ a {
     background-color: rgba(229, 9, 20, 0.08);
 }
 
-/* ================================
-   FORMS (Login, Register, CRUD)
-================================ */
-
 .form-control,
 .form-select {
     background-color: #0f0f0f;
     color: #fff;
     border: 1px solid var(--border-soft);
 }
-
     .form-control::placeholder {
-        color: #777;
+        color: var(--bs-secondary-color) !important;
+        opacity: 0.6;
     }
 
 @media (min-width: 768px) {
     html {
         font-size: 16px;
     }
+
     .form-control:focus,
     .form-select:focus {
         background-color: #0f0f0f;
@@ -170,10 +139,7 @@ a {
         box-shadow: 0 0 0 0.2rem rgba(229, 9, 20, 0.5);
         border-color: var(--accent);
     }
-
-/* ================================
-   FOOTER
-================================ */
+}
 
 footer {
     background-color: var(--bg-main);
@@ -181,11 +147,6 @@ footer {
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
     box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
-}
-
-html, body {
-    height: 100%; 
-    margin: 0;
 }
 
 .footer {
@@ -202,11 +163,6 @@ html, body {
     color: var(--bs-body-color) !important;
     border-color: var(--bs-gray-800) !important;
 }
-
-    .form-control::placeholder {
-        color: var(--bs-secondary-color) !important;
-        opacity: 0.6;
-    }
 
 input[type="date"]::-webkit-calendar-picker-indicator,
 input[type="time"]::-webkit-calendar-picker-indicator {
@@ -253,9 +209,6 @@ input[type="time"]::-webkit-calendar-picker-indicator {
     ::-webkit-scrollbar-thumb:hover {
         background: var(--bs-gray-600);
     }
-/* ================================
-   UTILS
-================================ */
 
 .text-muted {
     color: var(--text-muted) !important;
