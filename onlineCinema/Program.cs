@@ -83,7 +83,6 @@ builder.Services.AddScoped<CastMemberMapping>();
 builder.Services.AddScoped<FeatureMapping>();
 builder.Services.AddScoped<GenreMapping>();
 builder.Services.AddScoped<LanguageMapping>();
-builder.Services.AddScoped<SnackMapping>();
 builder.Services.AddScoped<DirectorMapping>();
 builder.Services.AddScoped<MovieMapping>();
 builder.Services.AddScoped<MovieScheduleViewModelMapper>();

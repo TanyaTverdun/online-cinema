@@ -9,9 +9,9 @@ namespace onlineCinema.Application.Services
     public class SnackService : ISnackService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly SnackMapping _mapper;
+        private readonly SnackMapper _mapper;
 
-        public SnackService(IUnitOfWork unitOfWork, SnackMapping mapper)
+        public SnackService(IUnitOfWork unitOfWork, SnackMapper mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -20,13 +20,13 @@ namespace onlineCinema.Application.Services
         public async Task<IEnumerable<SnackDto>> GetAllAsync()
         {
             var entities = await _unitOfWork.Snack.GetAllAsync();
-            return _mapper.MapToDtoList(entities);
+            return _mapper.MapSnacksToDtos(entities);
         }
 
         public async Task<SnackDto?> GetByIdAsync(int id)
         {
             var entity = await _unitOfWork.Snack.GetByIdAsync(id);
-            return entity != null ? _mapper.MapToDto(entity) : null;
+            return entity != null ? _mapper.MapSnackToDto(entity) : null;
         }
 
         public async Task CreateAsync(SnackDto dto)
