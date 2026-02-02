@@ -40,7 +40,7 @@
 
                 <div class="row">
                     <div class="col-lg-8">
-                        <h4 class="text-white border-bottom border-secondary pb-2 mb-3">Description</h4>
+                        <h6 class="text-white border-bottom  pb-2 mb-3">ОПИС</h6>
                         <p class="lead fs-6 mb-5 text-white text-break">@Model.Description</p>
 
                         <div class="row g-4 mb-5">
@@ -101,15 +101,19 @@
 
                             @if (Model.Status == MovieStatus.Released)
                             {
-                                <button class="btn btn-danger btn-lg w-100 mb-3 shadow">
+                                <a asp-controller="Session"
+                                   asp-action="Schedule"
+                                   asp-route-id="@Model.Id"
+                                   class="btn btn-danger btn-lg w-100 mb-3 shadow">
                                     <i class="bi bi-ticket-fill me-2"></i>Get Tickets
-                                </button>
+                                </a>
                                 <small class="d-block text-center text-muted">Select session time next</small>
                             }
                             else
                             {
                                 <button class="btn btn-secondary w-100" disabled>Tickets Unavailable</button>
                             }
+
                         </div>
                     </div>
                 </div>
