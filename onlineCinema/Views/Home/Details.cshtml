@@ -101,9 +101,12 @@
 
                             @if (Model.Status == MovieStatus.Released)
                             {
-                                <button class="btn btn-danger btn-lg w-100 mb-3 shadow">
+                                <a asp-controller="Session"
+                                   asp-action="Schedule"
+                                   asp-route-id="@Model.Id"
+                                   class="btn btn-danger btn-lg w-100 mb-3 shadow">
                                     <i class="bi bi-ticket-fill me-2"></i>Get Tickets
-                                </button>
+                                </a>
                                 <small class="d-block text-center text-muted">Select session time next</small>
                             }
                             else
