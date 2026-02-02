@@ -33,13 +33,13 @@ namespace onlineCinema.Application.Services
             }
 
             var hallEntity = _mapper.MapToEntity(hallDto);
-            // TODO: Remove hardcoded cinema ID
-            hallEntity.CinemaId = 1; // Temporary hardcoded cinema ID FROM INITIALIZER
+
+            hallEntity.CinemaId = 1; // hardcoded cinema ID FROM INITIALIZER
 
             await _unitOfWork.Hall.AddAsync(hallEntity);
             await _unitOfWork.SaveAsync();
 
-            await GenerateSeatsForHall(hallEntity);
+            await GenerateSeatsForHall(hallEntity, hallDto);
 
             if (hallDto.FeatureIds != null && hallDto.FeatureIds.Any())
             {
@@ -110,13 +110,20 @@ namespace onlineCinema.Application.Services
 
         // seats
 
-        private async Task GenerateSeatsForHall(Hall hall)
+        private async Task GenerateSeatsForHall(Hall hall, HallDto dto)
         {
+            int startVipRow = hall.RowCount - dto.VipRowCount;
+
             for (byte row = 1; row <= hall.RowCount; row++)
             {
+                bool isVipRow = row > startVipRow;
+
+                SeatType type = isVipRow ? SeatType.VIP : SeatType.Standard;
+                float coef = isVipRow ? dto.VipCoefficient : 1.0f;
+
                 for (byte number = 1; number <= hall.SeatInRowCount; number++)
                 {
-                    var seat = _seatMapper.CreateSeatEntity(hall.HallId, row, number);
+                    var seat = _seatMapper.CreateSeatEntity(hall.HallId, row, number, type, coef);
 
                     await _unitOfWork.Seat.AddAsync(seat);
                 }

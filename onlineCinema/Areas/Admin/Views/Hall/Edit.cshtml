@@ -1,0 +1,114 @@
+﻿@model onlineCinema.Areas.Admin.Models.HallInputViewModel
+
+@{
+    ViewData["Title"] = "Edit Hall";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Edit Hall: <span class="text-primary">#@Model.HallNumber</span></h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
+            <i class="bi bi-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+
+    <form asp-action="Edit" method="post">
+        <input type="hidden" asp-for="Id" />
+        <input type="hidden" asp-for="RowCount" />
+        <input type="hidden" asp-for="SeatInRowCount" />
+        <input type="hidden" asp-for="VipRowCount" />
+        <input type="hidden" asp-for="VipCoefficient" />
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-secondary bg-black text-white mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-grid-3x3 me-2"></i>Geometry (Read Only)
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="HallNumber" class="form-label text-muted small text-uppercase">Hall Number</label>
+                            <input asp-for="HallNumber" class="form-control bg-dark text-white border-secondary" />
+                            <span asp-validation-for="HallNumber" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="RowCount" class="form-label text-muted small text-uppercase">Rows</label>
+                                <input asp-for="RowCount" class="form-control bg-dark text-white border-secondary" disabled style="opacity: 0.7;" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="SeatInRowCount" class="form-label text-muted small text-uppercase">Seats per Row</label>
+                                <input asp-for="SeatInRowCount" class="form-control bg-dark text-white border-secondary" disabled style="opacity: 0.7;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-secondary bg-black text-white">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-star me-2"></i>VIP Configuration (Read Only)
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="VipRowCount" class="form-label text-muted small text-uppercase">VIP Rows</label>
+                                <input asp-for="VipRowCount" class="form-control bg-dark text-white border-secondary" disabled style="opacity: 0.7;" />
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="VipCoefficient" class="form-label text-muted small text-uppercase">Coefficient</label>
+                                <input asp-for="VipCoefficient" class="form-control bg-dark text-white border-secondary" disabled style="opacity: 0.7;" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-secondary bg-black text-white mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-hdd-network me-2"></i>Features
+                    </div>
+                    <div class="card-body">
+                        @if (Model.AvailableFeatures != null && Model.AvailableFeatures.Any())
+                        {
+                            <div class="d-flex flex-column gap-2">
+                                @foreach (var feature in Model.AvailableFeatures)
+                                {
+                                    <div class="form-check">
+                                        <input class="form-check-input bg-dark border-secondary" type="checkbox"
+                                               name="SelectedFeatureIds"
+                                               value="@feature.Id"
+                                               id="edit_f_@feature.Id"
+                                               @(feature.IsSelected ? "checked" : "") />
+
+                                        <label class="form-check-label text-white" for="edit_f_@feature.Id">
+                                            @feature.Name
+                                        </label>
+                                    </div>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <p class="text-muted small">No features available.</p>
+                        }
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary fw-bold py-2 shadow-sm">
+                        <i class="bi bi-save me-2"></i>Save Changes
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

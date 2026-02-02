@@ -1,8 +1,5 @@
-using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Localization;
-using System.Globalization;
 using FluentValidation;
+<<<<<<< Updated upstream
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
 using onlineCinema.Validators;
 using onlineCinema.Mapping;
@@ -14,6 +11,26 @@ using onlineCinema.Application.Services;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Infrastructure.Data;
 using onlineCinema.Domain.Entities;
+=======
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.EntityFrameworkCore;
+using onlineCinema.Application.DTOs.Movie;
+using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Mapping;
+using onlineCinema.Application.Services;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Domain.Entities;
+using onlineCinema.Infrastructure.Data;
+using onlineCinema.Infrastructure.Repositories;
+using onlineCinema.Mapping;
+using onlineCinema.Validators;
+using onlineCinema.ViewModels;
+using SharpGrip.FluentValidation.AutoValidation.Mvc.Extensions;
+using System.ComponentModel.Design;
+using System.Globalization;
+>>>>>>> Stashed changes
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -65,11 +82,17 @@ builder.Services.AddControllersWithViews(options =>
 
 builder.Services.AddRazorPages();
 
+<<<<<<< Updated upstream
 builder.Services.AddFluentValidationAutoValidation(options =>
 {
     options.DisableDataAnnotationsValidation = true;
 });
 builder.Services.AddFluentValidationClientsideAdapters();
+=======
+//builder.Services.AddValidatorsFromAssemblyContaining<HallInputViewModelValidator>();
+builder.Services.AddValidatorsFromAssemblyContaining<MovieFormValidator>();
+FluentValidation.AspNetCore.FluentValidationMvcExtensions.AddFluentValidationClientsideAdapters(builder.Services);
+>>>>>>> Stashed changes
 
 builder.Services.AddSingleton<MovieMapper>();
 builder.Services.AddSingleton<SessionMapper>();
@@ -111,6 +134,8 @@ builder.Services.AddScoped<IFeatureService, FeatureService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
+
+builder.Services.AddScoped<IValidator<HallInputViewModel>, HallInputViewModelValidator>();
 
 var app = builder.Build();
 
