@@ -11,7 +11,6 @@ namespace onlineCinema.Application.Services
     public class BookingService : IBookingService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly BookingMapper _mapper;
         private readonly SnackMapper _snackMapper;
         private readonly PaymentMapper _paymentMapper;
         private readonly BookingMapper _bookingMapper;
@@ -21,7 +20,7 @@ namespace onlineCinema.Application.Services
         public BookingService(IUnitOfWork unitOfWork, BookingMapper mapper, SnackMapper snackMapper, PaymentMapper paymentMapper)
         {
             _unitOfWork = unitOfWork;
-            _mapper = mapper;
+            _bookingMapper = mapper;
             _snackMapper = snackMapper;
             _paymentMapper = paymentMapper;
         }
@@ -60,10 +59,10 @@ namespace onlineCinema.Application.Services
             var bookedSeatIds = activeTickets.Select(t => t.SeatId).ToHashSet();
 
             var seatDtos = allSeats.Select(seat =>
-                this._mapper.MapToSeatDto(seat, session.BasePrice, bookedSeatIds)
+                this._bookingMapper.MapToSeatDto(seat, session.BasePrice, bookedSeatIds)
             ).ToList();
 
-            var sessionMapDto = this._mapper.MapToSessionSeatMapDto(session, seatDtos);
+            var sessionMapDto = this._bookingMapper.MapToSessionSeatMapDto(session, seatDtos);
 
             return sessionMapDto;
         }
@@ -102,7 +101,7 @@ namespace onlineCinema.Application.Services
                 throw new InvalidOperationException("Вибачте, ці місця щойно були заброньовані кимось іншим.");
             }
 
-            var booking = this._mapper.MapCreateBookingDtoToEntity(bookingDto);
+            var booking = this._bookingMapper.MapCreateBookingDtoToEntity(bookingDto);
 
             var lockExpiration = DateTime.Now.AddMinutes(BookingLockMinutes);
 
@@ -110,7 +109,7 @@ namespace onlineCinema.Application.Services
             var selectedSeats = allHallSeats.Where(s => bookingDto.SeatIds.Contains(s.SeatId));
 
             booking.Tickets = selectedSeats.Select(seat =>
-                this._mapper.MapToTicket(seat, session.SessionId, session.BasePrice, lockExpiration)
+                this._bookingMapper.MapToTicket(seat, session.SessionId, session.BasePrice, lockExpiration)
             ).ToList();
 
             await this._unitOfWork.Booking.AddAsync(booking);

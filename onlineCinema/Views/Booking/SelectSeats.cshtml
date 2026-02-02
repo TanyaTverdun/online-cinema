@@ -67,9 +67,21 @@
                 <input type="hidden" name="sessionId" value="@Model.SessionId" />
                 <div id="selectedSeatsContainer"></div>
 
-                <button type="submit" id="submitBtn" class="btn btn-confirm w-100 py-3" disabled>
-                    Confirm Seats
-                </button>
+                @if (User.Identity.IsAuthenticated)
+                {
+                    <button type="submit" id="submitBtn" class="btn btn-confirm w-100 py-3" disabled>
+                        Confirm Seats
+                    </button>
+                }
+                else
+                {
+                    <a asp-controller="Account"
+                       asp-action="Login"
+                       asp-route-returnUrl="@Context.Request.Path"
+                       class="btn btn-danger w-100 fw-bold">
+                        LOG IN TO CONFIRM
+                    </a>
+                }
             </form>
         </div>
     </div>

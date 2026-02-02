@@ -19,5 +19,8 @@ namespace onlineCinema.Application.DTOs
         public List<int> FeatureIds { get; set; } = new();
 
         public List<SessionSeatMapDto> Sessions { get; set; } = new();
+
+        public int VipRowCount { get; set; }
+        public float VipCoefficient { get; set; }
     }
 }

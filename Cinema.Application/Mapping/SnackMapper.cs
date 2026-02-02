@@ -20,5 +20,8 @@ namespace onlineCinema.Application.Mapping
         public partial SnackBooking MapSelectedSnackDtoToEntity(SelectedSnackDto dto);
 
         public partial List<SnackBooking> MapSelectedSnackDtoToEntityList(List<SelectedSnackDto> dtos, int bookingId);
+
+        public partial Snack MapToEntity(SnackDto dto);
+        public partial void UpdateEntityFromDto(SnackDto dto, Snack entity);
     }
 }

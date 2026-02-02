@@ -1,4 +1,5 @@
 ﻿using onlineCinema.Application.DTOs;
+using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Domain.Entities;
 using onlineCinema.ViewModels;
 using Riok.Mapperly.Abstractions;
@@ -40,7 +41,10 @@ namespace onlineCinema.Mapping
                 RowCount = model.RowCount,
                 SeatInRowCount = model.SeatInRowCount,
 
-                FeatureIds = model.SelectedFeatureIds ?? new List<int>()
+                FeatureIds = model.SelectedFeatureIds ?? new List<int>(),
+
+                VipRowCount = model.VipRowCount,
+                VipCoefficient = model.VipCoefficient
             };
         }
 
