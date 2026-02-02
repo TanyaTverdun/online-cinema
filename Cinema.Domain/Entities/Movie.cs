@@ -18,6 +18,7 @@ namespace onlineCinema.Domain.Entities
         public string? Description { get; set; }
         public string? PosterImage { get; set; }
 
+
         public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
         public ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
         public ICollection<DirectorMovie> MovieDirectors { get; set; } = new List<DirectorMovie>();

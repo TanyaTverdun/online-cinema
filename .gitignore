@@ -419,3 +419,4 @@ FodyWeavers.xsd
 
 appsettings.json
 /onlineCinema/wwwroot/images/movies
+/Cinema.Infrastructure/Data/DbInitializer.cs
