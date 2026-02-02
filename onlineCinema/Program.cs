@@ -83,7 +83,6 @@
     builder.Services.AddScoped<FeatureMapping>();
     builder.Services.AddScoped<GenreMapping>();
     builder.Services.AddScoped<LanguageMapping>();
-    builder.Services.AddScoped<SnackMapping>();
     builder.Services.AddScoped<DirectorMapping>();
     builder.Services.AddScoped<MovieMapping>();
     builder.Services.AddScoped<MovieScheduleViewModelMapper>();
@@ -123,10 +122,10 @@ using (var scope = app.Services.CreateScope())
         var context = services.GetRequiredService<onlineCinema.Infrastructure.Data.ApplicationDbContext>();
         var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<onlineCinema.Domain.Entities.ApplicationUser>>();
 
-        
+
         var roleManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
 
-     
+
         await onlineCinema.Infrastructure.Data.DbInitializer.Initialize(context, userManager, roleManager);
     }
     catch (Exception ex)
