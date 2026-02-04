@@ -63,6 +63,10 @@
                         <div class="row g-3">
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Genres</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="GenreIds" placeholder="Search genres...">
+                                </div>
                                 <select asp-for="GenreIds" asp-items="Model.GenresList" class="form-select" multiple size="4"></select>
                                 <span asp-validation-for="GenreIds" class="text-danger small"></span>
                                 <div class="form-text text-muted small">Hold Ctrl to select multiple</div>
@@ -71,6 +75,10 @@
 
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Actors</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="CastIds" placeholder="Search actors...">
+                                </div>
                                 <select asp-for="CastIds" asp-items="Model.ActorsList" class="form-select" multiple size="4"></select>
                                 <span asp-validation-for="CastIds" class="text-danger small"></span>
                                 <input asp-for="ActorsInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new (First Lastname)" />
@@ -78,6 +86,10 @@
 
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Directors</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="DirectorIds" placeholder="Search directors...">
+                                </div>
                                 <select asp-for="DirectorIds" asp-items="Model.DirectorsList" class="form-select" multiple size="3"></select>
                                 <span asp-validation-for="DirectorIds" class="text-danger small"></span>
                                 <input asp-for="DirectorsInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new" />
@@ -85,12 +97,21 @@
 
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Languages</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="LanguageIds" placeholder="Search languages...">
+                                </div>
                                 <select asp-for="LanguageIds" asp-items="Model.LanguagesList" class="form-select" multiple size="3"></select>
                                 <span asp-validation-for="LanguageIds" class="text-danger small"></span>
                                 <input asp-for="LanguagesInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new" />
                             </div>
+
                             <div class="col-md-6">
                                 <label class="form-label text-white small text-uppercase">Features (Technologies)</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="FeatureIds" placeholder="Search features...">
+                                </div>
                                 <select asp-for="FeatureIds" asp-items="Model.FeaturesList" class="form-select" multiple size="3"></select>
                                 <div class="form-text text-muted small">Hold Ctrl to select multiple</div>
                                 <input asp-for="FeaturesInput" class="form-control mt-2 form-control-sm" placeholder="+ Add new (comma separated)" />
@@ -113,12 +134,10 @@
                         <div class="row g-2">
                             <div class="col-6">
                                 <label asp-for="Runtime" class="form-label text-white small text-uppercase">Тривалість (год:хв)</label>
-
                                 <input asp-for="Runtime"
                                        type="time"
                                        class="form-control"
                                        value="@(Model.Runtime?.ToString(@"hh\:mm"))" />
-
                                 <span asp-validation-for="Runtime" class="text-danger small"></span>
                             </div>
                             <div class="col-6">
@@ -165,3 +184,18 @@
         </div>
     </form>
 </div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('.list-search').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                var targetId = $(this).data('target');
+                $('#' + targetId + ' option').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+    </script>
+}
