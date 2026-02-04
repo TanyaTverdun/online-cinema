@@ -7,9 +7,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "onlineCinema", "onlineCinem
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "onlineCinema.Domain", "Cinema.Domain\onlineCinema.Domain.csproj", "{53FE9AF1-9F1F-4A28-A902-FCB3438DF79F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "onlineCinema.Application", "Cinema.Application\onlineCinema.Application.csproj", "{4592E0C4-E50F-40B9-9436-E1D4640D7C2C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "onlineCinema.Application", "Cinema.Application\onlineCinema.Application.csproj", "{4592E0C4-E50F-40B9-9436-E1D4640D7C2C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "onlineCinema.Infrastructure", "Cinema.Infrastructure\onlineCinema.Infrastructure.csproj", "{D7DF6AB0-0506-4ACB-8E37-3D9DE708FBFC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "onlineCinema.Infrastructure", "Cinema.Infrastructure\onlineCinema.Infrastructure.csproj", "{D7DF6AB0-0506-4ACB-8E37-3D9DE708FBFC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

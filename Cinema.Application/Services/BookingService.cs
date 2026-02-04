@@ -39,23 +39,18 @@ namespace onlineCinema.Application.Services
                 throw new InvalidOperationException("Цей сеанс уже відбувся або розпочався.");
             }
 
-            // Чи є в залі взагалі місця
             var allSeats = await this._unitOfWork.Seat.GetSeatsByHallIdAsync(session.HallId);
             if (!allSeats.Any())
             {
                 throw new Exception("У вибраному залі відсутня конфігурація місць.");
             }
 
-            // для зайнятих місць
             var activeTickets = await this._unitOfWork.Ticket.GetAllAsync(t =>
                 t.SessionId == sessionId &&
                     (t.LockUntil > DateTime.Now || (t.Booking.Payment != null && t.Booking.Payment.Status == PaymentStatus.Completed)),
                 includeProperties: "Booking,Booking.Payment"
              );
 
-            // HashSet з ID зайнятих місць.
-            // щоб пошук .Contains() працював миттєво (O(1)), 
-            // а не перебирав список для кожного місця.
             var bookedSeatIds = activeTickets.Select(t => t.SeatId).ToHashSet();
 
             var seatDtos = allSeats.Select(seat =>

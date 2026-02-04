@@ -14,6 +14,7 @@
     using onlineCinema.Application.Mapping;
     using onlineCinema.Infrastructure.Data;
     using onlineCinema.Domain.Entities;
+    using onlineCinema.Application.Configurations;
 
     var builder = WebApplication.CreateBuilder(args);
 
@@ -78,6 +79,7 @@
     builder.Services.AddSingleton<SnackMapper>();
     builder.Services.AddSingleton<HallMapper>();
     builder.Services.AddSingleton<SeatMapper>();
+builder.Services.AddSingleton<StatisticsMapping>();
     builder.Services.AddSingleton<AdminDirectorMapper>();
     builder.Services.AddScoped<CastMemberMapping>();
     builder.Services.AddScoped<FeatureMapping>();
@@ -97,6 +99,7 @@
     builder.Services.AddScoped<AdminFeatureMapper>();
     builder.Services.AddScoped<AdminLanguageMapper>();
     builder.Services.AddScoped<AdminSnackMapper>();
+    builder.Services.AddScoped<AdminStatisticsMapper>();
 
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IMovieService, MovieService>();
@@ -109,10 +112,12 @@
     builder.Services.AddScoped<ICastMemberService, CastMemberService>();
     builder.Services.AddScoped<IFeatureService, FeatureService>();
     builder.Services.AddScoped<ILanguageService, LanguageService>();
+    builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 
     builder.Services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
+    builder.Services.Configure<StatisticsSettings>(builder.Configuration.GetSection("StatisticsSettings"));
 
-    var app = builder.Build();
+var app = builder.Build();
 
 using (var scope = app.Services.CreateScope())
 {

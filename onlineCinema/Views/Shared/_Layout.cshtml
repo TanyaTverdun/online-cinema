@@ -44,6 +44,11 @@
 
                         @if (User.IsInRole("Admin"))
                         {
+                            <li class="nav-item">
+                                <a class="nav-link nav-custom-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                    <i class="bi text-danger me-1"></i> Dashboard
+                                </a>
+                            </li>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle nav-custom-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
                                     Admin Panel
