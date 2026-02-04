@@ -82,7 +82,6 @@ namespace onlineCinema.Infrastructure.Repositories
 
                 if (existingTicket == null)
                 {
-                    
                     newTicket.BookingId = existingBooking.BookingId;
                     newTicket.SessionId = existingBooking.Tickets
                         .FirstOrDefault()?.SessionId ?? newTicket.SessionId; 

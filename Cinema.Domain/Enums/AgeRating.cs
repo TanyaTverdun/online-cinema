@@ -13,7 +13,7 @@ namespace onlineCinema.Domain.Enums
         Age0 = 0,
         [Display(Name = "6+")]
         Age6 = 6,
-        [Display(Name = "12+")]
+        [Display(Name = "13+")]
         Age13 = 13,
         [Display(Name = "16+")]
         Age16 = 16,

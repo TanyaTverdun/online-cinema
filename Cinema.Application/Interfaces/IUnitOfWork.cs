@@ -22,6 +22,7 @@ namespace onlineCinema.Application.Interfaces
         ISessionRepository Session { get; }
         ISnackRepository Snack { get; }
         ITicketRepository Ticket { get; }
+        IStatisticsRepository Statistics { get; }
         Task SaveAsync();
     }
 }
