@@ -72,7 +72,7 @@
                 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Скасувати</a>
             </div>
         </form>
-        @if (!User.IsInRole("Admin")) 
+        @if (!User.IsInRole("Admin"))
         {
             @if (Model.BookingHistory != null && Model.BookingHistory.Any())
             {
@@ -109,7 +109,7 @@
                                                             <strong>Дата замовлення:</strong> @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
                                                         </div>
                                                         <div class="col-md-6">
-                                                            <strong>Статус оплати:</strong> 
+                                                            <strong>Статус оплати:</strong>
                                                             <span class="badge @(booking.PaymentStatus == "Оплачено" ? "bg-success" : booking.PaymentStatus == "Очікується" ? "bg-warning" : booking.PaymentStatus == "Помилка" ? "bg-danger" : "bg-secondary")">
                                                                 @booking.PaymentStatus
                                                             </span>

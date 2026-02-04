@@ -155,13 +155,11 @@ namespace onlineCinema.Controllers
                 return NotFound();
             }
 
-            // 1. Перевіряємо, чи має користувач роль "Admin"
-            // Перевіряємо роль
+            // Перевірка ролі 1
             bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
-            // Використовуйте IEnumerable<BookingHistoryDto> або той тип, який повертає ваш сервіс
             var bookings = isAdmin
-                ? Enumerable.Empty<BookingHistoryDto>() // Створює порожній перелік потрібного типу
+                ? Enumerable.Empty<BookingHistoryDto>()
                 : await _bookingService.GetBookingHistoryAsync(user.Id);
 
             var model = _userMapping.ToProfileViewModel(user, bookings, returnUrl);
