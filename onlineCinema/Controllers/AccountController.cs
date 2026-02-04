@@ -5,6 +5,7 @@ using onlineCinema.Domain.Entities;
 using onlineCinema.ViewModels;
 using onlineCinema.Mapping;
 using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Application.DTOs;
 
 namespace onlineCinema.Controllers
 {
@@ -148,13 +149,21 @@ namespace onlineCinema.Controllers
         public async Task<IActionResult> Profile(string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
-            
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            var bookings = await _bookingService.GetBookingHistoryAsync(user.Id);
+            // 1. Перевіряємо, чи має користувач роль "Admin"
+            // Перевіряємо роль
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            // Використовуйте IEnumerable<BookingHistoryDto> або той тип, який повертає ваш сервіс
+            var bookings = isAdmin
+                ? Enumerable.Empty<BookingHistoryDto>() // Створює порожній перелік потрібного типу
+                : await _bookingService.GetBookingHistoryAsync(user.Id);
+
             var model = _userMapping.ToProfileViewModel(user, bookings, returnUrl);
 
             return View(model);

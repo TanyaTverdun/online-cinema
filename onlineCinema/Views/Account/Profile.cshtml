@@ -72,79 +72,81 @@
                 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Скасувати</a>
             </div>
         </form>
-
-        @if (Model.BookingHistory != null && Model.BookingHistory.Any())
+        @if (!User.IsInRole("Admin")) 
         {
-            <div class="card mt-4">
-                <div class="card-header">
-                    <h5 class="mb-0">Історія замовлень</h5>
-                </div>
-                <div class="card-body">
-                    <div class="row">
-                        @foreach (var booking in Model.BookingHistory)
-                        {
-                            <div class="col-md-12 mb-4">
-                                <div class="card">
-                                    <div class="card-body">
-                                        <div class="row">
-                                            @if (!string.IsNullOrEmpty(booking.MoviePoster))
-                                            {
-                                                <div class="col-md-2">
-                                                    <img src="@booking.MoviePoster" alt="@booking.MovieTitle" class="img-fluid rounded" style="max-height: 150px; object-fit: cover;" />
-                                                </div>
-                                            }
-                                            <div class="@(string.IsNullOrEmpty(booking.MoviePoster) ? "col-md-12" : "col-md-10")">
-                                                <h5 class="card-title">@booking.MovieTitle</h5>
-                                                <div class="row mb-2">
-                                                    <div class="col-md-6">
-                                                        <strong>Дата сеансу:</strong> @booking.SessionDateTime.ToString("dd.MM.yyyy HH:mm")
+            @if (Model.BookingHistory != null && Model.BookingHistory.Any())
+            {
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Історія замовлень</h5>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var booking in Model.BookingHistory)
+                            {
+                                <div class="col-md-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                @if (!string.IsNullOrEmpty(booking.MoviePoster))
+                                                {
+                                                    <div class="col-md-2">
+                                                        <img src="@booking.MoviePoster" alt="@booking.MovieTitle" class="img-fluid rounded" style="max-height: 150px; object-fit: cover;" />
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <strong>Зал:</strong> @booking.HallName
+                                                }
+                                                <div class="@(string.IsNullOrEmpty(booking.MoviePoster) ? "col-md-12" : "col-md-10")">
+                                                    <h5 class="card-title">@booking.MovieTitle</h5>
+                                                    <div class="row mb-2">
+                                                        <div class="col-md-6">
+                                                            <strong>Дата сеансу:</strong> @booking.SessionDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <strong>Зал:</strong> @booking.HallName
+                                                        </div>
                                                     </div>
-                                                </div>
-                                                <div class="row mb-2">
-                                                    <div class="col-md-6">
-                                                        <strong>Дата замовлення:</strong> @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                    <div class="row mb-2">
+                                                        <div class="col-md-6">
+                                                            <strong>Дата замовлення:</strong> @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <strong>Статус оплати:</strong> 
+                                                            <span class="badge @(booking.PaymentStatus == "Оплачено" ? "bg-success" : booking.PaymentStatus == "Очікується" ? "bg-warning" : booking.PaymentStatus == "Помилка" ? "bg-danger" : "bg-secondary")">
+                                                                @booking.PaymentStatus
+                                                            </span>
+                                                        </div>
                                                     </div>
-                                                    <div class="col-md-6">
-                                                        <strong>Статус оплати:</strong> 
-                                                        <span class="badge @(booking.PaymentStatus == "Оплачено" ? "bg-success" : booking.PaymentStatus == "Очікується" ? "bg-warning" : booking.PaymentStatus == "Помилка" ? "bg-danger" : "bg-secondary")">
-                                                            @booking.PaymentStatus
-                                                        </span>
+                                                    <div class="mb-2">
+                                                        <strong>Квитки:</strong>
+                                                        <ul class="list-unstyled ms-3">
+                                                            @foreach (var ticket in booking.Tickets)
+                                                            {
+                                                                <li>
+                                                                    Ряд @ticket.RowNumber, Місце @ticket.SeatNumber (@ticket.SeatType) - @ticket.Price.ToString("C")
+                                                                </li>
+                                                            }
+                                                        </ul>
                                                     </div>
-                                                </div>
-                                                <div class="mb-2">
-                                                    <strong>Квитки:</strong>
-                                                    <ul class="list-unstyled ms-3">
-                                                        @foreach (var ticket in booking.Tickets)
-                                                        {
-                                                            <li>
-                                                                Ряд @ticket.RowNumber, Місце @ticket.SeatNumber (@ticket.SeatType) - @ticket.Price.ToString("C")
-                                                            </li>
-                                                        }
-                                                    </ul>
-                                                </div>
-                                                <div class="mt-2">
-                                                    <strong>Загальна сума:</strong> <span class="text-primary fw-bold">@booking.TotalAmount.ToString("C")</span>
+                                                    <div class="mt-2">
+                                                        <strong>Загальна сума:</strong> <span class="text-primary fw-bold">@booking.TotalAmount.ToString("C")</span>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                        }
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-        }
-        else
-        {
-            <div class="card mt-4">
-                <div class="card-body text-center">
-                    <p class="text-muted mb-0">У вас поки що немає замовлень</p>
+            }
+            else
+            {
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">У вас поки що немає замовлень</p>
+                    </div>
                 </div>
-            </div>
+            }
         }
     </div>
 </div>
