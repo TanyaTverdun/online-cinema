@@ -5,6 +5,7 @@ using onlineCinema.Domain.Entities;
 using onlineCinema.ViewModels;
 using onlineCinema.Mapping;
 using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Application.DTOs;
 
 namespace onlineCinema.Controllers
 {
@@ -148,13 +149,19 @@ namespace onlineCinema.Controllers
         public async Task<IActionResult> Profile(string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
-            
+
             if (user == null)
             {
                 return NotFound();
             }
 
-            var bookings = await _bookingService.GetBookingHistoryAsync(user.Id);
+            // Перевірка ролі 1
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            var bookings = isAdmin
+                ? Enumerable.Empty<BookingHistoryDto>()
+                : await _bookingService.GetBookingHistoryAsync(user.Id);
+
             var model = _userMapping.ToProfileViewModel(user, bookings, returnUrl);
 
             return View(model);
