@@ -1,0 +1,27 @@
+﻿@model IEnumerable<onlineCinema.Application.DTOs.SessionDto>
+
+@{
+    ViewData["Title"] = "Admin Sessions";
+    Layout = "~/Areas/Admin/Views/Shared/_AdminLayout.cshtml";
+}
+
+<h1>Admin Sessions</h1>
+
+@if (!Model.Any())
+{
+    <p>Сесій поки немає</p>
+}
+else
+{
+    <ul>
+        @foreach (var session in Model)
+        {
+            <li>
+                Session ID: @session.Id |
+                MovieId: @session.MovieId |
+                HallId: @session.HallId |
+                Start:  @session.ShowingDateTime.ToString("dd.MM.yyyy HH:mm")
+            </li>
+        }
+    </ul>
+}

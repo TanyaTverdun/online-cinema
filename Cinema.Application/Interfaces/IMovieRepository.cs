@@ -10,5 +10,7 @@ namespace onlineCinema.Application.Interfaces
     public interface IMovieRepository : IGenericRepository<Movie>
     {
         Task<Movie?> GetByIdWithAllDetailsAsync(int id);
+        Task<Movie?> GetByIdWithFeaturesAsync(int id);
+
     }
 }

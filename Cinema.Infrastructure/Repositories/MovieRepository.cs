@@ -34,5 +34,13 @@ namespace onlineCinema.Infrastructure.Repositories
                     .ThenInclude(mf => mf.Feature)
                 .FirstOrDefaultAsync(m => m.Id == id);
         }
+        public async Task<Movie?> GetByIdWithFeaturesAsync(int id)
+        {
+            return await _db.Movies
+                .Include(m => m.MovieFeatures)
+                    .ThenInclude(mf => mf.Feature)
+                .FirstOrDefaultAsync(m => m.Id == id);
+        }
+
     }
 }

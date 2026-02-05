@@ -19,5 +19,7 @@ namespace onlineCinema.Application.Interfaces
         Task<IEnumerable<HallDto>> GetAllWithStatsAsync();
 
         Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId);
+        Task<Hall?> GetByIdWithFeaturesAsync(int id);
+
     }
 }

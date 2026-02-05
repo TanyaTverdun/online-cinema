@@ -136,19 +136,19 @@ namespace onlineCinema.Infrastructure.Repositories
                             ShowingDate = s.ShowingDateTime,
                             MovieTitle = s.Movie.Title,
 
-                            //Seats = s.Seats
-                            //    .Select(ss => new SeatDto
-                            //    {
-                            //        SeatId = ss.SeatId,
-                            //        Row = ss.RowNumber,
-                            //        Number = ss.SeatNumber,
-                            //        IsBooked = ss.IsBooked
-                            //    })
-                            //    .ToList()
+                            
                         }).ToList()
 
                 })
                 .FirstOrDefaultAsync();
         }
+        public async Task<Hall?> GetByIdWithFeaturesAsync(int id)
+        {
+            return await _db.Halls
+                .Include(h => h.HallFeatures)
+                    .ThenInclude(hf => hf.Feature)
+                .FirstOrDefaultAsync(h => h.HallId == id);
+        }
+
     }
 }

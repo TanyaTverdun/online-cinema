@@ -12,5 +12,6 @@ namespace onlineCinema.Application.DTOs
         public int HallId { get; set; }
         public DateTime ShowingDateTime { get; set; }
         public decimal BasePrice { get; set; }
+        public bool GenerateForWeek { get; set; }
     }
 }
