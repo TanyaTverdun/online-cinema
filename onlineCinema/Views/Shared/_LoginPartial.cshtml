@@ -3,25 +3,31 @@
 @inject SignInManager<ApplicationUser> SignInManager
 @inject UserManager<ApplicationUser> UserManager
 
-<ul class="navbar-nav">
-@if (SignInManager.IsSignedIn(User))
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="Account" asp-action="Profile" title="Особистий кабінет">Привіт, @User.Identity?.Name!</a>
-    </li>
-    <li class="nav-item">
-        <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
-            <button type="submit" class="nav-link btn btn-link text-dark border-0">Вихід</button>
-        </form>
-    </li>
-}
-else
-{
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="Account" asp-action="Register">Реєстрація</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link text-dark" asp-controller="Account" asp-action="Login">Вхід</a>
-    </li>
-}
+<ul class="navbar-nav align-items-center">
+    @if (SignInManager.IsSignedIn(User))
+    {
+        <li class="nav-item">
+            @* Додано asp-area="" для коректного переходу з адмін-панелі в профіль *@
+            <a class="nav-link nav-custom-link" asp-area="" asp-controller="Account" asp-action="Profile" title="Особистий кабінет">
+                Привіт, @User.Identity?.Name!
+            </a>
+        </li>
+        <li class="nav-item">
+            @* Додано asp-area="", щоб Logout спрацьовував з будь-якої сторінки сайту *@
+            <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
+                <button type="submit" class="nav-link btn btn-link nav-custom-link border-0 py-0" style="cursor: pointer;">
+                    Вихід
+                </button>
+            </form>
+        </li>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link nav-custom-link" asp-area="" asp-controller="Account" asp-action="Register">Реєстрація</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link nav-custom-link" asp-area="" asp-controller="Account" asp-action="Login">Вхід</a>
+        </li>
+    }
 </ul>
