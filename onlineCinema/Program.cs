@@ -79,7 +79,7 @@
     builder.Services.AddSingleton<SnackMapper>();
     builder.Services.AddSingleton<HallMapper>();
     builder.Services.AddSingleton<SeatMapper>();
-builder.Services.AddSingleton<StatisticsMapping>();
+    builder.Services.AddSingleton<StatisticsMapping>();
     builder.Services.AddSingleton<AdminDirectorMapper>();
     builder.Services.AddScoped<CastMemberMapping>();
     builder.Services.AddScoped<FeatureMapping>();
@@ -100,6 +100,8 @@ builder.Services.AddSingleton<StatisticsMapping>();
     builder.Services.AddScoped<AdminLanguageMapper>();
     builder.Services.AddScoped<AdminSnackMapper>();
     builder.Services.AddScoped<AdminStatisticsMapper>();
+    builder.Services.AddScoped<AdminTicketMapping>();
+    builder.Services.AddScoped<AdminTicketViewMapping>();
 
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IMovieService, MovieService>();
@@ -113,32 +115,33 @@ builder.Services.AddSingleton<StatisticsMapping>();
     builder.Services.AddScoped<IFeatureService, FeatureService>();
     builder.Services.AddScoped<ILanguageService, LanguageService>();
     builder.Services.AddScoped<IStatisticsService, StatisticsService>();
+    builder.Services.AddScoped<ITicketService, TicketService>();
 
     builder.Services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
     builder.Services.Configure<StatisticsSettings>(builder.Configuration.GetSection("StatisticsSettings"));
 
 var app = builder.Build();
 
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<onlineCinema.Infrastructure.Data.ApplicationDbContext>();
-        var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<onlineCinema.Domain.Entities.ApplicationUser>>();
+//using (var scope = app.Services.CreateScope())
+//{
+//    var services = scope.ServiceProvider;
+//    try
+//    {
+//        var context = services.GetRequiredService<onlineCinema.Infrastructure.Data.ApplicationDbContext>();
+//        var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<onlineCinema.Domain.Entities.ApplicationUser>>();
 
 
-        var roleManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
+//        var roleManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
 
 
-        await onlineCinema.Infrastructure.Data.DbInitializer.Initialize(context, userManager, roleManager);
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Сталася помилка під час заповнення БД.");
-    }
-}
+//        await onlineCinema.Infrastructure.Data.DbInitializer.Initialize(context, userManager, roleManager);
+//    }
+//    catch (Exception ex)
+//    {
+//        var logger = services.GetRequiredService<ILogger<Program>>();
+//        logger.LogError(ex, "Сталася помилка під час заповнення БД.");
+//    }
+//}
 
 var supportedCultures = new[] { new CultureInfo("uk-UA") };
     app.UseRequestLocalization(new RequestLocalizationOptions

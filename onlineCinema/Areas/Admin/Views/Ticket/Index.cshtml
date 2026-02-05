@@ -1,0 +1,94 @@
+﻿@model onlineCinema.Areas.Admin.Models.TicketListViewModel
+
+@{
+    ViewData["Title"] = "Куплені квитки";
+}
+
+<div class="container-fluid py-4 px-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h1 class="text-white fw-bold text-uppercase mb-1" style="letter-spacing: 2px;">
+                <i class="bi bi-journal-text text-danger me-2"></i> Продані <span class="text-danger">квитки</span>
+            </h1>
+            <p class="text-muted">Всього знайдено: <span class="text-white fw-bold">@Model.TotalCount</span></p>
+        </div>
+
+        @if (Model.LastId != null || !string.IsNullOrEmpty(Model.SearchEmail) || !string.IsNullOrEmpty(Model.SearchMovie))
+        {
+            <a asp-action="Index" class="btn btn-outline-light btn-sm">
+                <i class="bi bi-arrow-left"></i> Скинути все
+            </a>
+        }
+    </div>
+
+    @* форма пошуку *@
+    <div class="card border-0 mb-4 p-3" style="background-color: var(--bg-card); border: 1px solid var(--border-soft) !important;">
+        <form method="get" class="row g-3 align-items-end">
+            <div class="col-md-3">
+                <label class="form-label x-small text-uppercase text-muted fw-bold">Email</label>
+                <input type="text" name="email" value="@Model.SearchEmail" class="form-control form-control-sm" placeholder="user@mail.com">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label x-small text-uppercase text-muted fw-bold">Фільм</label>
+                <input type="text" name="movie" value="@Model.SearchMovie" class="form-control form-control-sm" placeholder="Назва...">
+            </div>
+            <div class="col-md-3">
+                <label class="form-label x-small text-uppercase text-muted fw-bold">Дата сеансу</label>
+                <input type="date" name="date" value="@(Model.SearchDate?.ToString("yyyy-MM-dd"))" class="form-control form-control-sm">
+            </div>
+            <div class="col-md-3">
+                <button type="submit" class="btn btn-danger btn-sm w-100 fw-bold">
+                    <i class="bi bi-search me-1"></i> ШУКАТИ
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <div class="card border-0 shadow-sm" style="background-color: var(--bg-card); border: 1px solid var(--border-soft) !important;">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0" style="color: var(--text-muted);">
+                    <thead class="bg-black text-white text-uppercase small" style="border-bottom: 2px solid var(--border-soft);">
+                        <tr>
+                            <th>Фільм</th>
+                            <th>Дата сеансу</th>
+                            <th>Місце / Зал</th>
+                            <th>Користувач</th>
+                            <th class="text-end pe-4">Ціна</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var ticket in Model.Tickets)
+                        {
+                            <tr style="border-bottom: 1px solid var(--border-soft);">
+                                <td class="ps-4 py-3 fw-bold text-white">#@ticket.TicketId</td>
+                                <td><div class="text-white fw-bold">@ticket.MovieTitle</div></td>
+                                <td><div class="small text-white">@ticket.ShowingDateTimeFormatted</div></td>
+                                <td><span class="badge bg-dark border border-soft text-danger">@ticket.SeatInfo</span></td>
+                                <td>
+                                    <div class="small text-white">@ticket.UserEmail</div>
+                                    <div style="font-size: 0.75rem" class="text-muted">Придбано: @ticket.PurchaseDateFormatted</div>
+                                </td>
+                                <td class="text-end pe-4"><span class="fw-bold text-success">@ticket.Price.ToString("N2") ₴</span></td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-center mt-4">
+        @if (Model.HasNextPage)
+        {
+            <a asp-action="Index" 
+               asp-route-lastId="@Model.NextId" 
+               asp-route-email="@Model.SearchEmail"
+               asp-route-movie="@Model.SearchMovie"
+               asp-route-date="@(Model.SearchDate?.ToString("yyyy-MM-dd"))"
+               class="btn btn-danger px-5 py-2 fw-bold text-uppercase">
+                Далі <i class="bi bi-chevron-right ms-2"></i>
+            </a>
+        }
+    </div>
+</div>

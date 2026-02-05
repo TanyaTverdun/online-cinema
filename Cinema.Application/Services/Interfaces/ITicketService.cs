@@ -3,10 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using onlineCinema.Application.DTOs.AdminTickets;
 
 namespace onlineCinema.Application.Services.Interfaces
 {
     public interface ITicketService
     {
+        Task<PagedResult<TicketAdminDto>> GetTicketsForAdminAsync(
+            int? lastId,
+            string? email,
+            string? movie,
+            DateTime? date);
     }
 }

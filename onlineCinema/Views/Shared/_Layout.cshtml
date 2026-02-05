@@ -38,15 +38,16 @@
                 <div class="collapse navbar-collapse" id="navbarContent">
                     <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
 
-                        <li class="nav-item">
-                            <a class="nav-link nav-custom-link" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                        </li>
-
                         @if (User.IsInRole("Admin"))
                         {
                             <li class="nav-item">
                                 <a class="nav-link nav-custom-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
                                     <i class="bi text-danger me-1"></i> Dashboard
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link nav-custom-link" asp-area="Admin" asp-controller="Ticket" asp-action="Index">
+                                    <i class="bi text-danger me-1"></i> Tickets
                                 </a>
                             </li>
                             <li class="nav-item dropdown">
@@ -102,10 +103,6 @@
                                 </ul>
                             </li>
                         }
-
-                        <li class="nav-item">
-                            <a class="nav-link nav-custom-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-                        </li>
                     </ul>
 
                     <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
