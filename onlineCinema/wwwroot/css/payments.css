@@ -1,0 +1,87 @@
+﻿.payment-dashboard, .payment-table-card {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-soft) !important;
+}
+
+.payment-table {
+    color: var(--text-muted);
+    table-layout: fixed;
+}
+
+    .payment-table thead {
+        border-bottom: 2px solid var(--border-soft);
+    }
+
+    .payment-table tr {
+        border-bottom: 1px solid var(--border-soft);
+    }
+
+    .payment-table tbody tr:hover {
+        background-color: rgba(229, 9, 20, 0.05);
+    }
+
+    .payment-table td, .payment-table th {
+        padding: 1rem 0.5rem;
+    }
+
+.col-date {
+    width: 15%;
+}
+
+.col-user {
+    width: 20%;
+}
+
+.col-movie {
+    width: 35%;
+}
+
+.col-sum {
+    width: 10%;
+}
+
+.col-status {
+    width: 10%;
+}
+
+.col-actions {
+    width: 10%;
+}
+
+.details-row {
+    background-color: rgba(255, 255, 255, 0.01);
+}
+
+.details-container {
+    padding: 1rem 2rem;
+}
+
+.clickable-row {
+    cursor: pointer;
+}
+
+.btn-action-size {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.7rem;
+    min-width: 110px;
+}
+
+.text-x-small {
+    font-size: 0.7rem;
+}
+
+.italic-text {
+    font-style: italic;
+}
+
+.border-current {
+    border-color: currentColor !important;
+}
+
+.row > * {
+    flex-shrink: 0;
+    max-width: 100%;
+    padding-right: calc(var(--bs-gutter-x) * 0.5);
+    padding-left: calc(var(--bs-gutter-x) * 0.8);
+    margin-top: var(--bs-gutter-y);
+}
