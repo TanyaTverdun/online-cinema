@@ -18,6 +18,11 @@ namespace onlineCinema.Controllers
         
         public async Task<IActionResult> Index()
         {
+            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            {
+                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+            }
+
             var movies = await _movieService.GetMoviesForShowcaseAsync();
             return View(movies);
         }

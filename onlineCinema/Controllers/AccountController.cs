@@ -155,7 +155,6 @@ namespace onlineCinema.Controllers
                 return NotFound();
             }
 
-            // Перевірка ролі 1
             bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
             var bookings = isAdmin

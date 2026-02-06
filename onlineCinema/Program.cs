@@ -59,6 +59,11 @@
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
 
+    builder.Services.AddAuthorization(options =>
+    {
+        options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    });
+
     builder.Services.AddControllersWithViews(options =>
     {
         options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
@@ -168,6 +173,12 @@
 
     app.UseAuthentication();
     app.UseAuthorization();
+
+    app.MapAreaControllerRoute(
+        name: "admin_area",
+        areaName: "Admin",
+        pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
+    ).RequireAuthorization("AdminOnly");
 
     app.MapControllerRoute(
         name: "areas",

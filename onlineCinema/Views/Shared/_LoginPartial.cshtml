@@ -7,13 +7,11 @@
     @if (SignInManager.IsSignedIn(User))
     {
         <li class="nav-item">
-            @* Додано asp-area="" для коректного переходу з адмін-панелі в профіль *@
             <a class="nav-link nav-custom-link" asp-area="" asp-controller="Account" asp-action="Profile" title="Особистий кабінет">
                 Привіт, @User.Identity?.Name!
             </a>
         </li>
         <li class="nav-item">
-            @* Додано asp-area="", щоб Logout спрацьовував з будь-якої сторінки сайту *@
             <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post" id="logoutForm">
                 <button type="submit" class="nav-link btn btn-link nav-custom-link border-0 py-0" style="cursor: pointer;">
                     Вихід
