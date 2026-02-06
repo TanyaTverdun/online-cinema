@@ -1,5 +1,5 @@
 ﻿using onlineCinema.Application.DTOs;
-using onlineCinema.ViewModels;
+using onlineCinema.Areas.Admin.Models;
 using Riok.Mapperly.Abstractions;
 
 namespace onlineCinema.Mapping
