@@ -105,8 +105,12 @@
                             <td class="text-end pe-4">
                                 @if (p.IsRefundable)
                                 {
-                                    <form asp-action="Refund" asp-route-id="@p.PaymentId" method="post" class="d-inline" onclick="event.stopPropagation();">
-                                        <button type="submit" class="btn btn-outline-danger btn-action-size fw-bold text-uppercase">Повернути</button>
+                                    <form asp-action="Refund" asp-route-id="@p.PaymentId" method="post" class="d-inline"
+                                          onclick="event.stopPropagation();"
+                                          onsubmit="return confirm('Ви впевнені, що хочете повернути кошти за цей платіж? Цю дію неможливо буде скасувати.');">
+                                        <button type="submit" class="btn btn-outline-danger btn-action-size fw-bold text-uppercase">
+                                            Повернути
+                                        </button>
                                     </form>
                                 }
                                 else
