@@ -9,10 +9,5 @@ namespace onlineCinema.Application.Services.Interfaces
 {
     public interface ITicketService
     {
-        Task<PagedResult<TicketAdminDto>> GetTicketsForAdminAsync(
-            int? lastId,
-            string? email,
-            string? movie,
-            DateTime? date);
     }
 }

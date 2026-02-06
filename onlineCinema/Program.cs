@@ -100,8 +100,7 @@
     builder.Services.AddScoped<AdminLanguageMapper>();
     builder.Services.AddScoped<AdminSnackMapper>();
     builder.Services.AddScoped<AdminStatisticsMapper>();
-    builder.Services.AddScoped<AdminTicketMapping>();
-    builder.Services.AddScoped<AdminTicketViewMapping>();
+    builder.Services.AddScoped<AdminPaymentMapping>();
 
     builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
     builder.Services.AddScoped<IMovieService, MovieService>();
@@ -116,11 +115,12 @@
     builder.Services.AddScoped<ILanguageService, LanguageService>();
     builder.Services.AddScoped<IStatisticsService, StatisticsService>();
     builder.Services.AddScoped<ITicketService, TicketService>();
+    builder.Services.AddScoped<IPaymentService, PaymentService>();
 
     builder.Services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
     builder.Services.Configure<StatisticsSettings>(builder.Configuration.GetSection("StatisticsSettings"));
 
-var app = builder.Build();
+    var app = builder.Build();
 
 //using (var scope = app.Services.CreateScope())
 //{
@@ -143,7 +143,7 @@ var app = builder.Build();
 //    }
 //}
 
-var supportedCultures = new[] { new CultureInfo("uk-UA") };
+    var supportedCultures = new[] { new CultureInfo("uk-UA") };
     app.UseRequestLocalization(new RequestLocalizationOptions
     {
         DefaultRequestCulture = new RequestCulture("uk-UA"),

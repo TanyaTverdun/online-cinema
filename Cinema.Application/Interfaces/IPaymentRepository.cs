@@ -11,6 +11,12 @@ namespace onlineCinema.Application.Interfaces
     {
         Task<IEnumerable<Payment>> GetAllWithBookingAsync();
         Task<Payment?> GetByIdWithBookingAsync(int id);
+        Task<(IEnumerable<Payment> Items, int TotalCount)> GetPaymentsSeekAsync(
+            int? lastId,
+            int pageSize,
+            string? email,
+            string? movieTitle,
+            DateTime? date);
     }
 
 }

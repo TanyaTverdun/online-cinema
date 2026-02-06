@@ -11,6 +11,6 @@ namespace onlineCinema.Application.Configurations
         public int TopSnacksCount { get; set; }
         public int TopMoviesCount { get; set; }
         public int ChartDays { get; set; }
-        public int AdminTicketsPageSize { get; set; }
+        public int AdminPageSize { get; set; }
     }
 }
