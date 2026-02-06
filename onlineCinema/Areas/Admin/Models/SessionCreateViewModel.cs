@@ -1,11 +1,10 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 
-namespace onlineCinema.ViewModels
+namespace onlineCinema.Areas.Admin.Models
 {
-    public class SessionEditViewModel
+    public class SessionCreateViewModel
     {
-        public int? Id { get; set; }
         public int? MovieId { get; set; }
         public int? HallId { get; set; }
         public DateTime? ShowingDateTime { get; set; }

@@ -1,19 +1,19 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.ViewModels;
 using onlineCinema.Mapping;
 using Microsoft.AspNetCore.Mvc.Rendering;
-namespace onlineCinema.Controllers
+using onlineCinema.Areas.Admin.Models;
+namespace onlineCinema.Areas.Admin.Controllers
 {
-    //[Authorize(Roles = "Admin")]
-    public class AdminSessionsController : Controller
+    [Area("Admin")]
+    public class SessionController : Controller
     {
         private readonly ISessionService _sessionService;
         private readonly IMovieService _movieService;
         private readonly IHallService _hallService;
         private readonly SessionViewModelMapper _sessionMapper;
 
-        public AdminSessionsController(ISessionService sessionService, IMovieService movieService, IHallService hallService, SessionViewModelMapper sessionMapper)
+        public SessionController(ISessionService sessionService, IMovieService movieService, IHallService hallService, SessionViewModelMapper sessionMapper)
         {
             _sessionService = sessionService;
             _movieService = movieService;

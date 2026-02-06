@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
-using onlineCinema.ViewModels;
-using onlineCinema.ViewModels;
+using onlineCinema.Areas.Admin.Models;
 
 namespace onlineCinema.Web.Validation
 {

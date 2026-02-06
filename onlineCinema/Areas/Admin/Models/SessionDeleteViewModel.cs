@@ -1,4 +1,4 @@
-﻿namespace onlineCinema.ViewModels
+﻿namespace onlineCinema.Areas.Admin.Models
 {
     public class SessionDeleteViewModel
     {
