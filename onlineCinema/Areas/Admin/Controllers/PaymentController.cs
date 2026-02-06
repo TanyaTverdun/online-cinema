@@ -13,19 +13,23 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IPaymentService _paymentService;
         private readonly AdminPaymentMapping _viewMapper;
 
-        public PaymentController(IPaymentService paymentService, AdminPaymentMapping viewMapper)
+        public PaymentController(IPaymentService paymentService, 
+            AdminPaymentMapping viewMapper)
         {
             _paymentService = paymentService;
             _viewMapper = viewMapper;
         }
 
-        public async Task<IActionResult> Index(int? lastId, string? email, string? movie, DateTime? date)
+        public async Task<IActionResult> Index(
+            int? lastId, string? email, string? movie, DateTime? date)
         {
-            var pagedResult = await _paymentService.GetPaymentsForAdminAsync(lastId, email, movie, date);
+            var pagedResult = await _paymentService
+                .GetPaymentsForAdminAsync(lastId, email, movie, date);
 
             string? msg = TempData["SuccessMessage"]?.ToString();
 
-            var viewModel = _viewMapper.MapWithDetails(pagedResult, lastId, email, movie, date, msg);
+            var viewModel = _viewMapper
+                .MapWithDetails(pagedResult, lastId, email, movie, date, msg);
 
             return View(viewModel);
         }

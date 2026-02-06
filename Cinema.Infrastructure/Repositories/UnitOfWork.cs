@@ -46,7 +46,6 @@ namespace onlineCinema.Infrastructure.Repositories
             this.Snack = new SnackRepository(_db);
             this.Ticket = new TicketRepository(_db);
             this.Statistics = new StatisticsRepository(_db);
-
         }
 
         public async Task SaveAsync()

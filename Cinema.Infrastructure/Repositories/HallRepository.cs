@@ -3,11 +3,6 @@ using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace onlineCinema.Infrastructure.Repositories
 {

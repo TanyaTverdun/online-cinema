@@ -14,6 +14,7 @@ namespace onlineCinema.Application.Mapping
         public partial List<FeatureDto> MapToDtoList(IEnumerable<Feature> features);
 
         public partial Feature MapToEntity(FeatureDto dto);
+
         public partial void UpdateEntityFromDto(FeatureDto dto, Feature entity);
     }
 }

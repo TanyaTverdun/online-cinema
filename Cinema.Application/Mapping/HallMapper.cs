@@ -34,6 +34,7 @@ namespace onlineCinema.Application.Mapping
 
             entity.HallFeatures = new List<HallFeature>();
             entity.Seats = new List<Seat>();
+            entity.CinemaId = 1;
 
             return entity;
         }

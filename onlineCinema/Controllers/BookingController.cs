@@ -35,17 +35,9 @@ namespace onlineCinema.Controllers
             _logger = logger;
         }
 
-        // сторінка бронювання місць
         [HttpGet("Booking/SelectSeats/{sessionId:int}")]
         public async Task<IActionResult> SelectSeats(int sessionId)
         {
-            _logger.LogInformation("Користувач відкрив сторінку вибору місць для сеансу {SessionId}", sessionId);
-            if (sessionId <= 0)
-            {
-                _logger.LogWarning("Запит SelectSeats відхилено: некоректний ID {SessionId}", sessionId);
-                return BadRequest("Некоректний ID сеансу.");
-            }
-
             try
             {
                 var dto = await _bookingService.GetSessionSeatMapAsync(sessionId);
@@ -56,23 +48,10 @@ namespace onlineCinema.Controllers
             }
             catch (KeyNotFoundException)
             {
-                _logger.LogWarning("Сторінку вибору місць не знайдено: сеанс {SessionId} відсутній", sessionId);
                 return NotFound();
-            }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Помилка при завантаженні карти місць для сеансу {SessionId}", sessionId);
-                var errorModel = new ErrorViewModel
-                {
-                    RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier
-                };
-
-                return View("Error", errorModel);
             }
         }
 
-        // збереження вибраних місць
-        // POST: /Booking/BookSeats
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
@@ -84,112 +63,108 @@ namespace onlineCinema.Controllers
                         .SelectMany(v => v.Errors)
                         .Select(e => e.ErrorMessage));
 
-                _logger.LogWarning("Помилка валідації моделі бронювання: {ValidationErrors}", errors);
-
                 TempData["Error"] = ModelState.Values
                     .SelectMany(v => v.Errors)
                     .FirstOrDefault()?.ErrorMessage;
                 
-                return RedirectToAction(nameof(SelectSeats), new { sessionId = model.SessionId });
+                return RedirectToAction(nameof(SelectSeats), 
+                    new { sessionId = model.SessionId });
             }
 
             var user = await _userManager.GetUserAsync(User);
             if (user == null)
             {
-                _logger.LogError("Авторизований користувач не знайдений у системі при бронюванні");
                 return Challenge();
             }
 
             if (!user.DateOfBirth.HasValue)
             {
-                TempData["Error"] = "Будь ласка, вкажіть дату народження у своєму профілі перед бронюванням.";
                 return RedirectToAction("Profile", "Account");
             }
 
             try
             {
-                _logger.LogInformation("Користувач {UserId} бронює місця [{Seats}] на сеанс {SessionId}", 
-                    user.Id, string.Join(", ", model.SelectedSeatIds), model.SessionId);
-                var dto = _viewMapper.MapBookingInputViewModelToDto(model, user);
+                var dto = _viewMapper
+                    .MapBookingInputViewModelToDto(model, user);
 
                 int bookingId = await _bookingService.CreateBookingAsync(dto);
 
-                _logger.LogInformation("Успішне бронювання квитків. Створено BookingId: {BookingId}", bookingId);
                 return RedirectToAction(nameof(AddSnacks), new { bookingId });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Помилка при створенні бронювання для користувача {UserId}", user.Id);
                 TempData["Error"] = ex.Message;
-                return RedirectToAction(nameof(SelectSeats), new { sessionId = model.SessionId });
+                return RedirectToAction(nameof(SelectSeats), 
+                    new { sessionId = model.SessionId });
             }
         }
 
-        // сторінка вибору снеків
         [HttpGet]
         public async Task<IActionResult> AddSnacks(int bookingId)
         {
-            _logger.LogInformation("Завантаження сторінки снеків для бронювання {BookingId}", bookingId);
-
             try
             {
                 var snackDtos = await _snackService.GetAllAsync();
-                var seatsTotalPrice = await _bookingService.GetTicketsPriceTotalAsync(bookingId);
-                var lockUntil = await _bookingService.GetBookingLockUntilAsync(bookingId);
-                var viewModel = _snackMapper.MapToSelectionViewModel(snackDtos, bookingId, seatsTotalPrice, lockUntil);
+
+                var seatsTotalPrice = await _bookingService
+                    .GetTicketsPriceTotalAsync(bookingId);
+
+                var lockUntil = await _bookingService
+                    .GetBookingLockUntilAsync(bookingId);
+
+                var viewModel = _snackMapper
+                    .MapToSelectionViewModel(
+                    snackDtos, bookingId, seatsTotalPrice, lockUntil);
 
                 return View(viewModel);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Помилка завантаження сторінки снеків для бронювання {BookingId}", bookingId);
                 return RedirectToAction("Index", "Home");
             }
         }
 
-        // Збереження обраних снеків
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> AddSnacks(SnackSelectionViewModel model)
         {
-            var lockUntil = await _bookingService.GetBookingLockUntilAsync(model.BookingId);
+            var lockUntil = await _bookingService
+                .GetBookingLockUntilAsync(model.BookingId);
             if (lockUntil < DateTime.Now)
             {
                 TempData["Error"] = "Час бронювання вийшов. Місця були звільнені.";
                 return RedirectToAction("Index", "Home");
             }
 
-            var chosenItems = model.AvailableSnacks.Where(s => s.Quantity > 0).ToList();
+            var chosenItems = model.AvailableSnacks
+                .Where(s => s.Quantity > 0).ToList();
 
             try
             {
                 if (chosenItems.Any())
                 {
-                    _logger.LogInformation("Додавання {Count} снеків до бронювання {BookingId}", chosenItems.Count, model.BookingId);
-                    var selectedDtos = _snackMapper.MapSnackItemViewModelToSelectedDtoList(chosenItems);
-                    await _bookingService.AddSnacksToBookingAsync(model.BookingId, selectedDtos);
-                }
-                else
-                {
-                    _logger.LogInformation("Користувач не обрав жодного снека для бронювання {BookingId}", model.BookingId);
+                    var selectedDtos = _snackMapper
+                        .MapSnackItemViewModelToSelectedDtoList(chosenItems);
+
+                    await _bookingService
+                        .AddSnacksToBookingAsync(model.BookingId, selectedDtos);
                 }
 
                 await _bookingService.CompletePaymentAsync(model.BookingId);
 
-                return RedirectToAction(nameof(BookingSuccess), new { id = model.BookingId });
+                return RedirectToAction(nameof(BookingSuccess), 
+                    new { id = model.BookingId });
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Помилка при збереженні снеків для бронювання {BookingId}", model.BookingId);
-                return RedirectToAction(nameof(BookingSuccess), new { id = model.BookingId });
+                return RedirectToAction(nameof(BookingSuccess), 
+                    new { id = model.BookingId });
             }
         }
 
-        // Фінальна сторінка (дякуємо за замовлення)
         [HttpGet]
         public IActionResult BookingSuccess(int id)
         {
-            _logger.LogInformation("Відображення успішного завершення бронювання {BookingId}", id);
             return View(id);
         }
     }

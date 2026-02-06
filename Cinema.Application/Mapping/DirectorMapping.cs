@@ -12,7 +12,6 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class DirectorMapping
     {
-
         public partial DirectorFormDto? ToDto(Director? director);
 
         public partial Director ToEntity(DirectorFormDto dto);

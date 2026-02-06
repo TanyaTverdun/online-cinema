@@ -18,7 +18,10 @@ namespace onlineCinema.Application.Services
         private readonly HallMapper _mapper;
         private readonly SeatMapper _seatMapper;
 
-        public HallService(IUnitOfWork unitOfWork, HallMapper hallMapper, SeatMapper seatMapper)
+        public HallService(
+            IUnitOfWork unitOfWork, 
+            HallMapper hallMapper, 
+            SeatMapper seatMapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = hallMapper;
@@ -29,12 +32,11 @@ namespace onlineCinema.Application.Services
         {
             if (hallDto.RowCount > 255 || hallDto.SeatInRowCount > 255)
             {
-                throw new ArgumentException("Кількість рядів та місць у ряді не може перевищувати 255.");
+                throw new ArgumentException("Кількість рядів та місць у ряді " +
+                    "не може перевищувати 255.");
             }
 
             var hallEntity = _mapper.MapToEntity(hallDto);
-
-            hallEntity.CinemaId = 1; // hardcoded cinema ID FROM INITIALIZER
 
             await _unitOfWork.Hall.AddAsync(hallEntity);
             await _unitOfWork.SaveAsync();
@@ -43,7 +45,8 @@ namespace onlineCinema.Application.Services
 
             if (hallDto.FeatureIds != null && hallDto.FeatureIds.Any())
             {
-                await _unitOfWork.Hall.UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
+                await _unitOfWork.Hall
+                    .UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
             }
 
             await _unitOfWork.SaveAsync();
@@ -60,7 +63,8 @@ namespace onlineCinema.Application.Services
 
         public async Task<HallDto?> EditHallAsync(HallDto hallDto)
         {
-            var exists = await _unitOfWork.Hall.GetByIdWithStatsAsync(hallDto.Id);
+            var exists = await _unitOfWork.Hall
+                .GetByIdWithStatsAsync(hallDto.Id);
 
             if(exists == null)
             {
@@ -68,9 +72,9 @@ namespace onlineCinema.Application.Services
             }
 
             var hallEntity = _mapper.MapToEntity(hallDto);
-            hallEntity.HallId = hallDto.Id;
 
-            await _unitOfWork.Hall.UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
+            await _unitOfWork.Hall
+                .UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
 
             return await GetHallByIdAsync(hallDto.Id);
         }
@@ -109,7 +113,6 @@ namespace onlineCinema.Application.Services
         }
 
         // seats
-
         private async Task GenerateSeatsForHall(Hall hall, HallDto dto)
         {
             int startVipRow = hall.RowCount - dto.VipRowCount;
@@ -123,7 +126,8 @@ namespace onlineCinema.Application.Services
 
                 for (byte number = 1; number <= hall.SeatInRowCount; number++)
                 {
-                    var seat = _seatMapper.CreateSeatEntity(hall.HallId, row, number, type, coef);
+                    var seat = _seatMapper
+                        .CreateSeatEntity(hall.HallId, row, number, type, coef);
 
                     await _unitOfWork.Seat.AddAsync(seat);
                 }

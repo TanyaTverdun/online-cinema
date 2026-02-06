@@ -37,10 +37,12 @@ namespace onlineCinema.Infrastructure.Repositories
                 {
                     Name = s.SnackName,
                     Revenue = s.Price * (decimal)s.SnackBookings
-                        .Where(sb => sb.Booking.Payment != null && sb.Booking.Payment.Status == PaymentStatus.Completed)
+                        .Where(sb => sb.Booking.Payment != null 
+                                && sb.Booking.Payment.Status == PaymentStatus.Completed)
                         .Sum(sb => (int)sb.Quantity),
                     Count = s.SnackBookings
-                        .Where(sb => sb.Booking.Payment != null && sb.Booking.Payment.Status == PaymentStatus.Completed)
+                        .Where(sb => sb.Booking.Payment != null 
+                                && sb.Booking.Payment.Status == PaymentStatus.Completed)
                         .Sum(sb => (int)sb.Quantity)
                 })
                 .OrderByDescending(x => x.Revenue)
@@ -56,11 +58,13 @@ namespace onlineCinema.Infrastructure.Repositories
                     Name = m.Title,
                     Revenue = m.Sessions
                         .SelectMany(s => s.Tickets)
-                        .Where(t => t.Booking.Payment != null && t.Booking.Payment.Status == PaymentStatus.Completed)
+                        .Where(t => t.Booking.Payment != null 
+                                && t.Booking.Payment.Status == PaymentStatus.Completed)
                         .Sum(t => t.Price),
                     Count = m.Sessions
                         .SelectMany(s => s.Tickets)
-                        .Count(t => t.Booking.Payment != null && t.Booking.Payment.Status == PaymentStatus.Completed)
+                        .Count(t => t.Booking.Payment != null 
+                                && t.Booking.Payment.Status == PaymentStatus.Completed)
                 })
                 .OrderByDescending(x => x.Revenue)
                 .Take(count)
@@ -72,7 +76,8 @@ namespace onlineCinema.Infrastructure.Repositories
             var startDate = DateTime.Now.Date.AddDays(-days);
 
             return await dbSet
-                .Where(p => p.Status == PaymentStatus.Completed && p.PaymentDate >= startDate)
+                .Where(p => p.Status == PaymentStatus.Completed 
+                        && p.PaymentDate >= startDate)
                 .GroupBy(p => p.PaymentDate.Date)
                 .Select(g => new DailyRevenueDto
                 {

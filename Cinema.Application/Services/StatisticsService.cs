@@ -25,13 +25,19 @@ namespace onlineCinema.Application.Services
 
         public async Task<AdminStatisticsDto> GetAdminStatisticsAsync()
         {
-            var tickets = await _unitOfWork.Statistics.GetTotalTicketsSoldAsync();
-            var revenue = await _unitOfWork.Statistics.GetTotalRevenueAsync();
-            var snacks = await _unitOfWork.Statistics.GetTopSnacksAsync(_settings.TopSnacksCount);
-            var movies = await _unitOfWork.Statistics.GetTopMoviesAsync(_settings.TopMoviesCount);
-            var daily = await _unitOfWork.Statistics.GetRevenueForLastDaysAsync(_settings.ChartDays);
+            var tickets = await _unitOfWork.Statistics
+                .GetTotalTicketsSoldAsync();
+            var revenue = await _unitOfWork.Statistics
+                .GetTotalRevenueAsync();
+            var snacks = await _unitOfWork.Statistics
+                .GetTopSnacksAsync(_settings.TopSnacksCount);
+            var movies = await _unitOfWork.Statistics
+                .GetTopMoviesAsync(_settings.TopMoviesCount);
+            var daily = await _unitOfWork.Statistics
+                .GetRevenueForLastDaysAsync(_settings.ChartDays);
 
-            return _mapper.CreateSummaryDto(tickets, revenue, snacks, movies, daily);
+            return _mapper.CreateSummaryDto(
+                tickets, revenue, snacks, movies, daily);
         }
     }
 }

@@ -9,15 +9,8 @@ namespace onlineCinema.Application.Interfaces
 {
     public interface IBookingRepository : IGenericRepository<Booking>
     {
-        
         Task<Booking?> GetByIdWithDetailsAsync(int id);
-
-        
         Task UpdateWithDetailsAsync(Booking booking);
-
-        /// <summary>
-        /// Отримує всі замовлення користувача з деталями (квитки, сесії, фільми, місця)
-        /// </summary>
         Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId);
     }
 }

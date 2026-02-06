@@ -22,7 +22,10 @@ namespace onlineCinema.Areas.Admin.Controllers
 
         private readonly IValidator<HallInputViewModel> _validator;
 
-        public HallController(IHallService hallService, HallViewModelMapper mapper, IValidator<HallInputViewModel> validator)
+        public HallController(
+            IHallService hallService, 
+            HallViewModelMapper mapper, 
+            IValidator<HallInputViewModel> validator)
         {
             _hallService = hallService;
             _mapper = mapper;
@@ -34,7 +37,8 @@ namespace onlineCinema.Areas.Admin.Controllers
         {
             var dtos = await _hallService.GetAllHallsAsync();
 
-            var viewModels = dtos.Select(dto => _mapper.MapToViewModel(dto)).ToList();
+            var viewModels = dtos
+                .Select(dto => _mapper.MapToViewModel(dto)).ToList();
 
             return View(viewModels);
         }
@@ -91,7 +95,8 @@ namespace onlineCinema.Areas.Admin.Controllers
                     {
                         Id = f.Id,
                         Name = f.Name,
-                        IsSelected = model.SelectedFeatureIds != null && model.SelectedFeatureIds.Contains(f.Id)
+                        IsSelected = model.SelectedFeatureIds != null 
+                                && model.SelectedFeatureIds.Contains(f.Id)
                     })
                     .ToList();
 
@@ -130,7 +135,8 @@ namespace onlineCinema.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 var features = await _hallService.GetAllFeaturesAsync();
-                model.AvailableFeatures = _mapper.PrepareInputViewModel(features).AvailableFeatures;
+                model.AvailableFeatures = _mapper
+                    .PrepareInputViewModel(features).AvailableFeatures;
                 //Select(f => new FeatureCheckboxViewModel
                 //{
                 //    Id = f.Id,

@@ -61,39 +61,34 @@
         </div>
 
         <div class="col-lg-8">
-            <div class="card border-secondary bg-dark text-white">
-                <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
-                    <i class="bi bi-clock-history me-2"></i>Schedule (Next 3 Days)
+            <div class="card border-secondary bg-dark text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary text-white fw-bold py-3">
+                    <i class="bi bi-clock-history text-danger me-2"></i>Schedule (Next 3 Days)
                 </div>
-                <div class="card-body p-0">
+                <div class="card-body p-0 bg-black">
                     <div class="table-responsive">
                         @if (Model.Sessions != null && Model.Sessions.Any())
                         {
-                            <table class="table table-hover table-dark mb-0 align-middle">
-                                <thead class="text-uppercase small text-muted">
+                            <table class="table table-hover mb-0 align-middle">
+                                <thead class="bg-black text-uppercase small">
                                     <tr>
-                                        <th class="ps-4">Date</th>
-                                        <th>Time</th>
-                                        <th>Movie</th>
-                                        <th></th>
+                                        <th class="ps-4 py-3 text-muted border-0">Date</th>
+                                        <th class="py-3 text-muted border-0">Time</th>
+                                        <th class="py-3 text-muted border-0">Movie</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody class="bg-black">
                                     @foreach (var session in Model.Sessions)
                                     {
                                         <tr>
-                                            <td class="ps-4">@session.Date</td>
-                                            <td>
-                                                <span class="badge bg-primary bg-opacity-10 text-primary border border-primary">
-                                                    @session.Time
+                                            <td class="ps-4 py-3 text-white-50">@session.Date</td>
+                                            <td class="py-3">
+                                                <span class="badge bg-info bg-opacity-10 text-info border border-info px-3 py-2 fw-normal">
+                                                    <i class="bi bi-clock me-1 small"></i>@session.Time
                                                 </span>
                                             </td>
-                                            <td class="fw-bold text-white">@session.MovieTitle</td>
-                                            <td class="text-end pe-4">
-                                                <a asp-controller="Booking" asp-action="SelectSeats" asp-route-sessionId="@session.Id"
-                                                   class="btn btn-sm btn-success fw-bold">
-                                                    Buy Ticket
-                                                </a>
+                                            <td class="py-3 fw-bold text-white">
+                                                @session.MovieTitle
                                             </td>
                                         </tr>
                                     }
