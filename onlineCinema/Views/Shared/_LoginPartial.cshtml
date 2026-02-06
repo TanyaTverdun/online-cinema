@@ -10,9 +10,9 @@
         <a class="nav-link text-dark" asp-controller="Account" asp-action="Profile" title="Особистий кабінет">Привіт, @User.Identity?.Name!</a>
     </li>
     <li class="nav-item">
-        <form class="form-inline" asp-controller="Account" asp-action="Logout" method="post">
-            <button type="submit" class="nav-link btn btn-link text-dark border-0">Вихід</button>
-        </form>
+            <form class="form-inline" asp-area="" asp-controller="Account" asp-action="Logout" method="post">
+                <button type="submit" class="nav-link btn btn-link text-white border-0">Вийти</button>
+            </form>
     </li>
 }
 else
