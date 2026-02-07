@@ -23,6 +23,6 @@ namespace onlineCinema.Areas.Admin.Models
         public string FeaturesList { get; set; } = string.Empty;
 
         [Display(Name = "Сессії")]
-        public List<SessionViewModel> Sessions { get; set; } = new();
+        public List<onlineCinema.ViewModels.SessionViewModel> Sessions { get; set; } = new();
     }
 }

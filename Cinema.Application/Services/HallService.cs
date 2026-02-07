@@ -81,7 +81,9 @@ namespace onlineCinema.Application.Services
 
         public async Task<IEnumerable<HallDto>> GetAllHallsAsync()
         {
-            return await _unitOfWork.Hall.GetAllWithStatsAsync();
+            var halls = await _unitOfWork.Hall.GetAllAsync(includeProperties: "HallFeatures");
+
+            return _mapper.MapToDtoList(halls);
         }
 
         public async Task<HallDto?> GetHallByIdAsync(int id)

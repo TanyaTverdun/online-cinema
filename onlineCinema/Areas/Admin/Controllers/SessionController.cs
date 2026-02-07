@@ -32,18 +32,18 @@ namespace onlineCinema.Areas.Admin.Controllers
         [HttpGet]
         public async Task<IActionResult> Create()
         {
-            var viewModel = new SessionCreateViewModel();
+            var viewModel = new SessionViewModel();
             await PopulateViewModelDropdowns(viewModel);
-            return View("CreateSession", viewModel);
+            return View("Session", viewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create(SessionCreateViewModel vm)
+        public async Task<IActionResult> Create(SessionViewModel vm)
         {
             if (!ModelState.IsValid)
             {
                 await PopulateViewModelDropdowns(vm);
-                return View("CreateSession", vm);
+                return View("Session", vm);
             }
 
             try
@@ -56,14 +56,14 @@ namespace onlineCinema.Areas.Admin.Controllers
                 ModelState.AddModelError("ShowingDateTime", ex.Message);
 
                 await PopulateViewModelDropdowns(vm);
-                return View("CreateSession", vm);
+                return View("Session", vm);
             }
             catch (Exception ex)
             {
                 ModelState.AddModelError("", ex.Message);
 
                 await PopulateViewModelDropdowns(vm);
-                return View("CreateSession", vm);
+                return View("Session", vm);
             }
         }
 
@@ -80,11 +80,11 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             await PopulateViewModelDropdowns(editViewModel);
 
-            return View("EditSession", editViewModel);
+            return View("Session", editViewModel);
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int id, SessionEditViewModel model)
+        public async Task<IActionResult> Edit(int id, SessionViewModel model)
         {
             if (model.Id == null || model.Id == 0)
             {
@@ -94,7 +94,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             if (!ModelState.IsValid)
             {
                 await PopulateViewModelDropdowns(model);
-                return View("EditSession", model);
+                return View("Session", model);
             }
 
             var conflict = await _sessionService.HallHasSessionAtTime(
@@ -108,7 +108,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 ModelState.AddModelError("ShowingDateTime", "У цьому залі вже є інший сеанс у цей час");
 
                 await PopulateViewModelDropdowns(model);
-                return View("EditSession", model);
+                return View("Session", model);
             }
 
             var updateDto = _sessionMapper.MapToUpdateDto(model);
@@ -116,15 +116,6 @@ namespace onlineCinema.Areas.Admin.Controllers
             await _sessionService.UpdateSessionAsync(updateDto);
 
             return RedirectToAction(nameof(Index));
-        }
-
-        private async Task PopulateViewModelDropdowns(SessionCreateViewModel vm)
-        {
-            var movies = await _movieService.GetAllMoviesAsync();
-            var halls = await _hallService.GetAllHallsAsync();
-
-            vm.AvailableMovies = new SelectList(movies, "Id", "Title", vm.MovieId);
-            vm.AvailableHalls = new SelectList(halls, "Id", "HallNumber", vm.HallId);
         }
 
         [HttpPost]
@@ -148,13 +139,10 @@ namespace onlineCinema.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private async Task PopulateViewModelDropdowns(SessionEditViewModel vm)
+        private async Task PopulateViewModelDropdowns(SessionViewModel vm)
         {
-            var movies = await _movieService.GetAllMoviesAsync();
-            var halls = await _hallService.GetAllHallsAsync();
-
-            vm.AvailableMovies = new SelectList(movies, "Id", "Title", vm.MovieId);
-            vm.AvailableHalls = new SelectList(halls, "Id", "HallNumber", vm.HallId);
+            vm.MoviesList = await _movieService.GetAllMoviesAsync();
+            vm.HallsList = await _hallService.GetAllHallsAsync();
         }
     }
 }

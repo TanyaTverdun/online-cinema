@@ -7,6 +7,11 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class HallMapper
     {
+        private List<int> MapFeaturesToIds(ICollection<HallFeature> features)
+            => features.Select(f => f.FeatureId).ToList();
+
+        [MapProperty(nameof(Hall.HallFeatures), nameof(HallDto.FeatureIds), Use = nameof(MapFeaturesToIds))]
+
         [MapProperty(nameof(Hall.HallId), nameof(HallDto.Id))]
         private partial HallDto MapToHallDtoBase(Hall hall);
 
@@ -24,6 +29,8 @@ namespace onlineCinema.Application.Mapping
 
             return dto;
         }
+
+        public partial IEnumerable<HallDto> MapToDtoList(IEnumerable<Hall> hall);
 
         [MapProperty(nameof(HallDto.Id), nameof(Hall.HallId))]
         private partial Hall MapToHallEntityBase(HallDto dto);

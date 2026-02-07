@@ -1,16 +1,19 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using onlineCinema.Application.DTOs;
 
 namespace onlineCinema.Areas.Admin.Models
 {
-    public class SessionEditViewModel
+    public class SessionViewModel
     {
         public int? Id { get; set; }
         public int? MovieId { get; set; }
         public int? HallId { get; set; }
+        public string MovieTitle { get; set; } = string.Empty;
+        public string HallName { get; set; } = string.Empty;
         public DateTime? ShowingDateTime { get; set; }
         public decimal? BasePrice { get; set; }
-        public IEnumerable<SelectListItem> AvailableMovies { get; set; } = new List<SelectListItem>();
-        public IEnumerable<SelectListItem> AvailableHalls { get; set; } = new List<SelectListItem>();
+        public IEnumerable<MovieDto> MoviesList { get; set; } = new List<MovieDto>();
+        public IEnumerable<HallDto> HallsList { get; set; } = new List<HallDto>();
     }
 }

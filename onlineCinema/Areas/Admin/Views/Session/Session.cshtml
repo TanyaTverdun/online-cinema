@@ -1,0 +1,115 @@
+﻿@model onlineCinema.Areas.Admin.Models.SessionViewModel
+
+@{
+    bool isEdit = Model.Id != null && Model.Id > 0;
+    ViewData["Title"] = isEdit ? "Редагувати сеанс" : "Додати сеанс";
+}
+
+@section Styles {
+    <link rel="stylesheet" href="~/css/CreateSession.css" asp-append-version="true" />
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">
+            @if (isEdit)
+            {
+                <text>Edit Session <span class="text-danger">#@Model.Id</span></text>
+            }
+            else
+            {
+                <text>Add New Session</text>
+            }
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
+            <i class="bi bi-arrow-left me-1"></i> Back to List
+        </a>
+    </div>
+
+    <form asp-action="@(isEdit ? "Edit" : "Create")" method="post">
+        @if (isEdit)
+        {
+            <input type="hidden" asp-for="Id" />
+        }
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-secondary movie-table mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-info-circle me-2"></i>General Information
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-4">
+                            <label asp-for="MovieId" class="form-label text-white small text-uppercase">Movie Title</label>
+                            <select asp-for="MovieId" class="form-select" id="MovieSelector">
+                                <option value="">-- Select Movie --</option>
+                                @foreach (var movie in Model.MoviesList)
+                                {
+                                    <option value="@movie.Id"
+                                            data-features="@(movie.FeatureIds != null ? string.Join(",", movie.FeatureIds) : "")">
+                                        @movie.Title
+                                    </option>
+                                }
+                            </select>
+                            <span asp-validation-for="MovieId" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="HallId" class="form-label text-white small text-uppercase">Cinema Hall</label>
+                                <select asp-for="HallId" class="form-select" id="HallSelector" data-initial-id="@Model.HallId">
+                                    <option value="">-- Select Hall --</option>
+                                    @foreach (var hall in Model.HallsList)
+                                    {
+                                        <option value="@hall.Id"
+                                                data-features="@(hall.FeatureIds != null ? string.Join(",", hall.FeatureIds) : "")">
+                                            Зал @hall.HallNumber
+                                        </option>
+                                    }
+                                </select>
+                                <span asp-validation-for="HallId" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ShowingDateTime" class="form-label text-white small text-uppercase">Showing Date & Time</label>
+                                <input asp-for="ShowingDateTime" type="datetime-local" class="form-control" />
+                                <span asp-validation-for="ShowingDateTime" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-secondary movie-table mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-cash-stack me-2"></i>Pricing Settings
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="BasePrice" class="form-label text-white small text-uppercase">Ticket Base Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text bg-secondary border-secondary text-white">₴</span>
+                                <input asp-for="BasePrice" type="text" inputmode="decimal" class="form-control" placeholder="0,00" />
+                            </div>
+                            <span asp-validation-for="BasePrice" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold py-2 shadow-sm">
+                        <i class="bi bi-check-lg me-2"></i>
+                        @(isEdit ? "Save Changes" : "Create Session")
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script src="~/js/session.js" asp-append-version="true"></script>
+}
