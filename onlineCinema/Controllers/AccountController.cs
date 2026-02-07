@@ -47,7 +47,7 @@ namespace onlineCinema.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
         {
             model.ReturnUrl = returnUrl ?? model.ReturnUrl;
-            
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -61,6 +61,8 @@ namespace onlineCinema.Controllers
 
             var user = _userMapping.ToApplicationUser(model);
 
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
+
             var result = await _userManager.CreateAsync(user, model.Password ?? string.Empty);
 
             if (result.Succeeded)
@@ -68,14 +70,14 @@ namespace onlineCinema.Controllers
                 await _userManager.AddToRoleAsync(user, userRoleName);
 
                 _logger.LogInformation("Користувач {Email} успішно зареєстрований з роллю {Role}", model.Email, userRoleName);
-                
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                
+
                 if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
                     return Redirect(model.ReturnUrl);
                 }
-                
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -115,12 +117,12 @@ namespace onlineCinema.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("Користувач {Email} успішно увійшов", model.Email);
-                
+
                 if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
                     return Redirect(model.ReturnUrl);
                 }
-                
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -173,17 +175,32 @@ namespace onlineCinema.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var currentUser = await _userManager.GetUserAsync(User);
+                if (currentUser != null)
+                {
+                    bool isAdmin = await _userManager.IsInRoleAsync(currentUser, "Admin");
+
+                    var bookings = isAdmin
+                        ? Enumerable.Empty<BookingHistoryDto>()
+                        : await _bookingService.GetBookingHistoryAsync(currentUser.Id);
+
+                    model.BookingHistory = bookings.Select(_userMapping.ToBookingHistoryItemViewModel).ToList();
+                }
+
                 return View(model);
             }
 
+
             var user = await _userManager.GetUserAsync(User);
-            
+
             if (user == null)
             {
                 return NotFound();
             }
 
             _userMapping.UpdateApplicationUser(model, user);
+
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
 
             if (user.Email != model.Email)
             {
@@ -196,7 +213,7 @@ namespace onlineCinema.Controllers
                     }
                     return View(model);
                 }
-                
+
                 var setUserNameResult = await _userManager.SetUserNameAsync(user, model.Email);
                 if (!setUserNameResult.Succeeded)
                 {
@@ -226,4 +243,3 @@ namespace onlineCinema.Controllers
         }
     }
 }
-

@@ -27,8 +27,8 @@ namespace onlineCinema.Mapping
         public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
 
         public ProfileViewModel ToProfileViewModel(
-            ApplicationUser user, 
-            IEnumerable<BookingHistoryDto> bookings, 
+            ApplicationUser user,
+            IEnumerable<BookingHistoryDto> bookings,
             string? returnUrl = null)
         {
             var viewModel = ToProfileViewModelBase(user);
@@ -62,14 +62,11 @@ namespace onlineCinema.Mapping
 
         private string? MapMoviePoster(byte[]? posterBytes)
         {
-            // Convert byte[] to base64 string if needed, or return null
-            // For now, since we're returning null from BookingMapper, this will be null
             if (posterBytes == null || posterBytes.Length == 0)
             {
                 return null;
             }
-            
-            // Convert byte[] to base64 string
+
             return Convert.ToBase64String(posterBytes);
         }
 
@@ -96,8 +93,10 @@ namespace onlineCinema.Mapping
         public ApplicationUser ToApplicationUser(RegisterViewModel model)
         {
             var user = ToApplicationUserBase(model);
-            user.EmailConfirmed = true; // Для спрощення
-            user.MiddleName ??= string.Empty;
+            user.EmailConfirmed = true;
+
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
+
             return user;
         }
 
@@ -129,8 +128,8 @@ namespace onlineCinema.Mapping
         public void UpdateApplicationUser(ProfileViewModel model, ApplicationUser user)
         {
             UpdateApplicationUserBase(model, user);
-            user.MiddleName ??= string.Empty;
+
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
         }
     }
 }
-

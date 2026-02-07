@@ -23,9 +23,9 @@ namespace onlineCinema.Validators
 
             RuleFor(x => x.MiddleName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("По батькові є обов'язковим")
+                .MaximumLength(50).WithMessage("По батькові не може перевищувати 50 символів")
                 .Matches(nameRegex).WithMessage("По батькові може містити тільки літери")
-                .MaximumLength(50).WithMessage("По батькові не може перевищувати 50 символів");
+                .When(x => !string.IsNullOrWhiteSpace(x.MiddleName));
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Електронна пошта є обов'язковою")
@@ -39,7 +39,6 @@ namespace onlineCinema.Validators
                 .NotEmpty().WithMessage("Дата народження є обов'язковою")
                 .Must(d => !d.HasValue || d <= DateTime.Now).WithMessage("Дата народження не може бути в майбутньому")
                 .Must(d => !d.HasValue || d >= new DateTime(1900, 1, 1)).WithMessage("Дата народження не може бути раніше 01.01.1900");
-
         }
     }
 }

@@ -23,13 +23,13 @@ namespace onlineCinema.Validators
 
             RuleFor(x => x.MiddleName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("По батькові є обов'язковим")
+                .MaximumLength(50).WithMessage("По батькові не може перевищувати 50 символів")
                 .Matches(nameRegex).WithMessage("По батькові може містити тільки літери")
-                .MaximumLength(50).WithMessage("По батькові не може перевищувати 50 символів");
+                .When(x => !string.IsNullOrWhiteSpace(x.MiddleName));
 
             RuleFor(x => x.Email)
                 .NotEmpty().WithMessage("Електронна пошта є обов'язковою")
-                .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$").WithMessage("Невірний формат електронної пошти (you@gmail.com)"); ;
+                .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$").WithMessage("Невірний формат електронної пошти (you@gmail.com)");
 
             RuleFor(x => x.PhoneNumber)
                 .NotEmpty().WithMessage("Номер телефону є обов'язковим")

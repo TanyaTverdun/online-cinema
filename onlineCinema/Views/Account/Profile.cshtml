@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <h2 class="mb-4">@ViewData["Title"]</h2>
-        
+
         @if (TempData["SuccessMessage"] != null)
         {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -14,16 +14,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
-        
+
         <form asp-action="Profile" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            
+
             <input asp-for="Id" type="hidden" />
-            
+
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">Особиста інформація</h5>
                 </div>
+
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
@@ -31,34 +32,36 @@
                             <input asp-for="FirstName" class="form-control" />
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
-                        
+
                         <div class="col-md-4 mb-3">
                             <label asp-for="LastName" class="form-label">Прізвище</label>
                             <input asp-for="LastName" class="form-control" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
-                        
+
                         <div class="col-md-4 mb-3">
-                            <label asp-for="MiddleName" class="form-label">По батькові</label>
+                            <label asp-for="MiddleName" class="form-label">
+                                По батькові <span class="text-muted">(необов'язково)</span>
+                            </label>
                             <input asp-for="MiddleName" class="form-control" />
                             <span asp-validation-for="MiddleName" class="text-danger"></span>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Email" class="form-label">Електронна  пошта</label>
+                            <label asp-for="Email" class="form-label">Електронна пошта</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label asp-for="PhoneNumber" class="form-label">Номер телефону</label>
                             <input asp-for="PhoneNumber" class="form-control" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label asp-for="DateOfBirth" class="form-label">Дата народження</label>
                         <input asp-for="DateOfBirth" class="form-control" type="date" />
@@ -66,12 +69,13 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button type="submit" class="btn btn-primary">Зберегти зміни</button>
                 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Скасувати</a>
             </div>
         </form>
+
         @if (!User.IsInRole("Admin"))
         {
             @if (Model.BookingHistory != null && Model.BookingHistory.Any())
@@ -80,6 +84,7 @@
                     <div class="card-header">
                         <h5 class="mb-0">Історія замовлень</h5>
                     </div>
+
                     <div class="card-body">
                         <div class="row">
                             @foreach (var booking in Model.BookingHistory)
@@ -91,43 +96,65 @@
                                                 @if (!string.IsNullOrEmpty(booking.MoviePoster))
                                                 {
                                                     <div class="col-md-2">
-                                                        <img src="@booking.MoviePoster" alt="@booking.MovieTitle" class="img-fluid rounded" style="max-height: 150px; object-fit: cover;" />
+                                                        <img src="@booking.MoviePoster"
+                                                             alt="@booking.MovieTitle"
+                                                             class="img-fluid rounded"
+                                                             style="max-height: 150px; object-fit: cover;" />
                                                     </div>
                                                 }
+
                                                 <div class="@(string.IsNullOrEmpty(booking.MoviePoster) ? "col-md-12" : "col-md-10")">
                                                     <h5 class="card-title">@booking.MovieTitle</h5>
+
                                                     <div class="row mb-2">
                                                         <div class="col-md-6">
-                                                            <strong>Дата сеансу:</strong> @booking.SessionDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                            <strong>Дата сеансу:</strong>
+                                                            @booking.SessionDateTime.ToString("dd.MM.yyyy HH:mm")
                                                         </div>
                                                         <div class="col-md-6">
                                                             <strong>Зал:</strong> @booking.HallName
                                                         </div>
                                                     </div>
+
                                                     <div class="row mb-2">
                                                         <div class="col-md-6">
-                                                            <strong>Дата замовлення:</strong> @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                            <strong>Дата замовлення:</strong>
+                                                            @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
                                                         </div>
                                                         <div class="col-md-6">
                                                             <strong>Статус оплати:</strong>
-                                                            <span class="badge @(booking.PaymentStatus == "Оплачено" ? "bg-success" : booking.PaymentStatus == "Очікується" ? "bg-warning" : booking.PaymentStatus == "Помилка" ? "bg-danger" : "bg-secondary")">
+                                                            <span class="badge @(booking.PaymentStatus == "Оплачено"
+                                                                ? "bg-success"
+                                                                : booking.PaymentStatus == "Очікується"
+                                                                    ? "bg-warning"
+                                                                    : booking.PaymentStatus == "Помилка"
+                                                                        ? "bg-danger"
+                                                                        : "bg-secondary")">
                                                                 @booking.PaymentStatus
                                                             </span>
                                                         </div>
                                                     </div>
+
                                                     <div class="mb-2">
                                                         <strong>Квитки:</strong>
                                                         <ul class="list-unstyled ms-3">
                                                             @foreach (var ticket in booking.Tickets)
                                                             {
                                                                 <li>
-                                                                    Ряд @ticket.RowNumber, Місце @ticket.SeatNumber (@ticket.SeatType) - @ticket.Price.ToString("C")
+                                                                    Ряд @ticket.RowNumber,
+                                                                    Місце @ticket.SeatNumber
+                                                                    (@ticket.SeatType) –
+                                                                    @ticket.Price.ToString("C")
                                                                 </li>
                                                             }
                                                         </ul>
                                                     </div>
+
                                                     <div class="mt-2">
-                                                        <strong>Загальна сума:</strong> <span class="text-primary fw-bold">@booking.TotalAmount.ToString("C")</span>
+                                                        <strong>Загальна сума:</strong>
+                                                        <span class="text-primary fw-bold">
+                                                            @booking.TotalAmount.ToString("C")
+                                                        </span>
                                                     </div>
                                                 </div>
                                             </div>
@@ -152,6 +179,5 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
 }
-
