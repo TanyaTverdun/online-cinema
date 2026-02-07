@@ -43,7 +43,7 @@
 
                             <div class="col-md-6 mb-3">
                                 <label asp-for="ShowingDateTime" class="form-label text-white small text-uppercase">Showing Date & Time</label>
-                                <input asp-for="ShowingDateTime" type="datetime-local" class="form-control bg-black text-white border-secondary" />
+                                <input asp-for="ShowingDateTime" type="datetime-local" class="form-control bg-black text-white border-secondary bg-dark text-white datepicker-input" />
                                 <span asp-validation-for="ShowingDateTime" class="text-danger-custom"></span>
                             </div>
                         </div>
@@ -87,4 +87,16 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datepicker-input", {
+                theme: "dark",
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "d.m.Y",
+                locale: "uk",
+                disableMobile: "true"
+            });
+        });
+    </script>
 }

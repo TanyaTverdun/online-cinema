@@ -39,7 +39,7 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label asp-for="ReleaseDate" class="form-label text-white small text-uppercase">Release Date</label>
-                                <input asp-for="ReleaseDate" type="date" class="form-control" />
+                                <input asp-for="ReleaseDate" type="date" class="form-control  bg-dark text-white datepicker-input" />
                                 <span asp-validation-for="ReleaseDate" class="text-danger small"></span>
                             </div>
                             <div class="col-md-6 mb-3">
@@ -184,6 +184,17 @@
                 $('#' + targetId + ' option').filter(function () {
                     $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
                 });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datepicker-input", {
+                theme: "dark",             
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "d.m.Y",
+                locale: "uk",
+                disableMobile: "true"  
             });
         });
     </script>
