@@ -4,10 +4,6 @@
     ViewData["Title"] = "Add New Session";
 }
 
-@section Styles {
-    <link rel="stylesheet" href="~/css/CreateSession.css" asp-append-version="true" />
-}
-
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h1 class="text-white fw-bold fs-3 mb-0">Add New Session</h1>
@@ -19,32 +15,32 @@
     <form asp-action="Create" method="post">
         <div class="row g-4">
             <div class="col-lg-8">
-                <div class="card border-secondary bg-dark movie-table mb-4">
-                    <div class="card-header bg-black border-bottom text-white fw-bold">
+                <div class="card border-secondary bg-black text-white mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
                         <i class="bi bi-info-circle me-2"></i>General Information
                     </div>
                     <div class="card-body">
                         <div class="mb-4">
-                            <label asp-for="MovieId" class="form-label text-white small text-uppercase">Movie</label>
-                            <select asp-for="MovieId" asp-items="@Model.AvailableMovies" class="form-select">
+                            <label asp-for="MovieId" class="form-label text-muted small text-uppercase">Movie</label>
+                            <select asp-for="MovieId" asp-items="@Model.AvailableMovies" class="form-select bg-dark text-white border-secondary">
                                 <option value="">-- Select Movie --</option>
                             </select>
-                            <span asp-validation-for="MovieId" class="text-danger-custom"></span>
+                            <span asp-validation-for="MovieId" class="text-danger small"></span>
                         </div>
 
                         <div class="row">
                             <div class="col-md-6 mb-3">
-                                <label asp-for="HallId" class="form-label text-white small text-uppercase">Cinema Hall</label>
-                                <select asp-for="HallId" asp-items="@Model.AvailableHalls" class="form-select">
+                                <label asp-for="HallId" class="form-label text-muted small text-uppercase">Cinema Hall</label>
+                                <select asp-for="HallId" asp-items="@Model.AvailableHalls" class="form-select bg-dark text-white border-secondary">
                                     <option value="">-- Select Hall --</option>
                                 </select>
-                                <span asp-validation-for="HallId" class="text-danger-custom"></span>
+                                <span asp-validation-for="HallId" class="text-danger small"></span>
                             </div>
 
                             <div class="col-md-6 mb-3">
-                                <label asp-for="ShowingDateTime" class="form-label text-white small text-uppercase">Showing Date & Time</label>
-                                <input asp-for="ShowingDateTime" type="datetime-local" class="form-control bg-black text-white border-secondary bg-dark text-white datepicker-input" />
-                                <span asp-validation-for="ShowingDateTime" class="text-danger-custom"></span>
+                                <label asp-for="ShowingDateTime" class="form-label text-muted small text-uppercase">Showing Date & Time</label>
+                                <input asp-for="ShowingDateTime" type="datetime-local" class="form-control bg-dark text-white border-secondary datepicker-input" />
+                                <span asp-validation-for="ShowingDateTime" class="text-danger small"></span>
                             </div>
                         </div>
                     </div>
@@ -52,24 +48,23 @@
             </div>
 
             <div class="col-lg-4">
-                <div class="card bg-dark movie-table mb-4">
-                    <div class="card-header bg-black border-bottom text-white fw-bold">
+                <div class="card border-secondary bg-black text-white mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
                         <i class="bi bi-cash-stack me-2"></i>Pricing Settings
                     </div>
                     <div class="card-body">
                         <div class="mb-3">
-                            <label asp-for="BasePrice" class="form-label text-white small text-uppercase">Ticket Base Price</label>
+                            <label asp-for="BasePrice" class="form-label text-muted small text-uppercase">Ticket Base Price</label>
                             <div class="input-group">
-                                <span class="input-group-text bg-secondary border-secondary text-white">₴</span>
+                                <span class="input-group-text bg-dark border-secondary text-white">₴</span>
                                 <input asp-for="BasePrice"
                                        type="text"
                                        inputmode="decimal"
-                                       data-val-number="Введіть коректне число (використовуйте кому для копійок)"
-                                       class="form-control bg-black text-white border-secondary"
+                                       class="form-control bg-dark text-white border-secondary"
                                        placeholder="0,00"
                                        autocomplete="off" />
                             </div>
-                            <span asp-validation-for="BasePrice" class="text-danger-custom"></span>
+                            <span asp-validation-for="BasePrice" class="text-danger small"></span>
                         </div>
                     </div>
                 </div>
@@ -90,12 +85,15 @@
     <script>
         document.addEventListener("DOMContentLoaded", function () {
             flatpickr(".datepicker-input", {
+                enableTime: true,
+                time_24hr: true,
                 theme: "dark",
-                dateFormat: "Y-m-d",
+                dateFormat: "Y-m-d H:i",
                 altInput: true,
-                altFormat: "d.m.Y",
+                altFormat: "d.m.Y H:i",
                 locale: "uk",
-                disableMobile: "true"
+                disableMobile: "true",
+                minuteIncrement: 10 
             });
         });
     </script>
