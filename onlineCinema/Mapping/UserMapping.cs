@@ -50,7 +50,6 @@ namespace onlineCinema.Mapping
                 PaymentStatus = dto.PaymentStatus,
                 HallName = dto.HallName,
                 Tickets = dto.Tickets.Select(ToTicketInfoViewModel).ToList(),
-
                 CanRefund = dto.CanRefund
             };
         }
