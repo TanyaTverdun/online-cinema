@@ -50,13 +50,23 @@
             
             <div class="mb-3">
                 <label asp-for="Password" class="form-label">Пароль</label>
-                <input asp-for="Password" class="form-control" />
+                <div class="input-group">
+                    <input asp-for="Password" class="form-control" type="password" id="passwordInput" />
+                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                        <i class="bi bi-eye" id="eyeIcon"></i>
+                    </button>
+                </div>
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
-            
+
             <div class="mb-3">
                 <label asp-for="ConfirmPassword" class="form-label">Підтвердження паролю</label>
-                <input asp-for="ConfirmPassword" class="form-control" />
+                <div class="input-group">
+                    <input asp-for="ConfirmPassword" class="form-control" type="password" id="confirmPasswordInput" />
+                    <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                        <i class="bi bi-eye" id="confirmEyeIcon"></i>
+                    </button>
+                </div>
                 <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
             </div>
             
@@ -73,5 +83,15 @@
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+
+    <script src="~/js/PasswordToggle.js" asp-append-version="true"></script>
+
+    <script>
+        // Ініціалізація для пароля
+        initPasswordToggle('togglePassword', 'passwordInput', 'eyeIcon');
+
+        // Ініціалізація для підтвердження пароля
+        initPasswordToggle('toggleConfirmPassword', 'confirmPasswordInput', 'confirmEyeIcon');
+    </script>
 }
 
