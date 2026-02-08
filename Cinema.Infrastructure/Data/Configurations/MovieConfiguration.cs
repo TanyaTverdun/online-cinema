@@ -29,6 +29,10 @@ namespace onlineCinema.Infrastructure.Data.Configurations
             builder.Property(m => m.AgeRating)
                 .HasColumnType("tinyint");
 
+            builder.Property(m => m.Rating)
+                .HasColumnType("decimal(3, 1)") 
+                .HasDefaultValue(0);
+
             builder.Property(m => m.ReleaseDate)
                 .HasColumnType("date");
 

@@ -18,6 +18,7 @@ namespace onlineCinema.Application.DTOs.Movie
         public int Runtime { get; set; } 
         public DateTime ReleaseDate { get; set; }
         public AgeRating AgeRating { get; set; }
+        public decimal Rating { get; set; }
         public MovieStatus Status { get; set; }
 
         public List<string> Genres { get; set; } = new List<string>();

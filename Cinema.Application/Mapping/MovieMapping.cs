@@ -51,6 +51,7 @@ namespace onlineCinema.Application.Mapping
             movie.Status = dto.Status;
             movie.AgeRating = dto.AgeRating;
             movie.TrailerLink = dto.TrailerLink;
+            movie.Rating = dto.Rating;
         }
 
         [MapProperty(nameof(Feature.Id), nameof(FeatureDto.Id))]
