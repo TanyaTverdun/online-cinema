@@ -6,7 +6,7 @@
 <div class="row justify-content-center">
     <div class="col-md-8">
         <h2 class="mb-4">@ViewData["Title"]</h2>
-        
+
         @if (TempData["SuccessMessage"] != null)
         {
             <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -14,12 +14,12 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
-        
+
         <form asp-action="Profile" method="post">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
-            
+
             <input asp-for="Id" type="hidden" />
-            
+
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0">Особиста інформація</h5>
@@ -31,34 +31,34 @@
                             <input asp-for="FirstName" class="form-control" />
                             <span asp-validation-for="FirstName" class="text-danger"></span>
                         </div>
-                        
+
                         <div class="col-md-4 mb-3">
                             <label asp-for="LastName" class="form-label">Прізвище</label>
                             <input asp-for="LastName" class="form-control" />
                             <span asp-validation-for="LastName" class="text-danger"></span>
                         </div>
-                        
+
                         <div class="col-md-4 mb-3">
                             <label asp-for="MiddleName" class="form-label">По батькові</label>
                             <input asp-for="MiddleName" class="form-control" />
                             <span asp-validation-for="MiddleName" class="text-danger"></span>
                         </div>
                     </div>
-                    
+
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label asp-for="Email" class="form-label">Електронна  пошта</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
-                        
+
                         <div class="col-md-6 mb-3">
                             <label asp-for="PhoneNumber" class="form-label">Номер телефону</label>
                             <input asp-for="PhoneNumber" class="form-control" />
                             <span asp-validation-for="PhoneNumber" class="text-danger"></span>
                         </div>
                     </div>
-                    
+
                     <div class="mb-3">
                         <label asp-for="DateOfBirth" class="form-label">Дата народження</label>
                         <input asp-for="DateOfBirth" class="form-control" type="date" />
@@ -66,7 +66,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                 <button type="submit" class="btn btn-primary">Зберегти зміни</button>
                 <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Скасувати</a>
@@ -126,9 +126,64 @@
                                                             }
                                                         </ul>
                                                     </div>
-                                                    <div class="mt-2">
-                                                        <strong>Загальна сума:</strong> <span class="text-primary fw-bold">@booking.TotalAmount.ToString("C")</span>
+
+                                                    @* --- ЗМІНЕНО ТУТ: Додано кнопку повернення --- *@
+                                                    <div class="mt-2 d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <strong>Загальна сума:</strong>
+                                                            <span class="text-primary fw-bold">@booking.TotalAmount.ToString("C")</span>
+                                                        </div>
+
+                                                        @if (booking.CanRefund)
+                                                        {
+                                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#refundModal-@booking.BookingId">
+                                                                Повернути квитки
+                                                            </button>
+
+                                                            <div class="modal fade" id="refundModal-@booking.BookingId" tabindex="-1" aria-labelledby="refundModalLabel-@booking.BookingId" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content text-dark">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="refundModalLabel-@booking.BookingId">Підтвердження повернення</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <p>Ви дійсно хочете скасувати бронювання на фільм <strong>"@booking.MovieTitle"</strong>?</p>
+
+                                                                            <div class="alert alert-warning py-2" role="alert">
+                                                                                <small><i class="bi bi-info-circle"></i> Кошти у сумі <strong>@booking.TotalAmount.ToString("C")</strong> будуть повернуті на ваш баланс.</small>
+                                                                            </div>
+
+                                                                            <p class="mb-1"><strong>Місця, що будуть звільнені:</strong></p>
+                                                                            <ul class="list-group list-group-flush mb-3">
+                                                                                @foreach (var t in booking.Tickets)
+                                                                                {
+                                                                                    <li class="list-group-item px-0 py-1 border-0">
+                                                                                        • Ряд @t.RowNumber, Місце @t.SeatNumber (@t.SeatType)
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                        </div>
+                                                                        <div class="modal-footer border-0">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ні, залишити</button>
+
+                                                                            <form asp-controller="Account" asp-action="CancelBooking" asp-route-id="@booking.BookingId" method="post">
+                                                                                <button type="submit" class="btn btn-danger">Так, повернути квитки</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else if (booking.PaymentStatus == "Повернуто")
+                                                        {
+                                                            <span class="badge bg-secondary">Скасовано</span>
+                                                        }
                                                     </div>
+                                                    @* --------------------------------------------- *@
+
                                                 </div>
                                             </div>
                                         </div>
@@ -152,6 +207,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }
-

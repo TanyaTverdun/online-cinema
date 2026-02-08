@@ -49,7 +49,9 @@ namespace onlineCinema.Mapping
                 MoviePoster = MapMoviePoster(dto.MoviePoster),
                 PaymentStatus = dto.PaymentStatus,
                 HallName = dto.HallName,
-                Tickets = dto.Tickets.Select(ToTicketInfoViewModel).ToList()
+                Tickets = dto.Tickets.Select(ToTicketInfoViewModel).ToList(),
+
+                CanRefund = dto.CanRefund
             };
         }
 
@@ -62,14 +64,11 @@ namespace onlineCinema.Mapping
 
         private string? MapMoviePoster(byte[]? posterBytes)
         {
-            // Convert byte[] to base64 string if needed, or return null
-            // For now, since we're returning null from BookingMapper, this will be null
             if (posterBytes == null || posterBytes.Length == 0)
             {
                 return null;
             }
             
-            // Convert byte[] to base64 string
             return Convert.ToBase64String(posterBytes);
         }
 
@@ -96,7 +95,7 @@ namespace onlineCinema.Mapping
         public ApplicationUser ToApplicationUser(RegisterViewModel model)
         {
             var user = ToApplicationUserBase(model);
-            user.EmailConfirmed = true; // Для спрощення
+            user.EmailConfirmed = true;
             user.MiddleName ??= string.Empty;
             return user;
         }

@@ -6,6 +6,7 @@ using onlineCinema.ViewModels;
 using onlineCinema.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.DTOs;
+using System.Security.Claims;
 
 namespace onlineCinema.Controllers
 {
@@ -223,6 +224,35 @@ namespace onlineCinema.Controllers
             }
 
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelBooking(int id)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                    return Unauthorized();
+
+                await _bookingService.CancelBookingAsync(id, userId);
+
+                TempData["SuccessMessage"] = "Квитки успішно повернуто, кошти зараховано на баланс.";
+
+                // Перезавантаження сторінки профілю
+                return RedirectToAction("Profile");
+            }
+            catch (Exception ex)
+            {
+                // У разі помилки (закінчився час на повернення квитка)
+                // зберігаємо повідомлення в TempData, щоб відобразити його після перенаправлення,
+                // і повертаємо користувача на сторінку профілю.
+                TempData["ErrorMessage"] = $"Помилка повернення: {ex.Message}";
+                return RedirectToAction("Profile");
+            }
         }
     }
 }
