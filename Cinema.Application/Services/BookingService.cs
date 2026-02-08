@@ -182,5 +182,14 @@ namespace onlineCinema.Application.Services
 
             return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
         }
+
+        public async Task<PaginatedListDto<BookingHistoryDto>> GetBookingHistoryPaginatedAsync(string userId, int pageIndex, int pageSize)
+        {
+            var (bookings, totalCount) = await _unitOfWork.Booking.GetUserBookingsPaginatedAsync(userId, pageIndex, pageSize);
+
+            var dtos = bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
+
+            return new PaginatedListDto<BookingHistoryDto>(dtos, totalCount, pageIndex, pageSize);
+        }
     }
 }
