@@ -98,6 +98,10 @@ namespace onlineCinema.Infrastructure.Repositories
                 .Include(b => b.Tickets)
                     .ThenInclude(t => t.Session)
                         .ThenInclude(s => s.Hall)
+                // Завантажуємо снеки
+                .Include(b => b.SnackBookings)
+                    .ThenInclude(sb => sb.Snack)
+
                 .OrderByDescending(b => b.CreatedDateTime)
                 .ToListAsync();
         }

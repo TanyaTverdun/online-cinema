@@ -84,6 +84,13 @@ namespace onlineCinema.Application.Mapping
             var movie = session?.Movie;
             var hall = session?.Hall;
 
+            // Логіка для кнопки: 
+            // 1. Оплачено (Completed)
+            // 2. Час до сеансу > 60 хвилин
+            bool isPaid = booking.Payment?.Status == PaymentStatus.Completed;
+            bool isTimeValid = session != null && (session.ShowingDateTime - DateTime.Now).TotalMinutes > 60;
+            bool notRefunded = booking.Payment?.Status != PaymentStatus.Refunded;
+
             return new BookingHistoryDto
             {
                 BookingId = booking.BookingId,
@@ -94,7 +101,16 @@ namespace onlineCinema.Application.Mapping
                 MoviePoster = MapMoviePoster(movie?.PosterImage),
                 HallName = MapHallName(hall?.HallNumber),
                 PaymentStatus = MapPaymentStatus(booking.Payment?.Status),
-                Tickets = booking.Tickets.Select(t => ToTicketInfoDtoWithSeatType(t)).ToList()
+                Tickets = booking.Tickets.Select(t => ToTicketInfoDtoWithSeatType(t)).ToList(),
+
+                Snacks = booking.SnackBookings.Select(sb => new SnackInfoDto
+                {
+                    Name = sb.Snack.SnackName,
+                    Quantity = sb.Quantity,
+                    Price = sb.Snack.Price // Ціна за одиницю
+                }).ToList(),
+
+                CanRefund = isPaid && isTimeValid && notRefunded
             };
         }
 
