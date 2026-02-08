@@ -16,5 +16,6 @@ namespace onlineCinema.Application.Services.Interfaces
         Task<DateTime> GetBookingLockUntilAsync(int bookingId);
         Task CompletePaymentAsync(int bookingId);
         Task<IEnumerable<BookingHistoryDto>> GetBookingHistoryAsync(string userId);
+        Task CancelBookingAsync(int bookingId, string userId);
     }
 }
