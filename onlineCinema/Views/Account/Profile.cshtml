@@ -1,3 +1,4 @@
+
 @model onlineCinema.ViewModels.ProfileViewModel
 @{
     ViewData["Title"] = "Особистий кабінет";
@@ -15,7 +16,7 @@
             </div>
         }
 
-        <form asp-action="Profile" method="post">
+        <form asp-action="Profile" method="post" id="profileForm">
             <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
 
             <input asp-for="Id" type="hidden" />
@@ -98,9 +99,11 @@
                 </div>
             </div>
             
-            <div class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <button type="submit" class="btn btn-primary">Зберегти зміни</button>
-                <a asp-controller="Home" asp-action="Index" class="btn btn-secondary">Скасувати</a>
+            <div id="action-buttons" class="d-none">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+                    <button type="button" id="cancel-changes" class="btn btn-secondary">Скасувати</button>
+                </div>
             </div>
         </form>
 
@@ -306,6 +309,7 @@
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 
     <script src="~/js/PasswordToggle.js" asp-append-version="true"></script>
+    <script src="~/js/EditProfile.js" asp-append-version="true"></script>
 
     <script>
         // Ініціалізація для пароля
