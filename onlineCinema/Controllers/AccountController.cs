@@ -146,7 +146,7 @@ namespace onlineCinema.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Profile(string? returnUrl = null)
+        public async Task<IActionResult> Profile(int pageNumber = 1, string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -157,11 +157,30 @@ namespace onlineCinema.Controllers
 
             bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
-            var bookings = isAdmin
-                ? Enumerable.Empty<BookingHistoryDto>()
-                : await _bookingService.GetBookingHistoryAsync(user.Id);
+            // винести в конфігураційний файл
+            const int pageSize = 5;
 
-            var model = _userMapping.ToProfileViewModel(user, bookings, returnUrl);
+            var paginatedBookings = isAdmin
+                ? new PaginatedListDto<BookingHistoryDto>(Enumerable.Empty<BookingHistoryDto>(), 0, pageNumber, pageSize)
+                : await _bookingService.GetBookingHistoryPaginatedAsync(user.Id, pageNumber, pageSize);
+
+            var model = _userMapping.ToProfileViewModelBase(user);
+
+            var historyItems = paginatedBookings.Items
+                .Select(dto => _userMapping.ToBookingHistoryItemViewModel(dto))
+                .ToList();
+
+            model.PaginatedBookingHistory = new PaginatedListDto<BookingHistoryItemViewModel>(
+                historyItems,
+                paginatedBookings.TotalPages * pageSize,
+                pageNumber,
+                pageSize
+            )
+            {
+                TotalPages = paginatedBookings.TotalPages
+            };
+
+            model.ReturnUrl = returnUrl;
 
             return View(model);
         }
@@ -173,11 +192,20 @@ namespace onlineCinema.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var userForError = await _userManager.GetUserAsync(User);
+                if (userForError != null)
+                {
+                    var bookings = await _bookingService.GetBookingHistoryPaginatedAsync(userForError.Id, 1, 5);
+                    model.PaginatedBookingHistory = new PaginatedListDto<BookingHistoryItemViewModel>(
+                        bookings.Items.Select(b => _userMapping.ToBookingHistoryItemViewModel(b)).ToList(),
+                        bookings.TotalPages * 5, 1, 5)
+                    { TotalPages = bookings.TotalPages };
+                }
                 return View(model);
             }
 
             var user = await _userManager.GetUserAsync(User);
-            
+
             if (user == null)
             {
                 return NotFound();
@@ -196,7 +224,7 @@ namespace onlineCinema.Controllers
                     }
                     return View(model);
                 }
-                
+
                 var setUserNameResult = await _userManager.SetUserNameAsync(user, model.Email);
                 if (!setUserNameResult.Succeeded)
                 {
