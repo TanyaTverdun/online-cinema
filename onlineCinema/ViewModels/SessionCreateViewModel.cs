@@ -9,6 +9,7 @@ namespace onlineCinema.ViewModels
         public int? HallId { get; set; }
         public DateTime? ShowingDateTime { get; set; }
         public decimal? BasePrice { get; set; }
+        public bool GenerateForWeek { get; set; }
         public IEnumerable<SelectListItem> AvailableMovies { get; set; } = new List<SelectListItem>();
         public IEnumerable<SelectListItem> AvailableHalls { get; set; } = new List<SelectListItem>();
     }

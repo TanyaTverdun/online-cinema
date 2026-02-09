@@ -53,16 +53,23 @@ namespace onlineCinema.Application.Services
 
         public async Task<bool> DeleteHallAsync(int id)
         {
-            await _unitOfWork.Hall.DeleteAsync(id);
+            var hall = await _unitOfWork.Hall.GetByIdAsync(id);
+
+            if (hall == null)
+                throw new KeyNotFoundException($"Зал з id {id} не знайдено.");
+
+            _unitOfWork.Hall.Remove(hall);
+            await _unitOfWork.SaveAsync();
 
             return true;
         }
+
 
         public async Task<HallDto?> EditHallAsync(HallDto hallDto)
         {
             var exists = await _unitOfWork.Hall.GetByIdWithStatsAsync(hallDto.Id);
 
-            if(exists == null)
+            if (exists == null)
             {
                 throw new KeyNotFoundException($"Зал з id {hallDto.Id} не знайдено.");
             }
@@ -77,20 +84,21 @@ namespace onlineCinema.Application.Services
 
         public async Task<IEnumerable<HallDto>> GetAllHallsAsync()
         {
-            return await _unitOfWork.Hall.GetAllWithStatsAsync();
+            var halls = await _unitOfWork.Hall.GetAllWithStatsAsync();
+
+            return halls.Select(h => _mapper.MapToHallDto(h));
         }
 
         public async Task<HallDto?> GetHallByIdAsync(int id)
         {
-            var hallDto = await _unitOfWork.Hall.GetByIdWithStatsAsync(id);
+            var hall = await _unitOfWork.Hall.GetByIdWithStatsAsync(id);
 
-            if(hallDto == null)
-            {
+            if (hall == null)
                 throw new KeyNotFoundException($"Зал з id {id} не знайдено.");
-            }
 
-            return hallDto;
+            return _mapper.MapToHallDto(hall);
         }
+
 
         public async Task<IEnumerable<Feature>> GetAllFeaturesAsync()
         {
@@ -99,14 +107,14 @@ namespace onlineCinema.Application.Services
 
         public async Task<HallDto?> GetHallDetailsAsync(int id)
         {
-            var dto = await _unitOfWork.Hall.GetHallWithFutureSessionsAsync(id);
+            var hall = await _unitOfWork.Hall.GetHallWithFutureSessionsAsync(id);
 
-            if (dto == null) {
-                throw new KeyNotFoundException($"Зал з id {id} не знайдено."); 
-            }
+            if (hall == null)
+                throw new KeyNotFoundException($"Зал з id {id} не знайдено.");
 
-            return dto;
+            return _mapper.MapToHallDto(hall);
         }
+
 
         // seats
 

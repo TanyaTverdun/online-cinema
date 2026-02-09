@@ -1,13 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
@@ -30,20 +24,13 @@ namespace onlineCinema.Infrastructure.Repositories
             }
         }
 
-        public async Task<HallDto?> GetByIdWithStatsAsync(int id)
+
+        public async Task<Hall?> GetByIdWithStatsAsync(int id)
         {
             return await _db.Halls
-                 .Where(h => h.HallId == id)
-                 .Select(h => new HallDto
-                 {
-                     Id = h.HallId,
-                     HallNumber = h.HallNumber,
-                     RowCount = h.RowCount,
-                     SeatInRowCount = h.SeatInRowCount,
-                     FeatureNames = h.HallFeatures.Select(hf => hf.Feature.Name).ToList(),
-                     FeatureIds = h.HallFeatures.Select(hf => hf.FeatureId).ToList()
-                 })
-                 .FirstOrDefaultAsync();
+                .Include(h => h.HallFeatures)
+                    .ThenInclude(hf => hf.Feature)
+                .FirstOrDefaultAsync(h => h.HallId == id);
         }
 
         public async Task UpdateWithFeaturesAsync(Hall hall, List<int> selectedFeatureIds)
@@ -53,25 +40,23 @@ namespace onlineCinema.Infrastructure.Repositories
                 .FirstOrDefaultAsync(h => h.HallId == hall.HallId);
 
             if (existingHall == null)
-            {
                 throw new KeyNotFoundException("Hall not found");
-            }
 
             existingHall.HallNumber = hall.HallNumber;
             existingHall.RowCount = hall.RowCount;
             existingHall.SeatInRowCount = hall.SeatInRowCount;
 
-            //remove unselected features
+            selectedFeatureIds ??= new List<int>();
+
+            // remove unselected features
             var featuresToRemove = existingHall.HallFeatures
                 .Where(hf => !selectedFeatureIds.Contains(hf.FeatureId))
                 .ToList();
 
             foreach (var feature in featuresToRemove)
-            {
                 _db.Remove(feature);
-            }
 
-            //add new selected features
+            // add new features
             var currentFeatureIds = existingHall.HallFeatures
                 .Select(hf => hf.FeatureId)
                 .ToList();
@@ -82,73 +67,47 @@ namespace onlineCinema.Infrastructure.Repositories
                 {
                     HallId = hall.HallId,
                     FeatureId = id
-                })
-                .ToList();
+                });
 
             foreach (var feature in featuresToAdd)
-            {
                 existingHall.HallFeatures.Add(feature);
-            }
 
             await _db.SaveChangesAsync();
         }
 
-        public async Task<IEnumerable<HallDto>> GetAllWithStatsAsync()
+
+        public async Task<IEnumerable<Hall>> GetAllWithStatsAsync()
         {
             return await _db.Halls
-                .Select(h => new HallDto
-                {
-                    Id = h.HallId,
-                    HallNumber = h.HallNumber,
-                    RowCount = h.RowCount,
-                    SeatInRowCount = h.SeatInRowCount,
-                    FeatureNames = h.HallFeatures
-                        .Select(hf => hf.Feature.Name)
-                        .ToList()
-                })
+                .Include(h => h.HallFeatures)
+                    .ThenInclude(hf => hf.Feature)
                 .ToListAsync();
         }
 
-        public async Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId)
+
+        public async Task<Hall?> GetHallWithFutureSessionsAsync(int hallId)
         {
             var now = DateTime.Now;
             var threeDaysLater = now.AddDays(3);
 
             return await _db.Halls
-                .Where(h => h.HallId == hallId)
-                .Select(h => new HallDto
-                {
-                    Id = h.HallId,
-                    HallNumber = h.HallNumber,
-                    RowCount = h.RowCount,
-                    SeatInRowCount = h.SeatInRowCount,
-
-                    FeatureNames = h.HallFeatures
-                        .Select(hf => hf.Feature.Name)
-                        .ToList(),
-
-                    Sessions = h.Sessions
-                        .Where(s => s.ShowingDateTime >= now && s.ShowingDateTime <= threeDaysLater)
-                        .OrderBy(s => s.ShowingDateTime)
-                        .Select(s => new SessionSeatMapDto
-                        {
-                            SessionId = s.SessionId,
-                            ShowingDate = s.ShowingDateTime,
-                            MovieTitle = s.Movie.Title,
-
-                            
-                        }).ToList()
-
-                })
-                .FirstOrDefaultAsync();
+                .Include(h => h.HallFeatures)
+                    .ThenInclude(hf => hf.Feature)
+                .Include(h => h.Sessions
+                    .Where(s => s.ShowingDateTime >= now && s.ShowingDateTime <= threeDaysLater))
+                    .ThenInclude(s => s.Movie)
+                .FirstOrDefaultAsync(h => h.HallId == hallId);
         }
+
         public async Task<Hall?> GetByIdWithFeaturesAsync(int id)
         {
             return await _db.Halls
                 .Include(h => h.HallFeatures)
                     .ThenInclude(hf => hf.Feature)
+                .Include(h => h.Sessions)
+                    .ThenInclude(s => s.Movie)
                 .FirstOrDefaultAsync(h => h.HallId == id);
         }
-
+      
     }
 }

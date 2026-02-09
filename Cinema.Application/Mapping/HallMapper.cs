@@ -2,40 +2,51 @@
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
 
-namespace onlineCinema.Application.Mapping
+namespace onlineCinema.Application.Mapping;
+
+[Mapper]
+public partial class HallMapper
 {
-    [Mapper]
-    public partial class HallMapper
+    public HallDto MapToDto(Hall hall)
     {
-        [MapProperty(nameof(Hall.HallId), nameof(HallDto.Id))]
-        private partial HallDto MapToHallDtoBase(Hall hall);
-
-        public HallDto MapToHallDto(Hall hall)
+        return new HallDto
         {
-            var dto = MapToHallDtoBase(hall);
-
-            dto.FeatureNames = hall.HallFeatures?
+            Id = hall.HallId,
+            HallNumber = hall.HallNumber,
+            RowCount = hall.RowCount,
+            SeatInRowCount = hall.SeatInRowCount,
+            FeatureNames = hall.HallFeatures
                 .Select(hf => hf.Feature.Name)
-                .ToList() ?? new List<string>();
-            if (hall.HallFeatures != null && hall.HallFeatures.Any())
-            {
-                dto.FeatureIds = hall.HallFeatures.Select(hf => hf.FeatureId).ToList();
-            }
+                .ToList(),
+            FeatureIds = hall.HallFeatures
+                .Select(hf => hf.FeatureId)
+                .ToList()
+        };
+    }
 
-            return dto;
-        }
+    [MapProperty(nameof(Hall.HallId), nameof(HallDto.Id))]
+    public partial HallDto MapToHallDtoBase(Hall hall);
 
-        [MapProperty(nameof(HallDto.Id), nameof(Hall.HallId))]
-        private partial Hall MapToHallEntityBase(HallDto dto);
+    public HallDto MapToHallDto(Hall hall)
+    {
+        var dto = MapToHallDtoBase(hall);
 
-        public Hall MapToEntity(HallDto dto)
-        {
-            var entity = MapToHallEntityBase(dto);
+        dto.FeatureNames = hall.HallFeatures?
+            .Select(hf => hf.Feature.Name)
+            .ToList() ?? new();
 
-            entity.HallFeatures = new List<HallFeature>();
-            entity.Seats = new List<Seat>();
+        dto.FeatureIds = hall.HallFeatures?
+            .Select(hf => hf.FeatureId)
+            .ToList() ?? new();
 
-            return entity;
-        }
+        return dto;
+    }
+
+    [MapProperty(nameof(HallDto.Id), nameof(Hall.HallId))]
+    public partial Hall MapToHallEntityBase(HallDto dto);
+
+    public Hall MapToEntity(HallDto dto)
+    {
+        return MapToHallEntityBase(dto);
     }
 }

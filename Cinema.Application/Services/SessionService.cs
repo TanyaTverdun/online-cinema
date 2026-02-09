@@ -48,24 +48,26 @@
 
         public async Task CreateSessionAsync(SessionCreateDto dto)
         {
-            // 1. Отримуємо фільм разом з Feature
             var movie = await _unitOfWork.Movie.GetByIdWithFeaturesAsync(dto.MovieId);
             if (movie == null)
+            {
                 throw new KeyNotFoundException("Фільм не знайдено");
+            }
 
-            // 2. Отримуємо зал разом з Feature
             var hall = await _unitOfWork.Hall.GetByIdWithFeaturesAsync(dto.HallId);
             if (hall == null)
+            {
                 throw new KeyNotFoundException("Зал не знайдено");
+            }
 
-            // 3. Перевірка: чи зал підтримує всі Feature фільму
             ValidateHallFeatures(movie, hall);
 
-            // 4. Генеруємо дати (одна або на тиждень)
             var dates = dto.GenerateForWeek
                 ? Enumerable.Range(0, 7)
                     .Select(i => dto.ShowingDateTime.AddDays(i))
                 : new List<DateTime> { dto.ShowingDateTime };
+
+            var conflicts = new List<DateTime>();
 
             foreach (var date in dates)
             {
@@ -77,18 +79,33 @@
 
                 if (hasConflict)
                 {
-                    throw new InvalidOperationException(
-                        $"У залі вже є сеанс, що перетинається за часом ({date:dd.MM.yyyy HH:mm})");
+                    conflicts.Add(date);
+                    continue;
                 }
 
-                var session = _mapper.MapToSession(dto);
-                session.ShowingDateTime = date;
+                var session = new Session
+                {
+                    MovieId = dto.MovieId,
+                    HallId = dto.HallId,
+                    ShowingDateTime = date,
+                    BasePrice = dto.BasePrice
+                };
 
                 await _unitOfWork.Session.AddAsync(session);
             }
 
             await _unitOfWork.SaveAsync();
+
+            if (conflicts.Any())
+            {
+                var message =
+                    "Деякі дати пропущені через конфлікти:\n" +
+                    string.Join("\n", conflicts.Select(d => d.ToString("dd.MM.yyyy HH:mm")));
+
+                throw new InvalidOperationException(message);
+            }
         }
+
         private void ValidateHallFeatures(Movie movie, Hall hall)
         {
             var movieFeatureIds = movie.MovieFeatures
