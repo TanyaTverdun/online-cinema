@@ -50,6 +50,15 @@ namespace onlineCinema.Mapping
                 PaymentStatus = dto.PaymentStatus,
                 HallName = dto.HallName,
                 Tickets = dto.Tickets.Select(ToTicketInfoViewModel).ToList(),
+
+                Snacks = dto.Snacks.Select(s => new SnackInfoViewModel
+                {
+                    Name = s.Name,
+                    Quantity = s.Quantity,
+                    Price = s.Price,
+                    TotalPrice = s.TotalPrice
+                }).ToList(),
+
                 CanRefund = dto.CanRefund
             };
         }

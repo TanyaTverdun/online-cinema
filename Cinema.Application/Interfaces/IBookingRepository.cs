@@ -12,5 +12,6 @@ namespace onlineCinema.Application.Interfaces
         Task<Booking?> GetByIdWithDetailsAsync(int id);
         Task UpdateWithDetailsAsync(Booking booking);
         Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId);
+        Task<(IEnumerable<Booking> Items, int TotalCount)> GetUserBookingsPaginatedAsync(string userId, int pageIndex, int pageSize);
     }
 }

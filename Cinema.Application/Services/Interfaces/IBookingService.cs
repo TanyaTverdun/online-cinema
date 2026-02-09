@@ -17,5 +17,6 @@ namespace onlineCinema.Application.Services.Interfaces
         Task CompletePaymentAsync(int bookingId);
         Task<IEnumerable<BookingHistoryDto>> GetBookingHistoryAsync(string userId);
         Task CancelBookingAsync(int bookingId, string userId);
+        Task<PaginatedListDto<BookingHistoryDto>> GetBookingHistoryPaginatedAsync(string userId, int pageIndex, int pageSize);
     }
 }

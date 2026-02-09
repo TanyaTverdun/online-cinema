@@ -102,6 +102,14 @@ namespace onlineCinema.Application.Mapping
                 HallName = MapHallName(hall?.HallNumber),
                 PaymentStatus = MapPaymentStatus(booking.Payment?.Status),
                 Tickets = booking.Tickets.Select(t => ToTicketInfoDtoWithSeatType(t)).ToList(),
+
+                Snacks = booking.SnackBookings.Select(sb => new SnackInfoDto
+                {
+                    Name = sb.Snack.SnackName,
+                    Quantity = sb.Quantity,
+                    Price = sb.Snack.Price // Ціна за одиницю
+                }).ToList(),
+
                 CanRefund = isPaid && isTimeValid && notRefunded
             };
         }

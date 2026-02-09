@@ -11,8 +11,9 @@ namespace onlineCinema.Application.DTOs
         public string HallName { get; set; } = string.Empty;
         public string PaymentStatus { get; set; } = string.Empty;
         public List<TicketInfoDto> Tickets { get; set; } = new();
-
         public bool CanRefund { get; set; }
+        public List<SnackInfoDto> Snacks { get; set; } = new();
+
     }
 }
 

@@ -106,7 +106,7 @@
 
         @if (!User.IsInRole("Admin"))
         {
-            @if (Model.BookingHistory != null && Model.BookingHistory.Any())
+            @if (Model.PaginatedBookingHistory != null && Model.PaginatedBookingHistory.Items.Any())
             {
                 <div class="card mt-4">
                     <div class="card-header">
@@ -114,7 +114,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            @foreach (var booking in Model.BookingHistory)
+                            @foreach (var booking in Model.PaginatedBookingHistory.Items)
                             {
                                 <div class="col-md-12 mb-4">
                                     <div class="card">
@@ -151,16 +151,42 @@
                                                         </div>
                                                     </div>
                                                     <div class="mb-2">
-                                                        <strong>Квитки:</strong>
-                                                        <ul class="list-unstyled ms-3">
+                                                        <div class="d-flex justify-content-between align-items-center mb-1" style="max-width: 400px;">
+                                                            <strong>Квитки:</strong>
+                                                            <strong>Ціна</strong>
+                                                        </div>
+
+                                                        <ul class="list-unstyled ms-3 mb-0">
                                                             @foreach (var ticket in booking.Tickets)
                                                             {
-                                                                <li>
-                                                                    Ряд @ticket.RowNumber, Місце @ticket.SeatNumber (@ticket.SeatType) - @ticket.Price.ToString("C")
+                                                                <li class="d-flex justify-content-between align-items-center" style="max-width: 400px;">
+                                                                    <span>
+                                                                        <i class="bi bi-ticket-perforated text-muted me-1"></i>
+                                                                        Ряд @ticket.RowNumber, Місце @ticket.SeatNumber
+                                                                        <span class="text-muted">(@ticket.SeatType)</span>
+                                                                    </span>
+                                                                    <span>@ticket.Price.ToString("C")</span>
                                                                 </li>
                                                             }
                                                         </ul>
                                                     </div>
+                                                    @if (booking.Snacks != null && booking.Snacks.Any())
+                                                    {
+                                                        <div class="mb-2 border-top pt-2">
+                                                            <strong>Снеки та напої:</strong>
+                                                            <ul class="list-unstyled ms-3 mb-0">
+                                                                @foreach (var snack in booking.Snacks)
+                                                                {
+                                                                    <li class="d-flex justify-content-between align-items-center" style="max-width: 400px;">
+                                                                        <span>
+                                                                            <i class="bi bi-cup-straw text-muted me-1"></i> @snack.Name <span class="text-muted">x @snack.Quantity</span>
+                                                                        </span>
+                                                                        <span>@snack.TotalPrice.ToString("C")</span>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
 
                                                     <div class="mt-2 d-flex justify-content-between align-items-center">
                                                         <div>
@@ -223,6 +249,44 @@
                                 </div>
                             }
                         </div>
+                        @* Блок пагінації *@
+                        @if (Model.PaginatedBookingHistory.TotalPages > 1)
+                        {
+                            <div class="mt-4 mb-3">
+                                <nav aria-label="Навігація по сторінках">
+                                    <ul class="pagination justify-content-center">
+
+                                        @* Кнопка "Назад" *@
+                                        <li class="page-item @(!Model.PaginatedBookingHistory.HasPreviousPage ? "disabled" : "")">
+                                            <a class="page-link" asp-action="Profile"
+                                               asp-route-pageNumber="@(Model.PaginatedBookingHistory.PageIndex - 1)"
+                                               aria-label="Previous">
+                                                <span aria-hidden="true">&laquo;</span>
+                                            </a>
+                                        </li>
+
+                                        @* Номери сторінок *@
+                                        @for (int i = 1; i <= Model.PaginatedBookingHistory.TotalPages; i++)
+                                        {
+                                            <li class="page-item @(i == Model.PaginatedBookingHistory.PageIndex ? "active" : "")">
+                                                <a class="page-link" asp-action="Profile" asp-route-pageNumber="@i">
+                                                    @i
+                                                </a>
+                                            </li>
+                                        }
+
+                                        @* Кнопка "Вперед" *@
+                                        <li class="page-item @(!Model.PaginatedBookingHistory.HasNextPage ? "disabled" : "")">
+                                            <a class="page-link" asp-action="Profile"
+                                               asp-route-pageNumber="@(Model.PaginatedBookingHistory.PageIndex + 1)"
+                                               aria-label="Next">
+                                                <span aria-hidden="true">&raquo;</span>
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </nav>
+                            </div>
+                        }
                     </div>
                 </div>
             }

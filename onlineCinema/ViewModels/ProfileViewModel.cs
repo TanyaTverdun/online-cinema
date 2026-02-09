@@ -1,3 +1,4 @@
+using onlineCinema.Application.DTOs;
 using System.ComponentModel.DataAnnotations;
 
 namespace onlineCinema.ViewModels
@@ -24,6 +25,7 @@ namespace onlineCinema.ViewModels
         ////////////////////////////
         public List<BookingHistoryItemViewModel> BookingHistory { get; set; } = new();
         public string? ReturnUrl { get; set; }
+        public PaginatedListDto<BookingHistoryItemViewModel>? PaginatedBookingHistory { get; set; }
     }
 }
 

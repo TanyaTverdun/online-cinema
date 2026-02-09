@@ -11,7 +11,10 @@ namespace onlineCinema.ViewModels
         public string PaymentStatus { get; set; } = string.Empty;
         public string HallName { get; set; } = string.Empty;
         public List<TicketInfoViewModel> Tickets { get; set; } = new();
+
+        public List<SnackInfoViewModel> Snacks { get; set; } = new();
         public bool CanRefund { get; set; }
+
     }
 }
 
