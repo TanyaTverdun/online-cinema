@@ -85,31 +85,59 @@ namespace onlineCinema.Infrastructure.Repositories
             }
         }
 
-        public async Task<(IEnumerable<Booking> Items, int TotalCount)> GetUserBookingsPaginatedAsync(string userId, int pageIndex, int pageSize)
+        public async Task<(IEnumerable<Booking> Items, int TotalCount, bool HasNext, bool HasPrevious)> GetUserBookingsSeekAsync(string userId, int? lastId, int? firstId, int pageSize)
         {
-            var query = _db.Bookings
-                .Where(b => b.ApplicationUserId == userId);
-
+            var query = _db.Bookings.Where(b => b.ApplicationUserId == userId);
             int totalCount = await query.CountAsync();
 
-            var items = await query
+            // 1. Вибірка
+            IQueryable<Booking> dataQuery = query;
+
+            if (lastId.HasValue)
+            {
+                dataQuery = dataQuery.Where(b => b.BookingId < lastId.Value).OrderByDescending(b => b.BookingId);
+            }
+            else if (firstId.HasValue)
+            {
+                dataQuery = dataQuery.Where(b => b.BookingId > firstId.Value).OrderBy(b => b.BookingId);
+            }
+            else
+            {
+                dataQuery = dataQuery.OrderByDescending(b => b.BookingId);
+            }
+
+            var items = await dataQuery
+                // ... ваші Include ...
                 .Include(b => b.Payment)
-                .Include(b => b.Tickets)
-                    .ThenInclude(t => t.Seat)
-                .Include(b => b.Tickets)
-                    .ThenInclude(t => t.Session)
-                        .ThenInclude(s => s.Movie)
-                .Include(b => b.Tickets)
-                    .ThenInclude(t => t.Session)
-                        .ThenInclude(s => s.Hall)
-                .Include(b => b.SnackBookings)
-                    .ThenInclude(sb => sb.Snack)
-                .OrderByDescending(b => b.CreatedDateTime)
-                .Skip((pageIndex - 1) * pageSize)
-                .Take(pageSize)                   
+                .Include(b => b.Tickets).ThenInclude(t => t.Seat)
+                .Include(b => b.Tickets).ThenInclude(t => t.Session).ThenInclude(s => s.Movie)
+                .Include(b => b.Tickets).ThenInclude(t => t.Session).ThenInclude(s => s.Hall)
+                .Include(b => b.SnackBookings).ThenInclude(sb => sb.Snack)
+                .Take(pageSize)
                 .ToListAsync();
 
-            return (items, totalCount);
+            if (firstId.HasValue)
+            {
+                items.Reverse();
+            }
+
+            // 2. Розрахунок навігації (важливо!)
+            bool hasNext = false;
+            bool hasPrevious = false;
+
+            if (items.Any())
+            {
+                var currentMaxId = items.First().BookingId; // Найновіший на цій сторінці
+                var currentMinId = items.Last().BookingId;  // Найстаріший на цій сторінці
+
+                // Чи є щось старіше за найстаріше? (Кнопка "Далі")
+                hasNext = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId < currentMinId);
+
+                // Чи є щось новіше за найновіше? (Кнопка "Назад" і "На початок")
+                hasPrevious = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId > currentMaxId);
+            }
+
+            return (items, totalCount, hasNext, hasPrevious);
         }
         public async Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId)
         {

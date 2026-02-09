@@ -24,15 +24,29 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ProfileViewModel.FullName))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.BookingHistory))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.ReturnUrl))]
+        [MapperIgnoreTarget(nameof(ProfileViewModel.NewPassword))]
+        [MapperIgnoreTarget(nameof(ProfileViewModel.ConfirmPassword))]
         public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
 
+        // --- ВАЖЛИВА ЗМІНА ТУТ ---
+        // Метод тепер приймає PagedResult замість IEnumerable
         public ProfileViewModel ToProfileViewModel(
-            ApplicationUser user, 
-            IEnumerable<BookingHistoryDto> bookings, 
+            ApplicationUser user,
+            PagedResultDto<BookingHistoryDto> bookings, // Змінено тип аргументу
             string? returnUrl = null)
         {
             var viewModel = ToProfileViewModelBase(user);
-            viewModel.BookingHistory = bookings.Select(ToBookingHistoryItemViewModel).ToList();
+
+            // Ручне перетворення PagedResult<Dto> -> PagedResult<ViewModel>
+            viewModel.BookingHistory = new PagedResultDto<BookingHistoryItemViewModel>
+            {
+                Items = bookings.Items.Select(ToBookingHistoryItemViewModel).ToList(),
+                TotalCount = bookings.TotalCount,
+                PageSize = bookings.PageSize,
+                HasNextPage = bookings.HasNextPage,
+                LastId = bookings.LastId
+            };
+
             viewModel.ReturnUrl = returnUrl;
             return viewModel;
         }
@@ -76,7 +90,7 @@ namespace onlineCinema.Mapping
             {
                 return null;
             }
-            
+
             return Convert.ToBase64String(posterBytes);
         }
 
@@ -116,6 +130,8 @@ namespace onlineCinema.Mapping
         [MapperIgnoreSource(nameof(ProfileViewModel.Id))]
         [MapperIgnoreSource(nameof(ProfileViewModel.Email))]
         [MapperIgnoreSource(nameof(ProfileViewModel.FullName))]
+        [MapperIgnoreSource(nameof(ProfileViewModel.NewPassword))]     // Додано ігнорування
+        [MapperIgnoreSource(nameof(ProfileViewModel.ConfirmPassword))] // Додано ігнорування
         [MapperIgnoreTarget(nameof(ApplicationUser.Id))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Email))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Bookings))]
@@ -140,4 +156,3 @@ namespace onlineCinema.Mapping
         }
     }
 }
-
