@@ -16,76 +16,66 @@ namespace onlineCinema.Infrastructure.Repositories
             _db = db;
         }
 
-        public async Task<int> GetTotalTicketsSoldAsync()
+        public async Task<List<TopItemDto>> GetMoviesByPopularityAsync(int count, bool ascending)
         {
-            return await _db.Tickets
-                .CountAsync(t => t.Booking.Payment != null
-                    && t.Booking.Payment.Status == PaymentStatus.Completed);
-        }
-
-        public async Task<decimal> GetTotalRevenueAsync()
-        {
-            return await dbSet
-                .Where(p => p.Status == PaymentStatus.Completed)
-                .SumAsync(p => p.Amount);
-        }
-
-        public async Task<List<TopItemDto>> GetTopSnacksAsync(int count)
-        {
-            return await _db.Snacks
-                .Select(s => new TopItemDto
-                {
-                    Name = s.SnackName,
-                    Revenue = s.Price * (decimal)s.SnackBookings
-                        .Where(sb => sb.Booking.Payment != null 
-                                && sb.Booking.Payment.Status == PaymentStatus.Completed)
-                        .Sum(sb => (int)sb.Quantity),
-                    Count = s.SnackBookings
-                        .Where(sb => sb.Booking.Payment != null 
-                                && sb.Booking.Payment.Status == PaymentStatus.Completed)
-                        .Sum(sb => (int)sb.Quantity)
-                })
-                .OrderByDescending(x => x.Revenue)
-                .Take(count)
-                .ToListAsync();
-        }
-
-        public async Task<List<TopItemDto>> GetTopMoviesAsync(int count)
-        {
-            return await _db.Movies
+            var query = _db.Movies
                 .Select(m => new TopItemDto
                 {
                     Name = m.Title,
-                    Revenue = m.Sessions
-                        .SelectMany(s => s.Tickets)
-                        .Where(t => t.Booking.Payment != null 
-                                && t.Booking.Payment.Status == PaymentStatus.Completed)
-                        .Sum(t => t.Price),
                     Count = m.Sessions
                         .SelectMany(s => s.Tickets)
-                        .Count(t => t.Booking.Payment != null 
-                                && t.Booking.Payment.Status == PaymentStatus.Completed)
-                })
-                .OrderByDescending(x => x.Revenue)
-                .Take(count)
-                .ToListAsync();
+                        .Count(t => t.Booking.Payment != null && t.Booking.Payment.Status == PaymentStatus.Completed),
+                    Revenue = 0
+                });
+
+            query = ascending ? query.OrderBy(x => x.Count) : query.OrderByDescending(x => x.Count); 
+
+            return await query.Take(count).ToListAsync();
         }
 
-        public async Task<List<DailyRevenueDto>> GetRevenueForLastDaysAsync(int days)
+        public async Task<List<TopItemDto>> GetSnacksByPopularityAsync(int count, bool ascending)
         {
-            var startDate = DateTime.Now.Date.AddDays(-days);
-
-            return await dbSet
-                .Where(p => p.Status == PaymentStatus.Completed 
-                        && p.PaymentDate >= startDate)
-                .GroupBy(p => p.PaymentDate.Date)
-                .Select(g => new DailyRevenueDto
+            var query = _db.Snacks
+                .Select(s => new TopItemDto
                 {
-                    Date = g.Key,
-                    Revenue = g.Sum(p => p.Amount)
+                    Name = s.SnackName,
+                    Count = s.SnackBookings
+                        .Where(sb => sb.Booking.Payment != null && sb.Booking.Payment.Status == PaymentStatus.Completed)
+                        .Sum(sb => (int)sb.Quantity),
+                    Revenue = 0
+                });
+
+            query = ascending ? query.OrderBy(x => x.Count) : query.OrderByDescending(x => x.Count);
+
+            return await query.Take(count).ToListAsync();
+        }
+
+        public async Task<List<MovieOccupancyDto>> GetAverageOccupancyPerMovieAsync(int count)
+        {
+            var data = await _db.Movies
+                .Select(m => new
+                {
+                    Title = m.Title,
+                    Sessions = m.Sessions.Select(s => new
+                    {
+                        TotalSeats = s.Hall.Seats.Count,
+                        SoldTickets = s.Tickets.Count(t => t.Booking.Payment != null && t.Booking.Payment.Status == PaymentStatus.Completed)
+                    })
                 })
-                .OrderBy(x => x.Date)
                 .ToListAsync();
+
+            var result = data.Select(m => new MovieOccupancyDto
+            {
+                MovieTitle = m.Title,
+                OccupancyPercentage = m.Sessions.Any()
+                    ? Math.Round(m.Sessions.Average(s => s.TotalSeats > 0 ? (double)s.SoldTickets / s.TotalSeats * 100 : 0), 1)
+                    : 0
+            })
+            .OrderByDescending(x => x.OccupancyPercentage)
+            .Take(count)
+            .ToList();
+
+            return result;
         }
     }
 }

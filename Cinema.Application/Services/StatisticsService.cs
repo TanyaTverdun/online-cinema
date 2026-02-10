@@ -4,6 +4,7 @@ using onlineCinema.Application.DTOs.AdminStatistics;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
+using System.Runtime.InteropServices;
 
 namespace onlineCinema.Application.Services
 {
@@ -25,19 +26,21 @@ namespace onlineCinema.Application.Services
 
         public async Task<AdminStatisticsDto> GetAdminStatisticsAsync()
         {
-            var tickets = await _unitOfWork.Statistics
-                .GetTotalTicketsSoldAsync();
-            var revenue = await _unitOfWork.Statistics
-                .GetTotalRevenueAsync();
-            var snacks = await _unitOfWork.Statistics
-                .GetTopSnacksAsync(_settings.TopSnacksCount);
-            var movies = await _unitOfWork.Statistics
-                .GetTopMoviesAsync(_settings.TopMoviesCount);
-            var daily = await _unitOfWork.Statistics
-                .GetRevenueForLastDaysAsync(_settings.ChartDays);
+            var occupancy = await _unitOfWork.Statistics.GetAverageOccupancyPerMovieAsync(_settings.OccupancyCount);
+
+            var popMovies = await _unitOfWork.Statistics.GetMoviesByPopularityAsync(_settings.MoviesCount, ascending: false);
+            var leastMovies = await _unitOfWork.Statistics.GetMoviesByPopularityAsync(_settings.MoviesCount, ascending: true);
+
+            var popSnacks = await _unitOfWork.Statistics.GetSnacksByPopularityAsync(_settings.SnacksCount, ascending: false);
+            var leastSnacks = await _unitOfWork.Statistics.GetSnacksByPopularityAsync(_settings.SnacksCount, ascending: true);
 
             return _mapper.CreateSummaryDto(
-                tickets, revenue, snacks, movies, daily);
+                occupancy,
+                popMovies,
+                leastMovies,
+                popSnacks,
+                leastSnacks
+            );
         }
     }
 }
