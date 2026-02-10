@@ -114,6 +114,27 @@ namespace onlineCinema.Application.Mapping
             };
         }
 
+        public PagedResultDto<BookingHistoryDto> MapToPagedResult(
+            List<BookingHistoryDto> items,
+            int totalCount,
+            int pageSize,
+            bool hasNext,
+            bool hasPrevious)
+        {
+            return new PagedResultDto<BookingHistoryDto>
+            {
+                Items = items,
+                TotalCount = totalCount,
+                PageSize = pageSize,
+
+                LastId = items.LastOrDefault()?.BookingId,
+                FirstId = items.FirstOrDefault()?.BookingId,
+
+                HasNextPage = hasNext,
+                HasPreviousPage = hasPrevious
+            };
+        }
+
         private TicketInfoDto ToTicketInfoDtoWithSeatType(Ticket ticket)
         {
             var dto = ToTicketInfoDto(ticket);

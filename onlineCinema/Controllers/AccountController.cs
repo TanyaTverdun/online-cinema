@@ -158,7 +158,6 @@ namespace onlineCinema.Controllers
         public async Task<IActionResult> Profile(int? lastId = null, int? firstId = null, string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
-            // ... (перевірки user) ...
 
             bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
@@ -166,21 +165,7 @@ namespace onlineCinema.Controllers
                 ? new PagedResultDto<BookingHistoryDto>()
                 : await _bookingService.GetBookingHistorySeekAsync(user.Id, lastId, firstId);
 
-            var model = _userMapping.ToProfileViewModelBase(user);
-
-            model.BookingHistory = new PagedResultDto<BookingHistoryItemViewModel>
-            {
-                Items = pagedResultDto.Items.Select(i => _userMapping.ToBookingHistoryItemViewModel(i)).ToList(),
-                TotalCount = pagedResultDto.TotalCount,
-                PageSize = pagedResultDto.PageSize,
-
-                HasNextPage = pagedResultDto.HasNextPage,
-                LastId = pagedResultDto.LastId,
-                FirstId = pagedResultDto.FirstId,
-
-                // !!! ОСЬ ЦЬОГО РЯДКА НЕ ВИСТАЧАЛО !!!
-                HasPreviousPage = pagedResultDto.HasPreviousPage
-            };
+            var model = _userMapping.ToProfileViewModel(user, pagedResultDto, returnUrl);
 
             model.ReturnUrl = returnUrl;
             return View(model);
@@ -191,13 +176,11 @@ namespace onlineCinema.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Profile(ProfileViewModel model)
         {
-            // Якщо модель не валідна одразу (наприклад, пусті поля)
             if (!ModelState.IsValid)
             {
                 var userForError = await _userManager.GetUserAsync(User);
                 if (userForError != null)
                 {
-                    // Використовуємо спільний метод для відновлення історії
                     await LoadHistoryAsync(userForError, model);
                 }
                 return View(model);
@@ -218,7 +201,10 @@ namespace onlineCinema.Controllers
                 var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
                 if (!setEmailResult.Succeeded)
                 {
-                    foreach (var error in setEmailResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                    foreach (var error in setEmailResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                     await LoadHistoryAsync(user, model);
                     return View(model);
                 }
@@ -226,7 +212,10 @@ namespace onlineCinema.Controllers
                 var setUserNameResult = await _userManager.SetUserNameAsync(user, model.Email);
                 if (!setUserNameResult.Succeeded)
                 {
-                    foreach (var error in setUserNameResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                    foreach (var error in setUserNameResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                     await LoadHistoryAsync(user, model);
                     return View(model);
                 }
@@ -249,7 +238,10 @@ namespace onlineCinema.Controllers
 
                 if (!changePasswordResult.Succeeded)
                 {
-                    foreach (var error in changePasswordResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                    foreach (var error in changePasswordResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                     await LoadHistoryAsync(user, model);
                     return View(model);
                 }

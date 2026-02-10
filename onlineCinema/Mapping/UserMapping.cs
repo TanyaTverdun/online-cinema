@@ -28,23 +28,23 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ProfileViewModel.ConfirmPassword))]
         public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
 
-        // --- ВАЖЛИВА ЗМІНА ТУТ ---
-        // Метод тепер приймає PagedResult замість IEnumerable
         public ProfileViewModel ToProfileViewModel(
-            ApplicationUser user,
-            PagedResultDto<BookingHistoryDto> bookings, // Змінено тип аргументу
-            string? returnUrl = null)
+    ApplicationUser user,
+    PagedResultDto<BookingHistoryDto> bookings,
+    string? returnUrl = null)
         {
             var viewModel = ToProfileViewModelBase(user);
 
-            // Ручне перетворення PagedResult<Dto> -> PagedResult<ViewModel>
             viewModel.BookingHistory = new PagedResultDto<BookingHistoryItemViewModel>
             {
                 Items = bookings.Items.Select(ToBookingHistoryItemViewModel).ToList(),
                 TotalCount = bookings.TotalCount,
                 PageSize = bookings.PageSize,
+
                 HasNextPage = bookings.HasNextPage,
-                LastId = bookings.LastId
+                HasPreviousPage = bookings.HasPreviousPage,
+                LastId = bookings.LastId,
+                FirstId = bookings.FirstId
             };
 
             viewModel.ReturnUrl = returnUrl;
@@ -130,8 +130,8 @@ namespace onlineCinema.Mapping
         [MapperIgnoreSource(nameof(ProfileViewModel.Id))]
         [MapperIgnoreSource(nameof(ProfileViewModel.Email))]
         [MapperIgnoreSource(nameof(ProfileViewModel.FullName))]
-        [MapperIgnoreSource(nameof(ProfileViewModel.NewPassword))]     // Додано ігнорування
-        [MapperIgnoreSource(nameof(ProfileViewModel.ConfirmPassword))] // Додано ігнорування
+        [MapperIgnoreSource(nameof(ProfileViewModel.NewPassword))]
+        [MapperIgnoreSource(nameof(ProfileViewModel.ConfirmPassword))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Id))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Email))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Bookings))]

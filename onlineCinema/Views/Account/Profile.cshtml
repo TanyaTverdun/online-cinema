@@ -252,15 +252,10 @@
                                 </div>
                             }
                         </div>
-                        @* --- ОНОВЛЕНИЙ БЛОК НАВІГАЦІЇ (Фінальний) --- *@
-                        @if (Model.BookingHistory.Items.Any()) // Показуємо тільки якщо є записи
+                        @if (Model.BookingHistory.Items.Any())
                         {
-                            @* Визначаємо логіку відображення кнопок *@
-
-                            @* Якщо є попередня сторінка (новіші записи) - значить ми не на початку *@
                             bool isNotAtStart = Model.BookingHistory.HasPreviousPage;
 
-                            @* Якщо є наступна сторінка (старіші записи) *@
                             bool hasMoreOld = Model.BookingHistory.HasNextPage;
 
                             @if (isNotAtStart || hasMoreOld)
@@ -268,7 +263,6 @@
                                 <div class="d-flex justify-content-between mt-4 mb-3 align-items-center">
 
                                     <div class="d-flex gap-2">
-                                        @* 1. Кнопка "Новіші" (Назад) *@
                                         @if (isNotAtStart)
                                         {
                                             <a asp-action="Profile" asp-route-firstId="@Model.BookingHistory.FirstId" class="btn btn-outline-primary">
@@ -276,8 +270,6 @@
                                             </a>
                                         }
 
-                                        @* 2. Кнопка "На початок" (Скинути) *@
-                                        @* Показуємо її тільки тоді, коли ми НЕ на першій сторінці *@
                                         @if (isNotAtStart)
                                         {
                                             <a asp-action="Profile" class="btn btn-outline-secondary" title="На першу сторінку">
@@ -286,7 +278,6 @@
                                         }
                                     </div>
 
-                                    @* 3. Кнопка "Старіші" (Вперед) *@
                                     @if (hasMoreOld)
                                     {
                                         <a asp-action="Profile" asp-route-lastId="@Model.BookingHistory.LastId" class="btn btn-outline-primary">

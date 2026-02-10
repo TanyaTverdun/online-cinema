@@ -90,7 +90,6 @@ namespace onlineCinema.Infrastructure.Repositories
             var query = _db.Bookings.Where(b => b.ApplicationUserId == userId);
             int totalCount = await query.CountAsync();
 
-            // 1. Вибірка
             IQueryable<Booking> dataQuery = query;
 
             if (lastId.HasValue)
@@ -107,7 +106,6 @@ namespace onlineCinema.Infrastructure.Repositories
             }
 
             var items = await dataQuery
-                // ... ваші Include ...
                 .Include(b => b.Payment)
                 .Include(b => b.Tickets).ThenInclude(t => t.Seat)
                 .Include(b => b.Tickets).ThenInclude(t => t.Session).ThenInclude(s => s.Movie)
@@ -121,19 +119,16 @@ namespace onlineCinema.Infrastructure.Repositories
                 items.Reverse();
             }
 
-            // 2. Розрахунок навігації (важливо!)
             bool hasNext = false;
             bool hasPrevious = false;
 
             if (items.Any())
             {
-                var currentMaxId = items.First().BookingId; // Найновіший на цій сторінці
-                var currentMinId = items.Last().BookingId;  // Найстаріший на цій сторінці
+                var currentMaxId = items.First().BookingId;
+                var currentMinId = items.Last().BookingId;
 
-                // Чи є щось старіше за найстаріше? (Кнопка "Далі")
                 hasNext = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId < currentMinId);
 
-                // Чи є щось новіше за найновіше? (Кнопка "Назад" і "На початок")
                 hasPrevious = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId > currentMaxId);
             }
 

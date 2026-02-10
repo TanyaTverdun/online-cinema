@@ -255,25 +255,12 @@ namespace onlineCinema.Application.Services
         {
             int pageSize = 5;
 
-            // Отримуємо розширені дані з репо
             var (bookings, totalCount, hasNext, hasPrevious) =
                 await _unitOfWork.Booking.GetUserBookingsSeekAsync(userId, lastId, firstId, pageSize);
 
             var dtos = bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking)).ToList();
 
-            return new PagedResultDto<BookingHistoryDto>
-            {
-                Items = dtos,
-                TotalCount = totalCount,
-                PageSize = pageSize,
-
-                LastId = dtos.LastOrDefault()?.BookingId,
-                FirstId = dtos.FirstOrDefault()?.BookingId,
-
-                // Тепер це точні дані з бази
-                HasNextPage = hasNext,
-                HasPreviousPage = hasPrevious
-            };
+            return _bookingMapper.MapToPagedResult(dtos, totalCount, pageSize, hasNext, hasPrevious);
         }
     }
 }

@@ -22,9 +22,6 @@ namespace onlineCinema.ViewModels
         [Display(Name = "Підтвердження пароля")]
         [Compare("NewPassword", ErrorMessage = "Паролі не збігаються.")]
         public string? ConfirmPassword { get; set; }
-        // --- ВАЖЛИВА ЗМІНА ---
-        // Тепер це PagedResult, який містить Items, LastId та HasNextPage.
-        // Ми використовуємо ту саму назву BookingHistory, щоб не ламати View.
         public PagedResultDto<BookingHistoryItemViewModel> BookingHistory { get; set; } = new();
         public string? ReturnUrl { get; set; }
 
