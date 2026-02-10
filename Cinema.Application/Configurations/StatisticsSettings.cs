@@ -8,9 +8,9 @@ namespace onlineCinema.Application.Configurations
 {
     public class StatisticsSettings
     {
-        public int TopSnacksCount { get; set; }
-        public int TopMoviesCount { get; set; }
-        public int ChartDays { get; set; }
+        public int SnacksCount { get; set; } = 5;
+        public int MoviesCount { get; set; } = 5;
+        public int OccupancyCount { get; set; } = 5;
         public int AdminPageSize { get; set; }
     }
 }

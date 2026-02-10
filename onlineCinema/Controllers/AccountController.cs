@@ -6,6 +6,7 @@ using onlineCinema.ViewModels;
 using onlineCinema.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.DTOs;
+using System.Security.Claims;
 
 namespace onlineCinema.Controllers
 {
@@ -50,6 +51,14 @@ namespace onlineCinema.Controllers
             
             if (!ModelState.IsValid)
             {
+                return View(model);
+            }
+
+            // Перевірка, чи існує email в базі
+            var existingUser = await _userManager.FindByEmailAsync(model.Email);
+            if (existingUser != null)
+            {
+                ModelState.AddModelError("Email", "Ця електронна пошта вже зареєстрована.");
                 return View(model);
             }
 
@@ -146,7 +155,7 @@ namespace onlineCinema.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Profile(string? returnUrl = null)
+        public async Task<IActionResult> Profile(int pageNumber = 1, string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
 
@@ -157,11 +166,30 @@ namespace onlineCinema.Controllers
 
             bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
-            var bookings = isAdmin
-                ? Enumerable.Empty<BookingHistoryDto>()
-                : await _bookingService.GetBookingHistoryAsync(user.Id);
+            // винести в конфігураційний файл
+            const int pageSize = 5;
 
-            var model = _userMapping.ToProfileViewModel(user, bookings, returnUrl);
+            var paginatedBookings = isAdmin
+                ? new PaginatedListDto<BookingHistoryDto>(Enumerable.Empty<BookingHistoryDto>(), 0, pageNumber, pageSize)
+                : await _bookingService.GetBookingHistoryPaginatedAsync(user.Id, pageNumber, pageSize);
+
+            var model = _userMapping.ToProfileViewModelBase(user);
+
+            var historyItems = paginatedBookings.Items
+                .Select(dto => _userMapping.ToBookingHistoryItemViewModel(dto))
+                .ToList();
+
+            model.PaginatedBookingHistory = new PaginatedListDto<BookingHistoryItemViewModel>(
+                historyItems,
+                paginatedBookings.TotalPages * pageSize,
+                pageNumber,
+                pageSize
+            )
+            {
+                TotalPages = paginatedBookings.TotalPages
+            };
+
+            model.ReturnUrl = returnUrl;
 
             return View(model);
         }
@@ -173,41 +201,80 @@ namespace onlineCinema.Controllers
         {
             if (!ModelState.IsValid)
             {
+                var userForError = await _userManager.GetUserAsync(User);
+                if (userForError != null)
+                {
+                    var bookings = await _bookingService.GetBookingHistoryPaginatedAsync(userForError.Id, 1, 5);
+                    model.PaginatedBookingHistory = new PaginatedListDto<BookingHistoryItemViewModel>(
+                        bookings.Items.Select(b => _userMapping.ToBookingHistoryItemViewModel(b)).ToList(),
+                        bookings.TotalPages * 5, 1, 5)
+                    { TotalPages = bookings.TotalPages };
+                }
                 return View(model);
             }
 
             var user = await _userManager.GetUserAsync(User);
-            
+
             if (user == null)
             {
                 return NotFound();
             }
 
+            // Перевірка валідації полів
+            if (!ModelState.IsValid)
+            {
+                await LoadHistoryAsync(user, model); // Відновлення історії
+                return View(model);
+            }
+
             _userMapping.UpdateApplicationUser(model, user);
 
+            // Логіка зміни Email
             if (user.Email != model.Email)
             {
                 var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
                 if (!setEmailResult.Succeeded)
                 {
-                    foreach (var error in setEmailResult.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                    foreach (var error in setEmailResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                    await LoadHistoryAsync(user, model); // Відновлення історії
                     return View(model);
                 }
-                
+
                 var setUserNameResult = await _userManager.SetUserNameAsync(user, model.Email);
                 if (!setUserNameResult.Succeeded)
                 {
-                    foreach (var error in setUserNameResult.Errors)
-                    {
-                        ModelState.AddModelError(string.Empty, error.Description);
-                    }
+                    foreach (var error in setUserNameResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                    await LoadHistoryAsync(user, model); // Відновлення історії
                     return View(model);
                 }
             }
 
+            // Логіка зміни пароля
+            if (!string.IsNullOrEmpty(model.NewPassword))
+            {
+                // Перевірка, чи новий пароль співпадає з старим
+                bool isSameAsOld = await _userManager.CheckPasswordAsync(user, model.NewPassword);
+
+                if (isSameAsOld)
+                {
+                    ModelState.AddModelError(nameof(model.NewPassword), "Новий пароль не може бути таким самим, як старий.");
+                    await LoadHistoryAsync(user, model); // Відновлення історії
+                    return View(model);
+                }
+
+                var token = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var changePasswordResult = await _userManager.ResetPasswordAsync(user, token, model.NewPassword);
+
+                if (!changePasswordResult.Succeeded)
+                {
+                    foreach (var error in changePasswordResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
+                    await LoadHistoryAsync(user, model); // Відновлення історії
+                    return View(model);
+                }
+                _logger.LogInformation("Користувач {UserId} змінив пароль через профіль", user.Id);
+            }
+
+            // Фінальне збереження користувача
             var result = await _userManager.UpdateAsync(user);
 
             if (result.Succeeded)
@@ -217,12 +284,57 @@ namespace onlineCinema.Controllers
                 return RedirectToAction("Profile");
             }
 
+            // Якщо UpdateAsync впав
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
 
+            await LoadHistoryAsync(user, model); // Відновлення історії
             return View(model);
+        }
+
+        [HttpPost]
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> CancelBooking(int id)
+        {
+            try
+            {
+                var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+                if (string.IsNullOrEmpty(userId))
+                    return Unauthorized();
+
+                await _bookingService.CancelBookingAsync(id, userId);
+
+                TempData["SuccessMessage"] = "Квитки успішно повернуто, кошти зараховано на баланс.";
+
+                // Перезавантаження сторінки профілю
+                return RedirectToAction("Profile");
+            }
+            catch (Exception ex)
+            {
+                // У разі помилки (закінчився час на повернення квитка)
+                // зберігаємо повідомлення в TempData, щоб відобразити його після перенаправлення,
+                // і повертаємо користувача на сторінку профілю.
+                TempData["ErrorMessage"] = $"Помилка повернення: {ex.Message}";
+                return RedirectToAction("Profile");
+            }
+        }
+
+        private async Task LoadHistoryAsync(ApplicationUser user, ProfileViewModel model)
+        {
+            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+
+            var bookingsDto = isAdmin
+                ? Enumerable.Empty<BookingHistoryDto>()
+                : await _bookingService.GetBookingHistoryAsync(user.Id);
+
+            // Перетворення в List, щоб не було конфліктів типів
+            model.BookingHistory = bookingsDto
+                .Select(dto => _userMapping.ToBookingHistoryItemViewModel(dto))
+                .ToList();
         }
     }
 }
