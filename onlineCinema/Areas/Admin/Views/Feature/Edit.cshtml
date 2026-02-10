@@ -9,20 +9,25 @@
 
     <form asp-action="@(Model.FeatureId == 0 ? "Create" : "Edit")" method="post">
         <input type="hidden" asp-for="FeatureId" />
-        <div class="card border-secondary movie-table mx-auto" style="max-width: 600px;">
+
+        <div class="card border-secondary bg-black text-white mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                <i class="bi bi-hdd-network me-2"></i>Feature Details
+            </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <label asp-for="FeatureName" class="form-label text-white small text-uppercase">Name</label>
-                    <input asp-for="FeatureName" class="form-control" />
+                    <label asp-for="FeatureName" class="form-label text-muted small text-uppercase">Name</label>
+                    <input asp-for="FeatureName" class="form-control bg-dark text-white border-secondary" />
                     <span asp-validation-for="FeatureName" class="text-danger small"></span>
                 </div>
                 <div class="mb-3">
-                    <label asp-for="FeatureDescription" class="form-label text-white small text-uppercase">Description</label>
-                    <textarea asp-for="FeatureDescription" class="form-control" rows="3"></textarea>
+                    <label asp-for="FeatureDescription" class="form-label text-muted small text-uppercase">Description</label>
+                    <textarea asp-for="FeatureDescription" class="form-control bg-dark text-white border-secondary" rows="3"></textarea>
                     <span asp-validation-for="FeatureDescription" class="text-danger small"></span>
                 </div>
+
                 <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-danger fw-bold">Save Feature</button>
+                    <button type="submit" class="btn btn-danger fw-bold py-2 shadow-sm">Save Feature</button>
                 </div>
             </div>
         </div>
