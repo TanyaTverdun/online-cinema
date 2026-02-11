@@ -17,6 +17,8 @@ namespace onlineCinema.Application.DTOs
         public int TotalSeats => RowCount * SeatInRowCount;
         public List<string> FeatureNames { get; set; } = new();
         public List<int> FeatureIds { get; set; } = new();
+        public List<string> FeatureDescriptions { get; set; } = new();
+
 
         public List<SessionSeatMapDto> Sessions { get; set; } = new();
 

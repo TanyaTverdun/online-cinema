@@ -55,23 +55,34 @@ namespace onlineCinema.Application.Services
                 throw new KeyNotFoundException("Фільм не знайдено");
             }
 
-            var hasConflict = await _unitOfWork.Session
-                .HallHasSessionAtTimeAsync(
-                    dto.HallId,
-                    dto.ShowingDateTime,
-                    movie.Runtime);
+            int days = dto.GenerateForWeek ? 7 : 1;
 
-            if (hasConflict)
+            for (int i = 0; i < days; i++)
             {
-                throw new InvalidOperationException(
-                    "У цьому залі вже існує сеанс, який перетинається за часом");
+                var sessionDate = dto.ShowingDateTime.AddDays(i);
+
+                var hasConflict = await _unitOfWork.Session
+                    .HallHasSessionAtTimeAsync(
+                        dto.HallId,
+                        sessionDate,
+                        movie.Runtime);
+
+                if (hasConflict)
+                {
+                    throw new InvalidOperationException(
+                        $"Конфлікт сеансу на дату {sessionDate:dd.MM.yyyy HH:mm}");
+                }
+
+                Session session = _mapper.MapToSession(dto);
+                session.ShowingDateTime = sessionDate;
+
+                await _unitOfWork.Session.AddAsync(session);
             }
 
-            Session session = _mapper.MapToSession(dto);
-
-            await _unitOfWork.Session.AddAsync(session);
             await _unitOfWork.SaveAsync();
         }
+
+
 
         public async Task UpdateSessionAsync(SessionUpdateDto dto)
         {
@@ -117,7 +128,7 @@ namespace onlineCinema.Application.Services
 
             if (movie == null)
             {
-                return false; 
+                return false;
             }
 
             return await _unitOfWork.Session

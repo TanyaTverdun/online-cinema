@@ -77,7 +77,6 @@
     });
     builder.Services.AddFluentValidationClientsideAdapters();
 
-    builder.Services.AddSingleton<MovieMapper>();
     builder.Services.AddSingleton<SessionMapper>();
     builder.Services.AddSingleton<PaymentMapper>();
     builder.Services.AddSingleton<BookingMapper>();

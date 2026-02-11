@@ -10,5 +10,6 @@ namespace onlineCinema.Application.DTOs
     {
         public int Id { get; set; }
         public string Title { get; set; } = string.Empty;
+        public List<int> FeatureIds { get; set; } = new();
     }
 }

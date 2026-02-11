@@ -20,7 +20,7 @@ namespace onlineCinema.Mapping
 
             if (dto.Sessions != null)
             {
-                vm.Sessions = dto.Sessions.Select(s => new SessionViewModel
+                vm.Sessions = dto.Sessions.Select(s => new onlineCinema.ViewModels.SessionViewModel
                 {
                     Id = s.SessionId,
                     MovieTitle = s.MovieTitle,

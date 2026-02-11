@@ -11,6 +11,7 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class MovieMapping
     {
+        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieDto.FeatureIds), Use = nameof(MapFeaturesToIds))]
         public partial MovieDto MapToDto(Movie movie);
 
         public partial IEnumerable<MovieDto> MapToDtoList(IEnumerable<Movie> movies);
@@ -108,5 +109,8 @@ namespace onlineCinema.Application.Mapping
             features.Select(x => x.FeatureId).ToList();
 
         private int MapReleaseYear(DateTime date) => date.Year;
+
+        private List<int> MapFeaturesToIds(ICollection<MovieFeature> features)
+            => features.Select(f => f.FeatureId).ToList();
     }
 }

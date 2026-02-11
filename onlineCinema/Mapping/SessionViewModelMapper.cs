@@ -7,17 +7,17 @@ namespace onlineCinema.Mapping
     [Mapper]
     public partial class SessionViewModelMapper
     {
-        public partial SessionCreateDto MapToCreateDto(SessionCreateViewModel vm);
+        public partial SessionCreateDto MapToCreateDto(SessionViewModel vm);
 
-        [MapProperty(nameof(SessionEditViewModel.Id), nameof(SessionUpdateDto.Id))]
-        public partial SessionUpdateDto MapToUpdateDto(SessionEditViewModel vm);
+        [MapProperty(nameof(SessionViewModel.Id), nameof(SessionUpdateDto.Id))]
+        public partial SessionUpdateDto MapToUpdateDto(SessionViewModel vm);
 
-        [MapProperty(nameof(SessionDto.Id), nameof(SessionEditViewModel.Id))]
-        public partial SessionEditViewModel MapToEditViewModel(SessionDto dto);
+        [MapProperty(nameof(SessionDto.Id), nameof(SessionViewModel.Id))]
+        public partial SessionViewModel MapToEditViewModel(SessionDto dto);
         public partial SessionListViewModel MapToListViewModel(SessionDto dto);
         public partial IEnumerable<SessionListViewModel> MapToListViewModelList(IEnumerable<SessionDto> dtos);
-        [MapProperty(nameof(SessionDto.HallNumber), nameof(SessionDeleteViewModel.HallName), Use = nameof(MapHallNumberToString))]
-        public partial SessionDeleteViewModel MapToDeleteViewModel(SessionDto dto);
+        [MapProperty(nameof(SessionDto.HallNumber), nameof(SessionViewModel.HallName), Use = nameof(MapHallNumberToString))]
+        public partial SessionViewModel MapToDeleteViewModel(SessionDto dto);
 
         private string MapHallNumberToString(int hallNumber) => $"Зал {hallNumber}";
     }
