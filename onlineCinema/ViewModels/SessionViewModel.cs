@@ -6,5 +6,6 @@
         public string Time { get; set; }
         public string Date { get; set; }
         public string MovieTitle { get; set; }
+       
     }
 }

@@ -8,6 +8,8 @@ public class Hall
     public byte HallNumber { get; set; }
     public byte RowCount { get; set; }
     public byte SeatInRowCount { get; set; }
+    public int VipRowCount { get; set; }
+    public float VipCoefficient { get; set; }
 
     public Cinema Cinema { get; set; } = null!;
     public ICollection<Seat> Seats { get; set; } = new List<Seat>();

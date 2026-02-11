@@ -76,6 +76,18 @@
                                 <span asp-validation-for="ShowingDateTime" class="text-danger small"></span>
                             </div>
                         </div>
+
+                        
+                        @if (!isEdit)
+                        {
+                            <div class="form-check mt-3">
+                                <input asp-for="GenerateForWeek" class="form-check-input" type="checkbox" />
+                                <label asp-for="GenerateForWeek" class="form-check-label text-white">
+                                    Згенерувати сеанси на 7 днів вперед
+                                </label>
+                            </div>
+                        }
+
                     </div>
                 </div>
             </div>

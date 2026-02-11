@@ -35,6 +35,10 @@ namespace onlineCinema.Application.Services
                 throw new ArgumentException("Кількість рядів та місць у ряді " +
                     "не може перевищувати 255.");
             }
+            if (hallDto.VipRowCount > hallDto.RowCount)
+            {
+                throw new ArgumentException("VIP рядів не може бути більше ніж загальна кількість рядів.");
+            }
 
             var hallEntity = _mapper.MapToEntity(hallDto);
 
@@ -63,28 +67,56 @@ namespace onlineCinema.Application.Services
 
         public async Task<HallDto?> EditHallAsync(HallDto hallDto)
         {
-            var exists = await _unitOfWork.Hall
-                .GetByIdWithStatsAsync(hallDto.Id);
+            var existing = await _unitOfWork.Hall
+                .GetByIdAsync(hallDto.Id);
 
-            if(exists == null)
+            if (existing == null)
             {
                 throw new KeyNotFoundException($"Зал з id {hallDto.Id} не знайдено.");
             }
+            
+            if (hallDto.VipRowCount > hallDto.RowCount)
+            {
+                throw new ArgumentException("VIP рядів не може бути більше ніж загальна кількість рядів.");
+            }
+            bool geometryChanged =
+                existing.RowCount != hallDto.RowCount ||
+                existing.SeatInRowCount != hallDto.SeatInRowCount ||
+                existing.VipRowCount != hallDto.VipRowCount ||
+                existing.VipCoefficient != hallDto.VipCoefficient;
 
             var hallEntity = _mapper.MapToEntity(hallDto);
 
             await _unitOfWork.Hall
                 .UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
 
+            
+            if (geometryChanged)
+            {
+                var seats = await _unitOfWork.Seat
+                    .GetAllAsync(s => s.HallId == hallDto.Id);
+
+                foreach (var seat in seats)
+                    _unitOfWork.Seat.Remove(seat);
+
+                await _unitOfWork.SaveAsync();
+
+                await GenerateSeatsForHall(hallEntity, hallDto);
+                await _unitOfWork.SaveAsync();
+            }
+
             return await GetHallByIdAsync(hallDto.Id);
         }
 
+
         public async Task<IEnumerable<HallDto>> GetAllHallsAsync()
         {
-            var halls = await _unitOfWork.Hall.GetAllAsync(includeProperties: "HallFeatures");
+            var halls = await _unitOfWork.Hall
+                .GetAllAsync(includeProperties: "HallFeatures.Feature");
 
             return _mapper.MapToDtoList(halls);
         }
+
 
         public async Task<HallDto?> GetHallByIdAsync(int id)
         {
