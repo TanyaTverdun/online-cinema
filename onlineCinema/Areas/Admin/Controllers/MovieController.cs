@@ -5,6 +5,8 @@ using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;
 using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
 
+
+
 namespace onlineCinema.Areas.Admin.Controllers
 {
     [Area("Admin")]
@@ -19,11 +21,17 @@ namespace onlineCinema.Areas.Admin.Controllers
             _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetAll()
         {
             var moviesDto = await _movieService.GetMoviesForShowcaseAsync();
             var moviesViewModel = moviesDto.Select(m => _mapper.ToViewModel(m));
-            return View(moviesViewModel);
+            return Json(new { data = moviesViewModel });
         }
 
         [HttpGet]
@@ -59,7 +67,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", $"Помилка збереження: {ex.Message}");
+                    ModelState.AddModelError("", $"Error: {ex.Message}");
                 }
             }
 
@@ -114,12 +122,18 @@ namespace onlineCinema.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            await _movieService.DeleteMovieAsync(id);
-            return RedirectToAction(nameof(Index));
+            try
+            {
+                await _movieService.DeleteMovieAsync(id);
+                return Json(new { success = true, message = "Delete successful" });
+            }
+            catch (Exception ex)
+            {
+                return Json(new { success = false, message = ex.Message });
+            }
         }
 
         private async Task ConfigureViewModel(MovieFormViewModel vm)
