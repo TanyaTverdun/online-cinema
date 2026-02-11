@@ -23,6 +23,9 @@ namespace onlineCinema.Application.DTOs.Movie
         public MovieStatus Status { get; set; } = MovieStatus.ComingSoon;
         public AgeRating AgeRating { get; set; }
 
+        [Range(0, 10)]
+        public decimal Rating { get; set; }
+
         [Range(1, 1000)]
         public int Runtime { get; set; }
 

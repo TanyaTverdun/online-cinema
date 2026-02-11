@@ -13,6 +13,7 @@ namespace onlineCinema.Areas.Admin.Models
         public string? Description { get; set; }
         public MovieStatus Status { get; set; } = MovieStatus.ComingSoon;
         public AgeRating AgeRating { get; set; }
+        public decimal Rating { get; set; }
         public TimeSpan? Runtime { get; set; }
         public DateTime ReleaseDate { get; set; } = DateTime.Today;
         public string? TrailerLink { get; set; }
