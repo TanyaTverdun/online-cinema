@@ -106,7 +106,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 }
                 catch (Exception ex)
                 {
-                    ModelState.AddModelError("", $"Error: {ex.Message}");
+                    ModelState.AddModelError("", $"Сталася помилка під час збереження: {ex.Message}");
                 }
             }
 

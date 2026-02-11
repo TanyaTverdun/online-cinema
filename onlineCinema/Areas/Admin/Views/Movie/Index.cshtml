@@ -2,14 +2,14 @@
 @using onlineCinema.Domain.Enums
 @model IEnumerable<MovieItemViewModel>
 @{
-    ViewData["Title"] = "Movie Management";
+    ViewData["Title"] = "Керування фільмами";
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3 mb-0">Movie Management</h1>
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування фільмами</h1>
         <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> Add New Movie
+            <i class="bi bi-plus-lg me-1"></i> Додати новий фільм
         </a>
     </div>
 
@@ -19,11 +19,11 @@
                 <table class="table table-hover mb-0 align-middle movie-table">
                     <thead class="bg-black text-uppercase small text-muted">
                         <tr>
-                            <th style="width: 80px;">Poster</th>
-                            <th>Title & Genres</th>
-                            <th>Release</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
+                            <th style="width: 80px;">Постер</th>
+                            <th>Назва та жанри</th>
+                            <th>Рік виходу</th>
+                            <th>Статус</th>
+                            <th class="text-end">Дії</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -31,22 +31,24 @@
                         {
                             <tr>
                                 <td class="py-3 ps-3">
-                                    <img src="@item.PosterUrl" alt="Poster" class="rounded border border-secondary"
+                                    <img src="@item.PosterUrl"
+                                         alt="Постер"
+                                         class="rounded border border-secondary"
                                          style="width: 50px; height: 75px; object-fit: cover;">
                                 </td>
                                 <td>
                                     <div class="fw-bold text-white">@item.Title</div>
                                     <small class="text-white">@item.GenreSummary</small>
                                 </td>
-                                <td class="text-white ">@item.ReleaseYear</td>
-                                <td >
+                                <td class="text-white">@item.ReleaseYear</td>
+                                <td>
                                     @if (item.Status == MovieStatus.Released)
                                     {
-                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Released</span>
+                                        <span class="badge bg-success bg-opacity-10 text-success border border-success">Вийшов</span>
                                     }
                                     else if (item.Status == MovieStatus.ComingSoon)
                                     {
-                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Coming Soon</span>
+                                        <span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Скоро у прокаті</span>
                                     }
                                     else
                                     {
@@ -55,13 +57,20 @@
                                 </td>
                                 <td class="text-end pe-3">
                                     <div class="btn-group">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-info"
+                                           title="Редагувати">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post"
-                                              onsubmit="return confirm('Are you sure you want to archive this movie?');"
+                                        <form asp-action="Delete"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              onsubmit="return confirm('Ви впевнені, що хочете архівувати цей фільм?');"
                                               style="display:inline;">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Архівувати">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
@@ -73,7 +82,7 @@
                         {
                             <tr>
                                 <td colspan="5" class="text-center py-5 text-muted">
-                                    No movies found. Click "Add New Movie" to start.
+                                    Фільмів не знайдено. Натисніть «Додати новий фільм», щоб створити перший.
                                 </td>
                             </tr>
                         }

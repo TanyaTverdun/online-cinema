@@ -3,9 +3,9 @@
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3 mb-0">Genres Management</h1>
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування жанрами</h1>
         <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> Add New Genre
+            <i class="bi bi-plus-lg me-1"></i> Додати новий жанр
         </a>
     </div>
 
@@ -13,8 +13,8 @@
         <table class="table table-hover mb-0 align-middle movie-table">
             <thead class="bg-black text-uppercase small text-muted">
                 <tr>
-                    <th>Genre Name</th>
-                    <th class="text-end">Actions</th>
+                    <th>Назва жанру</th>
+                    <th class="text-end">Дії</th>
                 </tr>
             </thead>
             <tbody class="text-white">
@@ -24,11 +24,23 @@
                         <td>@item.GenreName</td>
                         <td class="text-end">
                             <div class="btn-group">
-                                <a asp-action="Edit" asp-route-id="@item.GenreId" class="btn btn-sm btn-outline-info">
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.GenreId"
+                                   class="btn btn-sm btn-outline-info"
+                                   title="Редагувати">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <form asp-action="Delete" asp-route-id="@item.GenreId" method="post" onsubmit="return confirm('Delete this genre?');" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+
+                                <form asp-action="Delete"
+                                      asp-route-id="@item.GenreId"
+                                      method="post"
+                                      onsubmit="return confirm('Видалити цей жанр?');"
+                                      style="display:inline;">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Видалити">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>

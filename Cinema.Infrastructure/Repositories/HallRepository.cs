@@ -49,14 +49,13 @@ namespace onlineCinema.Infrastructure.Repositories
 
             if (existingHall == null)
             {
-                throw new KeyNotFoundException("Hall not found");
+                throw new KeyNotFoundException("Зал не знайдено.");
             }
 
             existingHall.HallNumber = hall.HallNumber;
             existingHall.RowCount = hall.RowCount;
             existingHall.SeatInRowCount = hall.SeatInRowCount;
 
-            //remove unselected features
             var featuresToRemove = existingHall.HallFeatures
                 .Where(hf => !selectedFeatureIds.Contains(hf.FeatureId))
                 .ToList();
@@ -66,7 +65,6 @@ namespace onlineCinema.Infrastructure.Repositories
                 _db.Remove(feature);
             }
 
-            //add new selected features
             var currentFeatureIds = existingHall.HallFeatures
                 .Select(hf => hf.FeatureId)
                 .ToList();
@@ -131,15 +129,6 @@ namespace onlineCinema.Infrastructure.Repositories
                             ShowingDate = s.ShowingDateTime,
                             MovieTitle = s.Movie.Title,
 
-                            //Seats = s.Seats
-                            //    .Select(ss => new SeatDto
-                            //    {
-                            //        SeatId = ss.SeatId,
-                            //        Row = ss.RowNumber,
-                            //        Number = ss.SeatNumber,
-                            //        IsBooked = ss.IsBooked
-                            //    })
-                            //    .ToList()
                         }).ToList()
 
                 })

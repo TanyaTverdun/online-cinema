@@ -10,7 +10,7 @@
 
     <div class="position-relative overflow-hidden" style="height: 60vh;">
         <img src="@Model.PosterUrl"
-             alt="@Model.Title Backdrop"
+             alt="@Model.Title Фон"
              class="w-100 h-100 object-fit-cover opacity-25"
              style="filter: blur(10px);">
 
@@ -22,7 +22,7 @@
         <div class="row g-5">
             <div class="col-12 col-md-4 col-lg-3">
                 <img src="@Model.PosterUrl"
-                     alt="@Model.Title Poster"
+                     alt="@Model.Title Постер"
                      class="img-fluid rounded shadow-lg border border-secondary">
             </div>
 
@@ -33,27 +33,27 @@
 
                     <div class="d-flex align-items-center gap-3 text-muted small">
                         <span><i class="bi bi-calendar3 me-1"></i> @Model.ReleaseDate.Year</span>
-                        <span><i class="bi bi-clock me-1"></i> @Model.Runtime min</span>
+                        <span><i class="bi bi-clock me-1"></i> @Model.Runtime хв</span>
                         <span class="text-primary fw-bold">@string.Join(", ", Model.Genres)</span>
                     </div>
                 </div>
 
                 <div class="row">
                     <div class="col-lg-8">
-                        <h6 class="text-white border-bottom  pb-2 mb-3">ОПИС</h6>
+                        <h6 class="text-white border-bottom pb-2 mb-3">ОПИС</h6>
                         <p class="lead fs-6 mb-5 text-white text-break">@Model.Description</p>
 
                         <div class="row g-4 mb-5">
                             <div class="col-6">
-                                <small class="text-muted d-block mb-1">DIRECTOR</small>
+                                <small class="text-muted d-block mb-1">РЕЖИСЕР</small>
                                 <span class="fw-bold text-white">@string.Join(", ", Model.Directors)</span>
                             </div>
                             <div class="col-6">
-                                <small class="text-muted d-block mb-1">LANGUAGES</small>
+                                <small class="text-muted d-block mb-1">МОВИ</small>
                                 <span class="text-white">@string.Join(", ", Model.Languages)</span>
                             </div>
                             <div class="col-6 mt-3">
-                                <small class="text-muted d-block mb-2">FEATURES</small>
+                                <small class="text-muted d-block mb-2">ОСОБЛИВОСТІ</small>
                                 @if (Model.Features.Any())
                                 {
                                     <div class="d-flex flex-wrap gap-2">
@@ -67,12 +67,12 @@
                                 }
                                 else
                                 {
-                                    <span class="badge border border-secondary text-white px-3 py-2 ">Standard Format</span>
+                                    <span class="badge border border-secondary text-white px-3 py-2">Стандартний формат</span>
                                 }
                             </div>
 
                             <div class="col-6 mt-3">
-                                <small class="text-muted d-block mb-1">CAST</small>
+                                <small class="text-muted d-block mb-1">АКТОРСЬКИЙ СКЛАД</small>
                                 <span class="text-white">@string.Join(", ", Model.Actors.Take(5))</span>
                             </div>
                         </div>
@@ -80,7 +80,7 @@
                         @if (!string.IsNullOrEmpty(Model.TrailerLink))
                         {
                             <a href="@Model.TrailerLink" target="_blank" class="btn btn-outline-light px-4">
-                                <i class="bi bi-youtube me-2"></i>Watch Trailer
+                                <i class="bi bi-youtube me-2"></i>Дивитися трейлер
                             </a>
                         }
                     </div>
@@ -88,14 +88,14 @@
                     <div class="col-lg-4">
                         <div class="card border-secondary p-4 bg-dark bg-opacity-50">
                             <div class="text-center mb-4">
-                                <small class="text-muted text-uppercase">Current Status</small>
+                                <small class="text-muted text-uppercase">Поточний статус</small>
                                 @if (Model.Status == MovieStatus.Released)
                                 {
-                                    <h3 class="text-success fw-bold mt-1">Now Showing</h3>
+                                    <h3 class="text-success fw-bold mt-1">У прокаті</h3>
                                 }
                                 else
                                 {
-                                    <h3 class="text-warning fw-bold mt-1">Coming Soon</h3>
+                                    <h3 class="text-warning fw-bold mt-1">Скоро у прокаті</h3>
                                 }
                             </div>
 
@@ -105,13 +105,13 @@
                                    asp-action="Schedule"
                                    asp-route-id="@Model.Id"
                                    class="btn btn-danger btn-lg w-100 mb-3 shadow">
-                                    <i class="bi bi-ticket-fill me-2"></i>Get Tickets
+                                    <i class="bi bi-ticket-fill me-2"></i>Купити квитки
                                 </a>
-                                <small class="d-block text-center text-muted">Select session time next</small>
+                                <small class="d-block text-center text-muted">Далі оберіть час сеансу</small>
                             }
                             else
                             {
-                                <button class="btn btn-secondary w-100" disabled>Tickets Unavailable</button>
+                                <button class="btn btn-secondary w-100" disabled>Квитки недоступні</button>
                             }
 
                         </div>

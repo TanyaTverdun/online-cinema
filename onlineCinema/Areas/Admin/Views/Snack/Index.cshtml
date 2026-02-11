@@ -3,9 +3,9 @@
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3 mb-0">Snack Management</h1>
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування снеками</h1>
         <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> Add New Snack
+            <i class="bi bi-plus-lg me-1"></i> Додати новий снек
         </a>
     </div>
 
@@ -13,9 +13,9 @@
         <table class="table table-hover mb-0 align-middle movie-table">
             <thead class="bg-black text-uppercase small text-muted">
                 <tr>
-                    <th>Snack Name</th>
-                    <th>Price (UAH)</th>
-                    <th class="text-end">Actions</th>
+                    <th>Назва снека</th>
+                    <th>Ціна (грн)</th>
+                    <th class="text-end">Дії</th>
                 </tr>
             </thead>
             <tbody class="text-white">
@@ -26,11 +26,22 @@
                         <td>@item.Price.ToString("C")</td>
                         <td class="text-end">
                             <div class="btn-group">
-                                <a asp-action="Edit" asp-route-id="@item.SnackId" class="btn btn-sm btn-outline-info">
+                                <a asp-action="Edit"
+                                   asp-route-id="@item.SnackId"
+                                   class="btn btn-sm btn-outline-info"
+                                   title="Редагувати">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <form asp-action="Delete" asp-route-id="@item.SnackId" method="post" onsubmit="return confirm('Delete this snack?');" style="display:inline;">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger"><i class="bi bi-trash"></i></button>
+                                <form asp-action="Delete"
+                                      asp-route-id="@item.SnackId"
+                                      method="post"
+                                      onsubmit="return confirm('Видалити цей снек?');"
+                                      style="display:inline;">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-outline-danger"
+                                            title="Видалити">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
                                 </form>
                             </div>
                         </td>

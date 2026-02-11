@@ -3,8 +3,12 @@
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3">@(Model.SnackId == 0 ? "Add Snack" : "Edit Snack")</h1>
-        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">Back to List</a>
+        <h1 class="text-white fw-bold fs-3">
+            @(Model.SnackId == 0 ? "Додати снек" : "Редагувати снек")
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
+            Назад до списку
+        </a>
     </div>
 
     <form asp-action="@(Model.SnackId == 0 ? "Create" : "Edit")" method="post">
@@ -13,20 +17,30 @@
             <div class="card-body">
 
                 <div class="mb-3">
-                    <label asp-for="SnackName" class="form-label text-white small text-uppercase">Snack Name</label>
+                    <label asp-for="SnackName" class="form-label text-white small text-uppercase">
+                        Назва снека
+                    </label>
                     <input asp-for="SnackName" class="form-control" />
                     <span asp-validation-for="SnackName" class="text-danger small"></span>
                 </div>
 
                 <div class="mb-3">
-                    <label asp-for="Price" class="form-label text-white small text-uppercase">Price</label>
-                    <input asp-for="Price" type="number" step="0.01" class="form-control" />
+                    <label asp-for="Price" class="form-label text-white small text-uppercase">
+                        Ціна
+                    </label>
+                    <input asp-for="Price"
+                           type="number"
+                           step="0.01"
+                           class="form-control" />
                     <span asp-validation-for="Price" class="text-danger small"></span>
                 </div>
 
                 <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-danger fw-bold">Save Snack</button>
+                    <button type="submit" class="btn btn-danger fw-bold">
+                        Зберегти
+                    </button>
                 </div>
+
             </div>
         </div>
     </form>

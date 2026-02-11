@@ -2,9 +2,9 @@
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3 mb-0">Sessions Management</h1>
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування сеансами</h1>
         <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> Add New Session
+            <i class="bi bi-plus-lg me-1"></i> Додати новий сеанс
         </a>
     </div>
 
@@ -12,14 +12,14 @@
     {
         <div class="alert alert-success alert-dismissible fade show bg-success text-white border-0" role="alert">
             <i class="bi bi-check-circle me-2"></i> @TempData["SuccessMessage"]
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Закрити"></button>
         </div>
     }
     @if (TempData["ErrorMessage"] != null)
     {
         <div class="alert alert-danger alert-dismissible fade show bg-danger text-white border-0" role="alert">
             <i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]
-            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Закрити"></button>
         </div>
     }
 
@@ -29,11 +29,11 @@
                 <table class="table table-hover mb-0 align-middle movie-table">
                     <thead class="bg-black text-uppercase small text-muted">
                         <tr>
-                            <th class="ps-3">Movie</th>
-                            <th>Hall</th>
-                            <th>Date & Time</th>
-                            <th>Base Price</th>
-                            <th class="text-end pe-3">Actions</th>
+                            <th class="ps-3">Фільм</th>
+                            <th>Зал</th>
+                            <th>Дата і час</th>
+                            <th>Базова ціна</th>
+                            <th class="text-end pe-3">Дії</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -42,7 +42,7 @@
                             <tr>
                                 <td class="ps-3">
                                     <div class="fw-bold text-white">@item.MovieTitle</div>
-                                    <small class="text-muted small text-uppercase">Session ID: @item.Id</small>
+                                    <small class="text-muted small text-uppercase">ID сеансу: @item.Id</small>
                                 </td>
                                 <td class="text-white">
                                     <span class="badge bg-secondary bg-opacity-10 text-white border border-secondary px-3">
@@ -58,12 +58,17 @@
                                 </td>
                                 <td class="text-end pe-3">
                                     <div class="btn-group">
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-info"
+                                           title="Редагувати">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post"
+                                        <form asp-action="Delete"
+                                              asp-route-id="@item.Id"
+                                              method="post"
                                               onsubmit="return confirm('Ви впевнені, що хочете видалити цей сеанс? Цю дію неможливо скасувати.');">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Видалити">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
