@@ -1,4 +1,5 @@
 ﻿using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.AdminTickets;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -250,13 +251,16 @@ namespace onlineCinema.Application.Services
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task<PaginatedListDto<BookingHistoryDto>> GetBookingHistoryPaginatedAsync(string userId, int pageIndex, int pageSize)
+        public async Task<PagedResultDto<BookingHistoryDto>> GetBookingHistorySeekAsync(string userId, int? lastId, int? firstId)
         {
-            var (bookings, totalCount) = await _unitOfWork.Booking.GetUserBookingsPaginatedAsync(userId, pageIndex, pageSize);
+            int pageSize = 5;
 
-            var dtos = bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
+            var (bookings, totalCount, hasNext, hasPrevious) =
+                await _unitOfWork.Booking.GetUserBookingsSeekAsync(userId, lastId, firstId, pageSize);
 
-            return new PaginatedListDto<BookingHistoryDto>(dtos, totalCount, pageIndex, pageSize);
+            var dtos = bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking)).ToList();
+
+            return _bookingMapper.MapToPagedResult(dtos, totalCount, pageSize, hasNext, hasPrevious);
         }
     }
 }

@@ -109,7 +109,7 @@
 
         @if (!User.IsInRole("Admin"))
         {
-            @if (Model.PaginatedBookingHistory != null && Model.PaginatedBookingHistory.Items.Any())
+            @if (Model.BookingHistory != null && Model.BookingHistory.Items.Any())
             {
                 <div class="card mt-4">
                     <div class="card-header">
@@ -117,7 +117,7 @@
                     </div>
                     <div class="card-body">
                         <div class="row">
-                            @foreach (var booking in Model.PaginatedBookingHistory.Items)
+                            @foreach (var booking in Model.BookingHistory.Items)
                             {
                                 <div class="col-md-12 mb-4">
                                     <div class="card">
@@ -252,43 +252,40 @@
                                 </div>
                             }
                         </div>
-                        @* Блок пагінації *@
-                        @if (Model.PaginatedBookingHistory.TotalPages > 1)
+                        @if (Model.BookingHistory.Items.Any())
                         {
-                            <div class="mt-4 mb-3">
-                                <nav aria-label="Навігація по сторінках">
-                                    <ul class="pagination justify-content-center">
+                            bool isNotAtStart = Model.BookingHistory.HasPreviousPage;
 
-                                        @* Кнопка "Назад" *@
-                                        <li class="page-item @(!Model.PaginatedBookingHistory.HasPreviousPage ? "disabled" : "")">
-                                            <a class="page-link" asp-action="Profile"
-                                               asp-route-pageNumber="@(Model.PaginatedBookingHistory.PageIndex - 1)"
-                                               aria-label="Previous">
-                                                <span aria-hidden="true">&laquo;</span>
-                                            </a>
-                                        </li>
+                            bool hasMoreOld = Model.BookingHistory.HasNextPage;
 
-                                        @* Номери сторінок *@
-                                        @for (int i = 1; i <= Model.PaginatedBookingHistory.TotalPages; i++)
+                            @if (isNotAtStart || hasMoreOld)
+                            {
+                                <div class="d-flex justify-content-between mt-4 mb-3 align-items-center">
+
+                                    <div class="d-flex gap-2">
+                                        @if (isNotAtStart)
                                         {
-                                            <li class="page-item @(i == Model.PaginatedBookingHistory.PageIndex ? "active" : "")">
-                                                <a class="page-link" asp-action="Profile" asp-route-pageNumber="@i">
-                                                    @i
-                                                </a>
-                                            </li>
+                                            <a asp-action="Profile" asp-route-firstId="@Model.BookingHistory.FirstId" class="btn btn-outline-primary">
+                                                <i class="bi bi-arrow-left"></i> Новіші
+                                            </a>
                                         }
 
-                                        @* Кнопка "Вперед" *@
-                                        <li class="page-item @(!Model.PaginatedBookingHistory.HasNextPage ? "disabled" : "")">
-                                            <a class="page-link" asp-action="Profile"
-                                               asp-route-pageNumber="@(Model.PaginatedBookingHistory.PageIndex + 1)"
-                                               aria-label="Next">
-                                                <span aria-hidden="true">&raquo;</span>
+                                        @if (isNotAtStart)
+                                        {
+                                            <a asp-action="Profile" class="btn btn-outline-secondary" title="На першу сторінку">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
                                             </a>
-                                        </li>
-                                    </ul>
-                                </nav>
-                            </div>
+                                        }
+                                    </div>
+
+                                    @if (hasMoreOld)
+                                    {
+                                        <a asp-action="Profile" asp-route-lastId="@Model.BookingHistory.LastId" class="btn btn-outline-primary">
+                                            Старіші <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    }
+                                </div>
+                            }
                         }
                     </div>
                 </div>

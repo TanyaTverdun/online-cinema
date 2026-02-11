@@ -22,9 +22,9 @@ namespace onlineCinema.ViewModels
         [Display(Name = "Підтвердження пароля")]
         [Compare("NewPassword", ErrorMessage = "Паролі не збігаються.")]
         public string? ConfirmPassword { get; set; }
-        public List<BookingHistoryItemViewModel> BookingHistory { get; set; } = new();
+        public PagedResultDto<BookingHistoryItemViewModel> BookingHistory { get; set; } = new();
         public string? ReturnUrl { get; set; }
-        public PaginatedListDto<BookingHistoryItemViewModel>? PaginatedBookingHistory { get; set; }
+
     }
 }
 

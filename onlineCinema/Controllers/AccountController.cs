@@ -155,42 +155,19 @@ namespace onlineCinema.Controllers
 
         [HttpGet]
         [Authorize]
-        public async Task<IActionResult> Profile(int pageNumber = 1, string? returnUrl = null)
+        public async Task<IActionResult> Profile(int? lastId = null, int? firstId = null, string? returnUrl = null)
         {
             var user = await _userManager.GetUserAsync(User);
 
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
-            // винести в конфігураційний файл
-            const int pageSize = 5;
+            var pagedResultDto = isAdmin
+                ? new PagedResultDto<BookingHistoryDto>()
+                : await _bookingService.GetBookingHistorySeekAsync(user.Id, lastId, firstId);
 
-            var paginatedBookings = isAdmin
-                ? new PaginatedListDto<BookingHistoryDto>(Enumerable.Empty<BookingHistoryDto>(), 0, pageNumber, pageSize)
-                : await _bookingService.GetBookingHistoryPaginatedAsync(user.Id, pageNumber, pageSize);
-
-            var model = _userMapping.ToProfileViewModelBase(user);
-
-            var historyItems = paginatedBookings.Items
-                .Select(dto => _userMapping.ToBookingHistoryItemViewModel(dto))
-                .ToList();
-
-            model.PaginatedBookingHistory = new PaginatedListDto<BookingHistoryItemViewModel>(
-                historyItems,
-                paginatedBookings.TotalPages * pageSize,
-                pageNumber,
-                pageSize
-            )
-            {
-                TotalPages = paginatedBookings.TotalPages
-            };
+            var model = _userMapping.ToProfileViewModel(user, pagedResultDto, returnUrl);
 
             model.ReturnUrl = returnUrl;
-
             return View(model);
         }
 
@@ -204,11 +181,7 @@ namespace onlineCinema.Controllers
                 var userForError = await _userManager.GetUserAsync(User);
                 if (userForError != null)
                 {
-                    var bookings = await _bookingService.GetBookingHistoryPaginatedAsync(userForError.Id, 1, 5);
-                    model.PaginatedBookingHistory = new PaginatedListDto<BookingHistoryItemViewModel>(
-                        bookings.Items.Select(b => _userMapping.ToBookingHistoryItemViewModel(b)).ToList(),
-                        bookings.TotalPages * 5, 1, 5)
-                    { TotalPages = bookings.TotalPages };
+                    await LoadHistoryAsync(userForError, model);
                 }
                 return View(model);
             }
@@ -220,13 +193,6 @@ namespace onlineCinema.Controllers
                 return NotFound();
             }
 
-            // Перевірка валідації полів
-            if (!ModelState.IsValid)
-            {
-                await LoadHistoryAsync(user, model); // Відновлення історії
-                return View(model);
-            }
-
             _userMapping.UpdateApplicationUser(model, user);
 
             // Логіка зміни Email
@@ -235,16 +201,22 @@ namespace onlineCinema.Controllers
                 var setEmailResult = await _userManager.SetEmailAsync(user, model.Email);
                 if (!setEmailResult.Succeeded)
                 {
-                    foreach (var error in setEmailResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
-                    await LoadHistoryAsync(user, model); // Відновлення історії
+                    foreach (var error in setEmailResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    await LoadHistoryAsync(user, model);
                     return View(model);
                 }
 
                 var setUserNameResult = await _userManager.SetUserNameAsync(user, model.Email);
                 if (!setUserNameResult.Succeeded)
                 {
-                    foreach (var error in setUserNameResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
-                    await LoadHistoryAsync(user, model); // Відновлення історії
+                    foreach (var error in setUserNameResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    await LoadHistoryAsync(user, model);
                     return View(model);
                 }
             }
@@ -252,13 +224,12 @@ namespace onlineCinema.Controllers
             // Логіка зміни пароля
             if (!string.IsNullOrEmpty(model.NewPassword))
             {
-                // Перевірка, чи новий пароль співпадає з старим
                 bool isSameAsOld = await _userManager.CheckPasswordAsync(user, model.NewPassword);
 
                 if (isSameAsOld)
                 {
                     ModelState.AddModelError(nameof(model.NewPassword), "Новий пароль не може бути таким самим, як старий.");
-                    await LoadHistoryAsync(user, model); // Відновлення історії
+                    await LoadHistoryAsync(user, model);
                     return View(model);
                 }
 
@@ -267,14 +238,16 @@ namespace onlineCinema.Controllers
 
                 if (!changePasswordResult.Succeeded)
                 {
-                    foreach (var error in changePasswordResult.Errors) ModelState.AddModelError(string.Empty, error.Description);
-                    await LoadHistoryAsync(user, model); // Відновлення історії
+                    foreach (var error in changePasswordResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+                    await LoadHistoryAsync(user, model);
                     return View(model);
                 }
                 _logger.LogInformation("Користувач {UserId} змінив пароль через профіль", user.Id);
             }
 
-            // Фінальне збереження користувача
             var result = await _userManager.UpdateAsync(user);
 
             if (result.Succeeded)
@@ -284,13 +257,12 @@ namespace onlineCinema.Controllers
                 return RedirectToAction("Profile");
             }
 
-            // Якщо UpdateAsync впав
             foreach (var error in result.Errors)
             {
                 ModelState.AddModelError(string.Empty, error.Description);
             }
 
-            await LoadHistoryAsync(user, model); // Відновлення історії
+            await LoadHistoryAsync(user, model);
             return View(model);
         }
 
@@ -323,18 +295,24 @@ namespace onlineCinema.Controllers
             }
         }
 
-        private async Task LoadHistoryAsync(ApplicationUser user, ProfileViewModel model)
+        private async Task LoadHistoryAsync(ApplicationUser user, ProfileViewModel model, int? lastId = null, int? firstId = null)
         {
             bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
 
-            var bookingsDto = isAdmin
-                ? Enumerable.Empty<BookingHistoryDto>()
-                : await _bookingService.GetBookingHistoryAsync(user.Id);
+            var pagedResultDto = isAdmin
+                ? new PagedResultDto<BookingHistoryDto>()
+                : await _bookingService.GetBookingHistorySeekAsync(user.Id, lastId, firstId);
 
-            // Перетворення в List, щоб не було конфліктів типів
-            model.BookingHistory = bookingsDto
-                .Select(dto => _userMapping.ToBookingHistoryItemViewModel(dto))
-                .ToList();
+            model.BookingHistory = new PagedResultDto<BookingHistoryItemViewModel>
+            {
+                Items = pagedResultDto.Items.Select(dto => _userMapping.ToBookingHistoryItemViewModel(dto)).ToList(),
+                TotalCount = pagedResultDto.TotalCount,
+                PageSize = pagedResultDto.PageSize,
+                HasNextPage = pagedResultDto.HasNextPage,
+                LastId = pagedResultDto.LastId,
+                FirstId = pagedResultDto.FirstId,
+                HasPreviousPage = pagedResultDto.HasPreviousPage
+            };
         }
     }
 }
