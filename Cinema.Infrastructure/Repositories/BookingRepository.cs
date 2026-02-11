@@ -85,6 +85,32 @@ namespace onlineCinema.Infrastructure.Repositories
             }
         }
 
+        public async Task<(IEnumerable<Booking> Items, int TotalCount)> GetUserBookingsPaginatedAsync(string userId, int pageIndex, int pageSize)
+        {
+            var query = _db.Bookings
+                .Where(b => b.ApplicationUserId == userId);
+
+            int totalCount = await query.CountAsync();
+
+            var items = await query
+                .Include(b => b.Payment)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Seat)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Session)
+                        .ThenInclude(s => s.Movie)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Session)
+                        .ThenInclude(s => s.Hall)
+                .Include(b => b.SnackBookings)
+                    .ThenInclude(sb => sb.Snack)
+                .OrderByDescending(b => b.CreatedDateTime)
+                .Skip((pageIndex - 1) * pageSize)
+                .Take(pageSize)                   
+                .ToListAsync();
+
+            return (items, totalCount);
+        }
         public async Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId)
         {
             return await _db.Bookings
@@ -98,6 +124,8 @@ namespace onlineCinema.Infrastructure.Repositories
                 .Include(b => b.Tickets)
                     .ThenInclude(t => t.Session)
                         .ThenInclude(s => s.Hall)
+                .Include(b => b.SnackBookings)
+                    .ThenInclude(sb => sb.Snack)
                 .OrderByDescending(b => b.CreatedDateTime)
                 .ToListAsync();
         }

@@ -1,0 +1,16 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace onlineCinema.Application.DTOs
+{
+    public class SnackInfoDto
+    {
+        public string Name { get; set; } = string.Empty;
+        public int Quantity { get; set; }
+        public decimal Price { get; set; } // Ціна за одиницю
+        public decimal TotalPrice => Price * Quantity;
+    }
+}

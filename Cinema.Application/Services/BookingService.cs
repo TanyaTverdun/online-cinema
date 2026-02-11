@@ -182,5 +182,81 @@ namespace onlineCinema.Application.Services
 
             return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
         }
+
+        public async Task CancelBookingAsync(int bookingId, string userId)
+        {
+            // Отримання бронювання з деталями (квитки, сеанс, оплата)
+            var booking = await _unitOfWork.Booking.GetByIdWithDetailsAsync(bookingId);
+
+            if (booking == null)
+            {
+                throw new KeyNotFoundException("Бронювання не знайдено.");
+            }
+
+            // Перевірка власника
+            if (booking.ApplicationUserId != userId)
+            {
+                throw new UnauthorizedAccessException("Ви не можете скасувати чуже бронювання.");
+            }
+
+            // Перевірка статусу оплати
+            if (booking.Payment != null && booking.Payment.Status == PaymentStatus.Refunded)
+            {
+                throw new InvalidOperationException("Бронювання вже скасовано.");
+            }
+
+            // Якщо оплата не була завершена, можна просто скасувати
+            bool isPaid = booking.Payment != null && booking.Payment.Status == PaymentStatus.Completed;
+
+            // Перевірка часу (Не пізніше ніж за 60 хвилин до початку)
+            var session = booking.Tickets.FirstOrDefault()?.Session;
+            if (session != null)
+            {
+                if (session.ShowingDateTime < DateTime.Now)
+                {
+                    throw new InvalidOperationException("Сеанс вже розпочався або минув.");
+                }
+
+                if ((session.ShowingDateTime - DateTime.Now).TotalMinutes < 60)
+                {
+                    throw new InvalidOperationException("Повернення можливе не пізніше ніж за 1 годину до початку сеансу.");
+                }
+            }
+
+            // Логіка повернення
+            if (booking.Payment == null)
+            {
+                var dummyPayment = _paymentMapper.CreateCompletedPayment(bookingId, 0);
+                dummyPayment.Status = PaymentStatus.Refunded;
+                await _unitOfWork.Payment.AddAsync(dummyPayment);
+                booking.Payment = dummyPayment;
+            }
+            else
+            {
+                booking.Payment.Status = PaymentStatus.Refunded;
+
+                _unitOfWork.Payment.Update(booking.Payment);
+
+                await _unitOfWork.SaveAsync();
+            }
+
+            // Скасування блокування з місць!
+            // Час блокування -1, щоб карта місць не бачила ці квитки як активні
+            foreach (var ticket in booking.Tickets)
+            {
+                ticket.LockUntil = DateTime.Now.AddMinutes(-1);
+            }
+
+            await _unitOfWork.SaveAsync();
+        }
+
+        public async Task<PaginatedListDto<BookingHistoryDto>> GetBookingHistoryPaginatedAsync(string userId, int pageIndex, int pageSize)
+        {
+            var (bookings, totalCount) = await _unitOfWork.Booking.GetUserBookingsPaginatedAsync(userId, pageIndex, pageSize);
+
+            var dtos = bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
+
+            return new PaginatedListDto<BookingHistoryDto>(dtos, totalCount, pageIndex, pageSize);
+        }
     }
 }

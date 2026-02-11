@@ -1,3 +1,4 @@
+using onlineCinema.Application.DTOs;
 using System.ComponentModel.DataAnnotations;
 
 namespace onlineCinema.ViewModels
@@ -12,8 +13,18 @@ namespace onlineCinema.ViewModels
         public string? PhoneNumber { get; set; } = string.Empty;
         public DateTime? DateOfBirth { get; set; }
         public string FullName => $"{LastName} {FirstName} {MiddleName}".Trim();
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Новий пароль")]
+        public string? NewPassword { get; set; }
+
+        [DataType(DataType.Password)]
+        [Display(Name = "Підтвердження пароля")]
+        [Compare("NewPassword", ErrorMessage = "Паролі не збігаються.")]
+        public string? ConfirmPassword { get; set; }
         public List<BookingHistoryItemViewModel> BookingHistory { get; set; } = new();
         public string? ReturnUrl { get; set; }
+        public PaginatedListDto<BookingHistoryItemViewModel>? PaginatedBookingHistory { get; set; }
     }
 }
 

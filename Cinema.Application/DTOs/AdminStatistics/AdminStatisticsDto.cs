@@ -8,11 +8,10 @@ namespace onlineCinema.Application.DTOs.AdminStatistics
 {
     public class AdminStatisticsDto
     {
-        public int TotalTicketsSold { get; set; }
-        public decimal TotalRevenue { get; set; }
-
-        public List<TopItemDto> TopSnacks { get; set; } = new();
-        public List<TopItemDto> TopMovies { get; set; } = new();
-        public List<DailyRevenueDto> RevenueByDay { get; set; } = new();
+        public List<MovieOccupancyDto> MovieOccupancy { get; set; } = new();
+        public List<TopItemDto> MostPopularMovies { get; set; } = new();
+        public List<TopItemDto> LeastPopularMovies { get; set; } = new();
+        public List<TopItemDto> MostPopularSnacks { get; set; } = new();
+        public List<TopItemDto> LeastPopularSnacks { get; set; } = new();
     }
 }
