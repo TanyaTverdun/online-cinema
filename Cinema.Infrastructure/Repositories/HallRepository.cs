@@ -35,8 +35,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     HallNumber = h.HallNumber,
                     RowCount = h.RowCount,
                     SeatInRowCount = h.SeatInRowCount,
-                    VipRowCount = h.VipRowCount,
-                    VipCoefficient = h.VipCoefficient,
+                   
 
                     FeatureIds = h.HallFeatures
                         .Select(hf => hf.FeatureId)
@@ -62,8 +61,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     HallNumber = h.HallNumber,
                     RowCount = h.RowCount,
                     SeatInRowCount = h.SeatInRowCount,
-                    VipRowCount = h.VipRowCount,
-                    VipCoefficient = h.VipCoefficient,
+                    
 
                     FeatureNames = h.HallFeatures
                         .Select(hf => hf.Feature.Name)
@@ -91,8 +89,7 @@ namespace onlineCinema.Infrastructure.Repositories
             existingHall.HallNumber = hall.HallNumber;
             existingHall.RowCount = hall.RowCount;
             existingHall.SeatInRowCount = hall.SeatInRowCount;
-            existingHall.VipRowCount = hall.VipRowCount;
-            existingHall.VipCoefficient = hall.VipCoefficient;
+            
 
             
 
@@ -134,8 +131,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     HallNumber = h.HallNumber,
                     RowCount = h.RowCount,
                     SeatInRowCount = h.SeatInRowCount,
-                    VipRowCount = h.VipRowCount,
-                    VipCoefficient = h.VipCoefficient,
+
 
                     FeatureNames = h.HallFeatures
                         .Select(hf => hf.Feature.Name)

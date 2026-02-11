@@ -81,9 +81,8 @@ namespace onlineCinema.Application.Services
             }
             bool geometryChanged =
                 existing.RowCount != hallDto.RowCount ||
-                existing.SeatInRowCount != hallDto.SeatInRowCount ||
-                existing.VipRowCount != hallDto.VipRowCount ||
-                existing.VipCoefficient != hallDto.VipCoefficient;
+                existing.SeatInRowCount != hallDto.SeatInRowCount;
+               
 
             var hallEntity = _mapper.MapToEntity(hallDto);
 
