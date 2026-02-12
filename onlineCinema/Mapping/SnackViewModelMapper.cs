@@ -16,14 +16,16 @@ namespace onlineCinema.Mapping
             IEnumerable<SnackDto> snacks,
             int bookingId, 
             decimal seatsTotalPrice,
-            DateTime lockUntil)
+            DateTime lockUntil,
+            int initialSeconds)
         {
             return new SnackSelectionViewModel
             {
                 BookingId = bookingId,
                 SeatsTotalPrice = seatsTotalPrice,
                 AvailableSnacks = MapSnackDtoToViewModelList(snacks),
-                LockUntil = lockUntil
+                LockUntil = lockUntil,
+                initialSeconds = $"{initialSeconds / 60:D2}:{initialSeconds % 60:D2}"
             };
         }
 

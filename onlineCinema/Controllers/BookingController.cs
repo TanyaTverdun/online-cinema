@@ -131,12 +131,15 @@ namespace onlineCinema.Controllers
                 var lockUntil = await _bookingService
                     .GetBookingLockUntilAsync(bookingId);
 
+                var initialSeconds = (int)(lockUntil - DateTime.Now).TotalSeconds;
+
                 var viewModel = _snackMapper
                     .MapToSelectionViewModel(
                         snackDtos,
                         bookingId,
                         seatsTotalPrice,
-                        lockUntil);
+                        lockUntil,
+                        initialSeconds);
 
                 return View(viewModel);
             }

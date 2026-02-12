@@ -17,6 +17,7 @@
         {
             const now = new Date().getTime();
             const distance = lockUntil - now;
+            countdownElement.innerText = distance;
 
             if (distance < 0)
             {

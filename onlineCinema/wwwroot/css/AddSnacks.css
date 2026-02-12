@@ -145,6 +145,13 @@ body, html {
         color: white;
     }
 
+.currency-symbol {
+    font-size: 0.8em;
+    font-weight: 700;
+    vertical-align: middle;
+    margin-left: 4px;
+}
+
 footer {
     display: none !important;
 }
