@@ -1,5 +1,4 @@
-﻿
-$(document).ready(function () {
+﻿$(document).ready(function () {
     MovieController.init();
 });
 
@@ -13,7 +12,8 @@ const MovieController = {
 
     loadDataTable: function () {
         const table = $('#tblData');
-        const url = table.data('load-url'); 
+        const url = table.data('load-url');
+
         this.dataTable = table.DataTable({
             "ajax": {
                 "url": url,
@@ -27,7 +27,7 @@ const MovieController = {
                     "className": "py-3 ps-3",
                     "render": (data) => {
                         const imgUrl = data || '/images/no-poster.png';
-                        return `<img src="${imgUrl}" alt="Poster" class="rounded border border-secondary"
+                        return `<img src="${imgUrl}" alt="Постер" class="rounded border border-secondary"
                                      style="width: 50px; height: 75px; object-fit: cover;">`;
                     },
                     "width": "80px",
@@ -59,15 +59,14 @@ const MovieController = {
                 {
                     "data": "status",
                     "render": (data) => {
-                       
+                        
                         const statusMap = {
-                            2: { text: 'Released', class: 'success' },
-                            1: { text: 'Coming Soon', class: 'warning' }
+                            2: { text: 'Вийшов', class: 'success' },      
+                            1: { text: 'Очікується', class: 'warning' }   
                         };
 
-                        const state = statusMap[data] || { text: 'Unknown', class: 'secondary' };
+                        const state = statusMap[data] || { text: 'Невідомо', class: 'secondary' };
 
-                     
                         const extraClasses = state.class !== 'secondary'
                             ? `bg-opacity-10 text-${state.class} border border-${state.class}`
                             : '';
@@ -80,13 +79,12 @@ const MovieController = {
                     "data": "id",
                     "className": "text-end pe-3",
                     "render": (data) => {
-                       
                         return `
                             <div class="btn-group">
-                                <a href="/Admin/Movie/Edit/${data}" class="btn btn-sm btn-outline-info">
+                                <a href="/Admin/Movie/Edit/${data}" class="btn btn-sm btn-outline-info" title="Редагувати">
                                     <i class="bi bi-pencil-square"></i>
                                 </a>
-                                <button type="button" class="btn btn-sm btn-outline-danger js-delete" data-id="${data}">
+                                <button type="button" class="btn btn-sm btn-outline-danger js-delete" data-id="${data}" title="Видалити">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
@@ -97,22 +95,20 @@ const MovieController = {
                 }
             ],
             "language": {
-                "emptyTable": "No movies found. Click 'Add New Movie' to start.",
-                "search": "",
-                "searchPlaceholder": "Search movies..."
+                "url": "//cdn.datatables.net/plug-ins/1.13.7/i18n/uk.json",
+                "emptyTable": "Фільмів не знайдено. Натисніть 'Додати новий фільм', щоб почати.",
+                "searchPlaceholder": "Пошук фільмів..."
             },
             "order": [[2, "desc"]]
         });
     },
 
     registerEvents: function () {
-        
         $('#tblData').on('click', '.js-delete', (e) => {
-            const button = $(e.currentTarget); 
+            const button = $(e.currentTarget);
             const id = button.data('id');
 
-          
-            if (confirm("Are you sure you want to archive this movie?")) {
+            if (confirm("Ви впевнені, що бажаєте архівувати/видалити цей фільм?")) {
                 this.deleteMovie(id);
             }
         });
@@ -120,18 +116,17 @@ const MovieController = {
 
     deleteMovie: function (id) {
         $.ajax({
-            url: `/Admin/Movie/Delete/${id}`, 
+            url: `/Admin/Movie/Delete/${id}`,
             type: 'DELETE',
             success: (data) => {
                 if (data.success) {
                     this.dataTable.ajax.reload();
-                   
                 } else {
-                    alert(data.message); 
+                    alert(data.message);
                 }
             },
             error: function () {
-                alert("Error while deleting");
+                alert("Сталася помилка при видаленні.");
             }
         });
     }
