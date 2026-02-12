@@ -47,29 +47,47 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
+
                 return View(model);
             }
 
-            var dto = _mapper.ToCreateUpdateDto(model);
-            await _castMemberService.CreateAsync(dto);
+            try
+            {
+                var dto = _mapper.ToCreateUpdateDto(model);
+                await _castMemberService.CreateAsync(dto);
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(model);
         }
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
-            var dto = await _castMemberService.GetByIdAsync(id);
+            try
+            {
+                var dto = await _castMemberService.GetByIdAsync(id);
+                var viewModel = _mapper.ToViewModel(dto);
 
-            if (dto == null)
+                return View(viewModel);
+            }
+            catch (KeyNotFoundException)
             {
                 return NotFound();
             }
-
-            var viewModel = _mapper.ToViewModel(dto);
-            return View(viewModel);
         }
 
         [HttpPost]
@@ -82,22 +100,59 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
+
                 return View(model);
             }
 
-            var dto = _mapper.ToCreateUpdateDto(model);
-            await _castMemberService.UpdateAsync(dto);
+            try
+            {
+                var dto = _mapper.ToCreateUpdateDto(model);
+                await _castMemberService.UpdateAsync(dto);
 
-            return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Index));
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (ArgumentException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
         {
-            await _castMemberService.DeleteAsync(id);
+            try
+            {
+                await _castMemberService.DeleteAsync(id);
+
+                TempData["SuccessMessage"] =
+                    "Актор успішно видалений.";
+            }
+            catch (KeyNotFoundException)
+            {
+                TempData["ErrorMessage"] =
+                    "Актор не знайдений.";
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["ErrorMessage"] =
+                    ex.Message;
+            }
+
             return RedirectToAction(nameof(Index));
         }
     }

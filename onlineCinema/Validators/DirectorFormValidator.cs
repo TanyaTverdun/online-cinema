@@ -4,7 +4,8 @@ using onlineCinema.Areas.Admin.Models;
 
 namespace onlineCinema.Validators
 {
-    public class DirectorFormValidator : AbstractValidator<DirectorFormViewModel>
+    public class DirectorFormValidator 
+        : AbstractValidator<DirectorFormViewModel>
     {
         public DirectorFormValidator()
         {

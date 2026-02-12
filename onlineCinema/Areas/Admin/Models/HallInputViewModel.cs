@@ -18,7 +18,8 @@ namespace onlineCinema.Areas.Admin.Models
 
         public List<int> SelectedFeatureIds { get; set; } = new();
 
-        public List<FeatureCheckboxViewModel> AvailableFeatures { get; set; } = new();
+        public List<FeatureCheckboxViewModel> AvailableFeatures { get; set; }
+            = new();
 
         [Display(Name = "Кількість VIP рядів (з кінця)")]
         public int VipRowCount { get; set; }

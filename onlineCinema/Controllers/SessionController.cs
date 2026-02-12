@@ -16,7 +16,9 @@ namespace onlineCinema.Controllers
         private readonly ISessionService _sessionService;
         private readonly MovieScheduleViewModelMapper _sessionMapper;
 
-        public SessionController(ISessionService sessionService, MovieScheduleViewModelMapper sessionMapper)
+        public SessionController(
+            ISessionService sessionService,
+            MovieScheduleViewModelMapper sessionMapper)
         {
             _sessionService = sessionService;
             _sessionMapper = sessionMapper;
@@ -27,9 +29,11 @@ namespace onlineCinema.Controllers
         {
             try
             {
-                var dto = await _sessionService.GetMovieScheduleAsync(id);
+                var dto = await _sessionService
+                    .GetMovieScheduleAsync(id);
 
-                var viewModel = _sessionMapper.MapMovieScheduleDtoToViewModel(dto);
+                var viewModel = _sessionMapper
+                    .MapMovieScheduleDtoToViewModel(dto);
 
                 return View(viewModel);
             }
@@ -37,6 +41,11 @@ namespace onlineCinema.Controllers
             {
                 return NotFound();
             }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home");
+            }
         }
+
     }
 }

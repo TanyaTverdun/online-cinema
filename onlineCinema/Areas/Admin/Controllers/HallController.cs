@@ -81,7 +81,9 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 foreach (var error in validationResult.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
             }
 

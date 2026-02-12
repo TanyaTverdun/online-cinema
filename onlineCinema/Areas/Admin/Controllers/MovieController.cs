@@ -15,7 +15,9 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IMovieService _movieService;
         private readonly AdminMovieMapper _mapper;
 
-        public MovieController(IMovieService movieService, AdminMovieMapper mapper)
+        public MovieController(
+            IMovieService movieService, 
+            AdminMovieMapper mapper)
         {
             _movieService = movieService;
             _mapper = mapper;
@@ -30,7 +32,9 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> GetAll()
         {
             var moviesDto = await _movieService.GetMoviesForShowcaseAsync();
-            var moviesViewModel = moviesDto.Select(m => _mapper.ToViewModel(m));
+            var moviesViewModel = moviesDto
+                .Select(m => _mapper
+                .ToViewModel(m));
             return Json(new { data = moviesViewModel });
         }
 
@@ -44,36 +48,49 @@ namespace onlineCinema.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(MovieFormViewModel viewModel)
+        public async Task<IActionResult> Create(
+    MovieFormViewModel viewModel)
         {
             var validator = new Validators.MovieFormValidator();
-            var validationResult = await validator.ValidateAsync(viewModel);
+            var validationResult =
+                await validator.ValidateAsync(viewModel);
 
             if (!validationResult.IsValid)
             {
                 foreach (var error in validationResult.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
             }
 
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                try
-                {
-                    var dto = _mapper.ToDto(viewModel);
-                    await _movieService.AddMovieAsync(dto);
-                    return RedirectToAction(nameof(Index));
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", $"Error: {ex.Message}");
-                }
+                await ConfigureViewModel(viewModel);
+                return View(viewModel);
+            }
+
+            try
+            {
+                var dto = _mapper.ToDto(viewModel);
+
+                await _movieService.AddMovieAsync(dto);
+
+                return RedirectToAction(nameof(Index));
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    ex.Message);
             }
 
             await ConfigureViewModel(viewModel);
+
             return View(viewModel);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -100,7 +117,9 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 foreach (var error in validationResult.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
             }
 
@@ -110,17 +129,34 @@ namespace onlineCinema.Areas.Admin.Controllers
                 {
                     var dto = _mapper.ToDto(viewModel);
                     await _movieService.UpdateMovieAsync(dto);
+
                     return RedirectToAction(nameof(Index));
                 }
-                catch (Exception ex)
+                catch (KeyNotFoundException ex)
                 {
-                    ModelState.AddModelError("", $"Сталася помилка під час збереження: {ex.Message}");
+                    ModelState.AddModelError(
+                        string.Empty,
+                        ex.Message);
+                }
+                catch (ArgumentException ex)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        ex.Message);
+                }
+                catch (InvalidOperationException ex)
+                {
+                    ModelState.AddModelError(
+                        string.Empty,
+                        ex.Message);
                 }
             }
 
             await ConfigureViewModel(viewModel);
+
             return View(viewModel);
         }
+
 
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
@@ -128,17 +164,36 @@ namespace onlineCinema.Areas.Admin.Controllers
             try
             {
                 await _movieService.DeleteMovieAsync(id);
-                return Json(new { success = true, message = "Delete successful" });
+
+                return Json(new
+                {
+                    success = true,
+                    message = "Delete successful"
+                });
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException ex)
             {
-                return Json(new { success = false, message = ex.Message });
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
+            }
+            catch (InvalidOperationException ex)
+            {
+                return Json(new
+                {
+                    success = false,
+                    message = ex.Message
+                });
             }
         }
 
+
         private async Task ConfigureViewModel(MovieFormViewModel vm)
         {
-            var dropdowns = await _movieService.GetMovieDropdownsValuesAsync();
+            var dropdowns = await _movieService
+                .GetMovieDropdownsValuesAsync();
             _mapper.Fill(dropdowns, vm);
         }
     }

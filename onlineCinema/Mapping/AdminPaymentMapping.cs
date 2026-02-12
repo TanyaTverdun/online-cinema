@@ -8,12 +8,18 @@ namespace onlineCinema.Mapping
     [Mapper]
     public partial class AdminPaymentMapping
     {
-        [MapProperty(nameof(PaymentAdminDto.Status), 
-            nameof(PaymentAdminViewModel.StatusName), Use = nameof(MapStatus))]
-        [MapProperty(nameof(PaymentAdminDto.MovieSessionDateTime), 
-            nameof(PaymentAdminViewModel.FormattedSessionDate), Use = nameof(FormatSession))]
-        [MapProperty(nameof(PaymentAdminDto.OrderDate), 
-            nameof(PaymentAdminViewModel.FormattedDate), Use = nameof(FormatDate))]
+        [MapProperty
+            (nameof(PaymentAdminDto.Status), 
+            nameof(PaymentAdminViewModel.StatusName),
+            Use = nameof(MapStatus))]
+        [MapProperty(
+            nameof(PaymentAdminDto.MovieSessionDateTime), 
+            nameof(PaymentAdminViewModel.FormattedSessionDate),
+            Use = nameof(FormatSession))]
+        [MapProperty(
+            nameof(PaymentAdminDto.OrderDate), 
+            nameof(PaymentAdminViewModel.FormattedDate),
+            Use = nameof(FormatDate))]
         [MapProperty(nameof(PaymentAdminDto.TicketsInfo), 
             nameof(PaymentAdminViewModel.TicketsDetail))]
         [MapProperty(nameof(PaymentAdminDto.SnacksInfo), 
@@ -21,11 +27,14 @@ namespace onlineCinema.Mapping
         public partial PaymentAdminViewModel ToViewModel(PaymentAdminDto dto);
 
         private string FormatSession(DateTime dt)
-            => dt == DateTime.MinValue ? "—" : dt.ToString("dd.MM.yyyy HH:mm");
+            => dt == DateTime.MinValue 
+            ? "—" 
+            : dt.ToString("dd.MM.yyyy HH:mm");
 
         [MapProperty(nameof(PagedResult<PaymentAdminDto>.Items), 
             nameof(PaymentListViewModel.Payments))]
-        public partial PaymentListViewModel ToListViewModel(PagedResult<PaymentAdminDto> pagedDto);
+        public partial PaymentListViewModel ToListViewModel(
+            PagedResult<PaymentAdminDto> pagedDto);
 
         private string FormatDate(DateTime dt) => dt.ToString("g");
 
@@ -38,7 +47,8 @@ namespace onlineCinema.Mapping
 
             for (int i = 0; i < pagedDto.Items.Count; i++)
             {
-                vm.Payments[i].IsRefundable = pagedDto.Items[i].Status == PaymentStatus.Completed;
+                vm.Payments[i].IsRefundable =
+                    pagedDto.Items[i].Status == PaymentStatus.Completed;
             }
 
             vm.LastId = lastId;

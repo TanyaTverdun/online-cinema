@@ -8,8 +8,10 @@ namespace onlineCinema.Mapping
     public partial class AdminCastMemberMapper
     {
         public partial CastMemberViewModel ToViewModel(CastMemberDto dto);
-        public partial List<CastMemberViewModel> ToViewModelList(IEnumerable<CastMemberDto> dtos);
+        public partial List<CastMemberViewModel> ToViewModelList(
+            IEnumerable<CastMemberDto> dtos);
 
-        public partial CastMemberCreateUpdateDto ToCreateUpdateDto(CastMemberViewModel model);
+        public partial CastMemberCreateUpdateDto ToCreateUpdateDto(
+            CastMemberViewModel model);
     }
 }

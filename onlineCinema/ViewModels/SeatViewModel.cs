@@ -11,6 +11,11 @@ namespace onlineCinema.ViewModels
         public decimal Price { get; set; }
         public bool IsBooked { get; set; }
 
-        public string CssClass => IsBooked ? "seat-booked" : (Type == SeatType.VIP ? "seat-vip" : "");
+        public string CssClass => 
+            IsBooked 
+            ? "seat-booked" 
+            : (Type == SeatType.VIP 
+            ? "seat-vip" 
+            : "");
     }
 }

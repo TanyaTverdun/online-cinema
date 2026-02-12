@@ -18,8 +18,10 @@
 
     var builder = WebApplication.CreateBuilder(args);
 
-    var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-        ?? throw new InvalidOperationException("Рядок підключення 'DefaultConnection' не знайдено.");
+    var connectionString = 
+    builder.Configuration.GetConnectionString("DefaultConnection") 
+        ?? throw new InvalidOperationException(
+            "Рядок підключення 'DefaultConnection' не знайдено.");
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {
@@ -34,7 +36,10 @@
 
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-    builder.Services.AddIdentity<ApplicationUser, Microsoft.AspNetCore.Identity.IdentityRole>(options =>
+    builder.Services
+    .AddIdentity<ApplicationUser,
+    Microsoft.AspNetCore.Identity.IdentityRole>(
+        options =>
     {
        
         options.Password.RequireDigit = true;
@@ -49,7 +54,8 @@
 
       
         options.User.RequireUniqueEmail = true;
-        options.User.AllowedUserNameCharacters = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
+        options.User.AllowedUserNameCharacters = 
+        "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
 
        
         options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
@@ -66,7 +72,9 @@
 
     builder.Services.AddControllersWithViews(options =>
     {
-        options.SuppressImplicitRequiredAttributeForNonNullableReferenceTypes = true;
+        options
+        .SuppressImplicitRequiredAttributeForNonNullableReferenceTypes =
+        true;
     });
 
     builder.Services.AddRazorPages();
@@ -121,8 +129,10 @@
     builder.Services.AddScoped<ITicketService, TicketService>();
     builder.Services.AddScoped<IPaymentService, PaymentService>();
 
-    builder.Services.AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
-    builder.Services.Configure<StatisticsSettings>(builder.Configuration.GetSection("StatisticsSettings"));
+    builder.Services
+    .AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
+    builder.Services.Configure<StatisticsSettings>(
+        builder.Configuration.GetSection("StatisticsSettings"));
 
     var app = builder.Build();
 
@@ -131,14 +141,20 @@
 //    var services = scope.ServiceProvider;
 //    try
 //    {
-//        var context = services.GetRequiredService<onlineCinema.Infrastructure.Data.ApplicationDbContext>();
-//        var userManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.UserManager<onlineCinema.Domain.Entities.ApplicationUser>>();
+// var context = services.GetRequiredService<
+//     onlineCinema.Infrastructure.Data.ApplicationDbContext>();
 
+// var userManager = services.GetRequiredService<
+//     Microsoft.AspNetCore.Identity.UserManager<
+//         onlineCinema.Domain.Entities.ApplicationUser>>();
 
-//        var roleManager = services.GetRequiredService<Microsoft.AspNetCore.Identity.RoleManager<Microsoft.AspNetCore.Identity.IdentityRole>>();
+// var roleManager = services.GetRequiredService<
+//     Microsoft.AspNetCore.Identity.RoleManager<
+//         Microsoft.AspNetCore.Identity.IdentityRole>>();
 
+// await onlineCinema.Infrastructure.Data.DbInitializer
+//     .Initialize(context, userManager, roleManager);
 
-//        await onlineCinema.Infrastructure.Data.DbInitializer.Initialize(context, userManager, roleManager);
 //    }
 //    catch (Exception ex)
 //    {

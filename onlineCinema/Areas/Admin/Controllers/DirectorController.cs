@@ -14,7 +14,10 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly AdminDirectorMapper _mapper;
         private readonly IValidator<DirectorFormViewModel> _validator;
 
-        public DirectorController(IDirectorService directorService, AdminDirectorMapper mapper, IValidator<DirectorFormViewModel> validator)
+        public DirectorController(
+            IDirectorService directorService,
+            AdminDirectorMapper mapper,
+            IValidator<DirectorFormViewModel> validator)
         {
             _directorService = directorService;
             _mapper = mapper;
@@ -33,14 +36,17 @@ namespace onlineCinema.Areas.Admin.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(DirectorFormViewModel viewModel)
+        public async Task<IActionResult> Create(
+            DirectorFormViewModel viewModel)
         {
             var result = await _validator.ValidateAsync(viewModel);
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
             }
 
@@ -73,7 +79,9 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
             }
 
