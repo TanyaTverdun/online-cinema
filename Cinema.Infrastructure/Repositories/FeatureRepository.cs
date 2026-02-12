@@ -9,11 +9,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class FeatureRepository : GenericRepository<Feature>, IFeatureRepository
+    public class FeatureRepository 
+        : GenericRepository<Feature>, IFeatureRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public FeatureRepository(ApplicationDbContext db) : base(db)
+        public FeatureRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }

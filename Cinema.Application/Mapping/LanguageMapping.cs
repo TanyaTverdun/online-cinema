@@ -10,10 +10,13 @@ namespace onlineCinema.Application.Mapping
     {
         public partial LanguageDto MapToDto(Language language);
 
-        public partial List<LanguageDto> MapToDtoList(IEnumerable<Language> languages);
+        public partial List<LanguageDto> 
+            MapToDtoList(IEnumerable<Language> languages);
 
         public partial Language MapToEntity(LanguageDto dto);
 
-        public partial void UpdateEntityFromDto(LanguageDto dto, Language entity);
+        public partial void UpdateEntityFromDto(
+            LanguageDto dto, 
+            Language entity);
     }
 }

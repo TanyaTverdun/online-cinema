@@ -12,7 +12,10 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Seat.SeatNumber), nameof(SeatDto.Number))]
         private partial SeatDto MapToSeatBase(Seat seat);
 
-        public SeatDto MapToSeatDto(Seat seat, decimal basePrice, HashSet<int> bookedSeatIds)
+        public SeatDto MapToSeatDto(
+            Seat seat, 
+            decimal basePrice, 
+            HashSet<int> bookedSeatIds)
         {
             var dto = MapToSeatBase(seat);
 
@@ -22,12 +25,17 @@ namespace onlineCinema.Application.Mapping
             return dto;
         }
 
-        [MapProperty(nameof(Session.Hall.HallNumber), nameof(SessionSeatMapDto.HallNumber))]
-        [MapProperty(nameof(Session.Movie.Title), nameof(SessionSeatMapDto.MovieTitle))]
-        [MapProperty(nameof(Session.ShowingDateTime), nameof(SessionSeatMapDto.ShowingDate))]
+        [MapProperty(nameof(Session.Hall.HallNumber), 
+            nameof(SessionSeatMapDto.HallNumber))]
+        [MapProperty(nameof(Session.Movie.Title), 
+            nameof(SessionSeatMapDto.MovieTitle))]
+        [MapProperty(nameof(Session.ShowingDateTime), 
+            nameof(SessionSeatMapDto.ShowingDate))]
         private partial SessionSeatMapDto MapToSessionBase(Session session);
 
-        public SessionSeatMapDto MapToSessionSeatMapDto(Session session, List<SeatDto> seatDtos)
+        public SessionSeatMapDto MapToSessionSeatMapDto(
+            Session session, 
+            List<SeatDto> seatDtos)
         {
             var dto = MapToSessionBase(session);
             
@@ -36,8 +44,10 @@ namespace onlineCinema.Application.Mapping
             return dto;
         }
 
-        [MapProperty(nameof(CreateBookingDto.UserEmail), nameof(Booking.EmailAddress))]
-        [MapProperty(nameof(CreateBookingDto.UserId), nameof(Booking.ApplicationUserId))]
+        [MapProperty(nameof(CreateBookingDto.UserEmail), 
+            nameof(Booking.EmailAddress))]
+        [MapProperty(nameof(CreateBookingDto.UserId), 
+            nameof(Booking.ApplicationUserId))]
         private partial Booking MapToBookingBase(CreateBookingDto dto);
 
         public Booking MapCreateBookingDtoToEntity(CreateBookingDto dto)
@@ -51,7 +61,11 @@ namespace onlineCinema.Application.Mapping
             return booking;
         }
 
-        public Ticket MapToTicket(Seat seat, int sessionId, decimal basePrice, DateTime lockUntil)
+        public Ticket MapToTicket(
+            Seat seat, 
+            int sessionId, 
+            decimal basePrice, 
+            DateTime lockUntil)
         {
             return new Ticket
             {

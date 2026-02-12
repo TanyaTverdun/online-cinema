@@ -85,7 +85,22 @@
     });
     builder.Services.AddFluentValidationClientsideAdapters();
 
-    builder.Services.AddSingleton<SessionMapper>();
+builder.Services.Configure<StatisticsSettings>(
+        builder.Configuration.GetSection("StatisticsSettings"));
+
+builder.Services.Configure<BookingSettings>(
+    builder.Configuration.GetSection("BookingSettings"));
+
+builder.Services.Configure<PaginationSettings>(
+    builder.Configuration.GetSection("PaginationSettings"));
+
+builder.Services.Configure<TimeSettings>(
+    builder.Configuration.GetSection("TimeSettings"));
+
+builder.Services.Configure<PricingSettings>(
+    builder.Configuration.GetSection("PricingSettings"));
+
+builder.Services.AddSingleton<SessionMapper>();
     builder.Services.AddSingleton<PaymentMapper>();
     builder.Services.AddSingleton<BookingMapper>();
     builder.Services.AddSingleton<SnackMapper>();
@@ -131,29 +146,28 @@
 
     builder.Services
     .AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
-    builder.Services.Configure<StatisticsSettings>(
-        builder.Configuration.GetSection("StatisticsSettings"));
+    
 
-    var app = builder.Build();
+var app = builder.Build();
 
 //using (var scope = app.Services.CreateScope())
 //{
 //    var services = scope.ServiceProvider;
 //    try
 //    {
-// var context = services.GetRequiredService<
-//     onlineCinema.Infrastructure.Data.ApplicationDbContext>();
+//        var context = services.GetRequiredService<
+//            onlineCinema.Infrastructure.Data.ApplicationDbContext>();
 
-// var userManager = services.GetRequiredService<
-//     Microsoft.AspNetCore.Identity.UserManager<
-//         onlineCinema.Domain.Entities.ApplicationUser>>();
+//        var userManager = services.GetRequiredService<
+//            Microsoft.AspNetCore.Identity.UserManager<
+//                onlineCinema.Domain.Entities.ApplicationUser>>();
 
-// var roleManager = services.GetRequiredService<
-//     Microsoft.AspNetCore.Identity.RoleManager<
-//         Microsoft.AspNetCore.Identity.IdentityRole>>();
+//        var roleManager = services.GetRequiredService<
+//            Microsoft.AspNetCore.Identity.RoleManager<
+//                Microsoft.AspNetCore.Identity.IdentityRole>>();
 
-// await onlineCinema.Infrastructure.Data.DbInitializer
-//     .Initialize(context, userManager, roleManager);
+//        await onlineCinema.Infrastructure.Data.DbInitializer
+//            .Initialize(context, userManager, roleManager);
 
 //    }
 //    catch (Exception ex)

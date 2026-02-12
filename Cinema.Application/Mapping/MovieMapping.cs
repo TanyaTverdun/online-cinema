@@ -11,34 +11,69 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class MovieMapping
     {
-        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieDto.FeatureIds), Use = nameof(MapFeaturesToIds))]
+        [MapProperty(nameof(Movie.MovieFeatures), 
+            nameof(MovieDto.FeatureIds), 
+            Use = nameof(MapFeaturesToIds))]
         public partial MovieDto MapToDto(Movie movie);
 
-        public partial IEnumerable<MovieDto> MapToDtoList(IEnumerable<Movie> movies);
+        public partial IEnumerable<MovieDto> 
+            MapToDtoList(IEnumerable<Movie> movies);
 
         private const string PlaceholderImage = "/images/no-poster.png";
 
-        [MapProperty(nameof(Movie.PosterImage), nameof(MovieCardDto.PosterUrl), Use = nameof(MapPosterUrl))]
-        [MapProperty(nameof(Movie.MovieGenres), nameof(MovieCardDto.GenreSummary), Use = nameof(MapGenreSummary))]
-        [MapProperty(nameof(Movie.ReleaseDate), nameof(MovieCardDto.ReleaseYear), Use = nameof(MapReleaseYear))]
-        [MapProperty(nameof(Movie.AgeRating), nameof(MovieCardDto.AgeRating))]
-        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieCardDto.Features), Use = nameof(MapFeaturesList))] 
+        [MapProperty(nameof(Movie.PosterImage), 
+            nameof(MovieCardDto.PosterUrl), 
+            Use = nameof(MapPosterUrl))]
+        [MapProperty(nameof(Movie.MovieGenres), 
+            nameof(MovieCardDto.GenreSummary), 
+            Use = nameof(MapGenreSummary))]
+        [MapProperty(nameof(Movie.ReleaseDate), 
+            nameof(MovieCardDto.ReleaseYear), 
+            Use = nameof(MapReleaseYear))]
+        [MapProperty(nameof(Movie.AgeRating), 
+            nameof(MovieCardDto.AgeRating))]
+        [MapProperty(nameof(Movie.MovieFeatures), 
+            nameof(MovieCardDto.Features), 
+            Use = nameof(MapFeaturesList))] 
         public partial MovieCardDto ToCardDto(Movie movie);
 
-        [MapProperty(nameof(Movie.PosterImage), nameof(MovieDetailsDto.PosterUrl), Use = nameof(MapPosterUrl))]
-        [MapProperty(nameof(Movie.MovieGenres), nameof(MovieDetailsDto.Genres), Use = nameof(MapGenresList))]
-        [MapProperty(nameof(Movie.MovieCasts), nameof(MovieDetailsDto.Actors), Use = nameof(MapActorsList))]
-        [MapProperty(nameof(Movie.MovieDirectors), nameof(MovieDetailsDto.Directors), Use = nameof(MapDirectorsList))]
-        [MapProperty(nameof(Movie.MovieLanguages), nameof(MovieDetailsDto.Languages), Use = nameof(MapLanguagesList))]
-        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieDetailsDto.Features), Use = nameof(MapFeaturesList))] 
+        [MapProperty(nameof(Movie.PosterImage), 
+            nameof(MovieDetailsDto.PosterUrl), 
+            Use = nameof(MapPosterUrl))]
+        [MapProperty(nameof(Movie.MovieGenres), 
+            nameof(MovieDetailsDto.Genres), 
+            Use = nameof(MapGenresList))]
+        [MapProperty(nameof(Movie.MovieCasts), 
+            nameof(MovieDetailsDto.Actors), 
+            Use = nameof(MapActorsList))]
+        [MapProperty(nameof(Movie.MovieDirectors), 
+            nameof(MovieDetailsDto.Directors), 
+            Use = nameof(MapDirectorsList))]
+        [MapProperty(nameof(Movie.MovieLanguages), 
+            nameof(MovieDetailsDto.Languages), 
+            Use = nameof(MapLanguagesList))]
+        [MapProperty(nameof(Movie.MovieFeatures), 
+            nameof(MovieDetailsDto.Features), 
+            Use = nameof(MapFeaturesList))] 
         public partial MovieDetailsDto ToDetailsDto(Movie movie);
 
-        [MapProperty(nameof(Movie.PosterImage), nameof(MovieFormDto.PosterUrl))]
-        [MapProperty(nameof(Movie.MovieGenres), nameof(MovieFormDto.GenreIds), Use = nameof(MapGenreIds))]
-        [MapProperty(nameof(Movie.MovieCasts), nameof(MovieFormDto.CastIds), Use = nameof(MapCastIds))]
-        [MapProperty(nameof(Movie.MovieDirectors), nameof(MovieFormDto.DirectorIds), Use = nameof(MapDirectorIds))]
-        [MapProperty(nameof(Movie.MovieLanguages), nameof(MovieFormDto.LanguageIds), Use = nameof(MapLanguageIds))]
-        [MapProperty(nameof(Movie.MovieFeatures), nameof(MovieFormDto.FeatureIds), Use = nameof(MapFeatureIds))]
+        [MapProperty(nameof(Movie.PosterImage), 
+            nameof(MovieFormDto.PosterUrl))]
+        [MapProperty(nameof(Movie.MovieGenres), 
+            nameof(MovieFormDto.GenreIds), 
+            Use = nameof(MapGenreIds))]
+        [MapProperty(nameof(Movie.MovieCasts), 
+            nameof(MovieFormDto.CastIds), 
+            Use = nameof(MapCastIds))]
+        [MapProperty(nameof(Movie.MovieDirectors), 
+            nameof(MovieFormDto.DirectorIds), 
+            Use = nameof(MapDirectorIds))]
+        [MapProperty(nameof(Movie.MovieLanguages), 
+            nameof(MovieFormDto.LanguageIds), 
+            Use = nameof(MapLanguageIds))]
+        [MapProperty(nameof(Movie.MovieFeatures), 
+            nameof(MovieFormDto.FeatureIds), 
+            Use = nameof(MapFeatureIds))]
         public partial MovieFormDto ToFormDto(Movie movie);
 
         public partial Movie ToEntity(MovieFormDto dto);
@@ -59,34 +94,43 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Feature.Name), nameof(FeatureDto.Name))]
         public partial FeatureDto ToFeatureDto(Feature feature);
 
-        [MapProperty(nameof(Genre.GenreId), nameof(GenreDto.GenreId))]
-        [MapProperty(nameof(Genre.GenreName), nameof(GenreDto.GenreName))]
+        [MapProperty(nameof(Genre.GenreId), 
+            nameof(GenreDto.GenreId))]
+        [MapProperty(nameof(Genre.GenreName), 
+            nameof(GenreDto.GenreName))]
         public partial GenreDto ToGenreDto(Genre genre);
 
-        [MapProperty(nameof(Language.LanguageId), nameof(LanguageDto.LanguageId))]
-        [MapProperty(nameof(Language.LanguageName), nameof(LanguageDto.LanguageName))]
+        [MapProperty(nameof(Language.LanguageId), 
+            nameof(LanguageDto.LanguageId))]
+        [MapProperty(nameof(Language.LanguageName), 
+            nameof(LanguageDto.LanguageName))]
         public partial LanguageDto ToLanguageDto(Language language);
 
         public PersonDto ToPersonDto(CastMember actor) =>
-            new PersonDto { Id = actor.CastId, FullName = $"{actor.CastFirstName} {actor.CastLastName}" };
+            new PersonDto { Id = actor.CastId, FullName = 
+                $"{actor.CastFirstName} {actor.CastLastName}" };
 
         public PersonDto ToPersonDto(Director director) =>
-            new PersonDto { Id = director.DirectorId, FullName = $"{director.DirectorFirstName} {director.DirectorLastName}" };
+            new PersonDto { Id = director.DirectorId, FullName = 
+                $"{director.DirectorFirstName} {director.DirectorLastName}" };
 
         private string MapPosterUrl(string? posterImage) =>
             string.IsNullOrEmpty(posterImage) ? PlaceholderImage : posterImage;
 
         private string MapGenreSummary(ICollection<MovieGenre> genres) =>
-            genres == null ? "" : string.Join(", ", genres.Select(mg => mg.Genre.GenreName).Take(2));
+            genres == null ? "" : string.Join(", ", genres
+                .Select(mg => mg.Genre.GenreName).Take(2));
 
         private List<string> MapGenresList(ICollection<MovieGenre> genres) =>
             genres.Select(mg => mg.Genre.GenreName).ToList();
 
         private List<string> MapActorsList(ICollection<MovieCast> casts) =>
-            casts.Select(mc => $"{mc.CastMember.CastFirstName} {mc.CastMember.CastLastName}").ToList();
+            casts.Select(mc => $"{mc.CastMember.CastFirstName} " +
+            $"{mc.CastMember.CastLastName}").ToList();
 
         private List<string> MapDirectorsList(ICollection<DirectorMovie> directors) =>
-            directors.Select(md => $"{md.Director.DirectorFirstName} {md.Director.DirectorLastName}").ToList();
+            directors.Select(md => $"{md.Director.DirectorFirstName} " +
+            $"{md.Director.DirectorLastName}").ToList();
 
         private List<string> MapLanguagesList(ICollection<LanguageMovie> languages) =>
             languages.Select(ml => ml.Language.LanguageName).ToList();

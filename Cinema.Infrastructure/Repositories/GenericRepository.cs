@@ -10,7 +10,8 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class GenericRepository<T> : IGenericRepository<T> where T : class
+    public class GenericRepository<T> 
+        : IGenericRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
         internal DbSet<T> dbSet;
@@ -31,7 +32,9 @@ namespace onlineCinema.Infrastructure.Repositories
             return await dbSet.FindAsync(id);
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>>? filter = null, string? includeProperties = null)
+        public async Task<IEnumerable<T>> GetAllAsync(
+            Expression<Func<T, bool>>? filter = null, 
+            string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
 
@@ -43,7 +46,8 @@ namespace onlineCinema.Infrastructure.Repositories
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties
-                    .Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries))
+                    .Split(new char[] { ',' }, 
+                        StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProp);
                 }

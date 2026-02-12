@@ -6,11 +6,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class HallRepository : GenericRepository<Hall>, IHallRepository
+    public class HallRepository 
+        : GenericRepository<Hall>, IHallRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public HallRepository(ApplicationDbContext db) : base(db)
+        public HallRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }
@@ -74,7 +76,9 @@ namespace onlineCinema.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task UpdateWithFeaturesAsync(Hall hall, List<int> selectedFeatureIds)
+        public async Task UpdateWithFeaturesAsync(
+            Hall hall, 
+            List<int> selectedFeatureIds)
         {
             var existingHall = await _db.Halls
                 .Include(h => h.HallFeatures)

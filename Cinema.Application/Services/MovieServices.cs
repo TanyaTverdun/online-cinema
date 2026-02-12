@@ -21,7 +21,10 @@ namespace onlineCinema.Application.Services
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly MovieMapping _mapper;
 
-        public MovieService(IUnitOfWork unitOfWork, IWebHostEnvironment webHostEnvironment, MovieMapping mapper)
+        public MovieService(
+            IUnitOfWork unitOfWork, 
+            IWebHostEnvironment webHostEnvironment, 
+            MovieMapping mapper)
         {
             _unitOfWork = unitOfWork;
             _webHostEnvironment = webHostEnvironment;
@@ -30,7 +33,8 @@ namespace onlineCinema.Application.Services
 
         public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
         {
-            var movies = await _unitOfWork.Movie.GetAllAsync(includeProperties: "MovieFeatures");
+            var movies = await _unitOfWork.Movie
+                .GetAllAsync(includeProperties: "MovieFeatures");
 
             return _mapper.MapToDtoList(movies);
         }
@@ -75,19 +79,24 @@ namespace onlineCinema.Application.Services
             var response = new MovieDropdownsDto();
 
             var genres = await _unitOfWork.Genre.GetAllAsync();
-            response.Genres = genres.Select(g => _mapper.ToGenreDto(g)).ToList();
+            response.Genres = genres
+                .Select(g => _mapper.ToGenreDto(g)).ToList();
 
             var actors = await _unitOfWork.CastMember.GetAllAsync();
-            response.Actors = actors.Select(a => _mapper.ToPersonDto(a)).ToList();
+            response.Actors = actors
+                .Select(a => _mapper.ToPersonDto(a)).ToList();
 
             var directors = await _unitOfWork.Director.GetAllAsync();
-            response.Directors = directors.Select(d => _mapper.ToPersonDto(d)).ToList();
+            response.Directors = directors
+                .Select(d => _mapper.ToPersonDto(d)).ToList();
 
             var languages = await _unitOfWork.Language.GetAllAsync();
-            response.Languages = languages.Select(l => _mapper.ToLanguageDto(l)).ToList();
+            response.Languages = languages
+                .Select(l => _mapper.ToLanguageDto(l)).ToList();
 
             var features = await _unitOfWork.Feature.GetAllAsync();
-            response.Features = features.Select(f => _mapper.ToFeatureDto(f)).ToList();
+            response.Features = features
+                .Select(f => _mapper.ToFeatureDto(f)).ToList();
 
             return response;
         }
@@ -113,7 +122,8 @@ namespace onlineCinema.Application.Services
 
         public async Task UpdateMovieAsync(MovieFormDto model)
         {
-            var movieFromDb = await _unitOfWork.Movie.GetByIdWithAllDetailsAsync(model.Id);
+            var movieFromDb = await _unitOfWork.Movie
+                .GetByIdWithAllDetailsAsync(model.Id);
             if (movieFromDb == null)
             {
                 return;
@@ -169,7 +179,11 @@ namespace onlineCinema.Application.Services
                 var names = SplitInput(model.GenresInput);
                 foreach (var name in names)
                 {
-                    var existing = (await _unitOfWork.Genre.GetAllAsync(x => x.GenreName.ToLower() == name.ToLower())).FirstOrDefault();
+                    var existing = (await _unitOfWork.Genre
+                        .GetAllAsync(x => x.GenreName
+                        .ToLower() == name.ToLower()))
+                        .FirstOrDefault();
+
                     if (existing != null)
                     {
                         allIds.Add(existing.GenreId);
@@ -200,7 +214,9 @@ namespace onlineCinema.Application.Services
                 foreach (var fullName in names)
                 {
                     var (first, last) = ParseName(fullName);
-                    var existing = (await _unitOfWork.CastMember.GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower() && x.CastLastName.ToLower() == last.ToLower())).FirstOrDefault();
+                    var existing = (await _unitOfWork.CastMember
+                        .GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower() 
+                            && x.CastLastName.ToLower() == last.ToLower())).FirstOrDefault();
 
                     if (existing != null)
                     {
@@ -232,7 +248,9 @@ namespace onlineCinema.Application.Services
                 foreach (var fullName in names)
                 {
                     var (first, last) = ParseName(fullName);
-                    var existing = (await _unitOfWork.Director.GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower() && x.DirectorLastName.ToLower() == last.ToLower())).FirstOrDefault();
+                    var existing = (await _unitOfWork.Director
+                        .GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower() 
+                            && x.DirectorLastName.ToLower() == last.ToLower())).FirstOrDefault();
 
                     if (existing != null)
                     {
@@ -263,7 +281,9 @@ namespace onlineCinema.Application.Services
                 var names = SplitInput(model.LanguagesInput);
                 foreach (var name in names)
                 {
-                    var existing = (await _unitOfWork.Language.GetAllAsync(x => x.LanguageName.ToLower() == name.ToLower())).FirstOrDefault();
+                    var existing = (await _unitOfWork.Language
+                        .GetAllAsync(x => x.LanguageName.ToLower() == name.ToLower()))
+                        .FirstOrDefault();
                     if (existing != null)
                     {
                         allIds.Add(existing.LanguageId);
@@ -286,7 +306,8 @@ namespace onlineCinema.Application.Services
 
         private string[] SplitInput(string input)
         {
-            return input.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            return input.Split(',', StringSplitOptions.RemoveEmptyEntries 
+                | StringSplitOptions.TrimEntries);
         }
 
         private (string First, string Last) ParseName(string fullName)
@@ -305,7 +326,8 @@ namespace onlineCinema.Application.Services
         private async Task<string> SaveImageAsync(IFormFile file)
         {
             string wwwRootPath = _webHostEnvironment.WebRootPath;
-            string fileName = Guid.NewGuid().ToString() + Path.GetExtension(file.FileName);
+            string fileName = Guid.NewGuid().ToString() 
+                + Path.GetExtension(file.FileName);
             string folderPath = Path.Combine(wwwRootPath, @"images\movies");
 
             if (!Directory.Exists(folderPath))
@@ -313,7 +335,8 @@ namespace onlineCinema.Application.Services
                 Directory.CreateDirectory(folderPath);
             }
 
-            using (var fileStream = new FileStream(Path.Combine(folderPath, fileName), FileMode.Create))
+            using (var fileStream = new FileStream(
+                Path.Combine(folderPath, fileName), FileMode.Create))
             {
                 await file.CopyToAsync(fileStream);
             }
@@ -328,7 +351,10 @@ namespace onlineCinema.Application.Services
                 return;
             }
 
-            var imagePath = Path.Combine(_webHostEnvironment.WebRootPath, imageUrl.TrimStart('\\', '/'));
+            var imagePath = Path
+                .Combine(
+                _webHostEnvironment.WebRootPath, 
+                imageUrl.TrimStart('\\', '/'));
             if (File.Exists(imagePath))
             {
                 File.Delete(imagePath);
@@ -343,7 +369,9 @@ namespace onlineCinema.Application.Services
                 var names = SplitInput(model.FeaturesInput);
                 foreach (var name in names)
                 {
-                    var existing = (await _unitOfWork.Feature.GetAllAsync(x => x.Name.ToLower() == name.ToLower())).FirstOrDefault();
+                    var existing = (await _unitOfWork.Feature
+                        .GetAllAsync(x => x.Name.ToLower() == name.ToLower()))
+                        .FirstOrDefault();
                     if (existing != null)
                     {
                         allIds.Add(existing.Id);

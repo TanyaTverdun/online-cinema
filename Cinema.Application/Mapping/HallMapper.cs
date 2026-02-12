@@ -10,7 +10,9 @@ namespace onlineCinema.Application.Mapping
         private List<int> MapFeaturesToIds(ICollection<HallFeature> features)
             => features.Select(f => f.FeatureId).ToList();
 
-        [MapProperty(nameof(Hall.HallFeatures), nameof(HallDto.FeatureIds), Use = nameof(MapFeaturesToIds))]
+        [MapProperty(nameof(Hall.HallFeatures), 
+            nameof(HallDto.FeatureIds), 
+            Use = nameof(MapFeaturesToIds))]
 
         [MapProperty(nameof(Hall.HallId), nameof(HallDto.Id))]
         private partial HallDto MapToHallDtoBase(Hall hall);
@@ -24,7 +26,8 @@ namespace onlineCinema.Application.Mapping
                 .ToList() ?? new List<string>();
             if (hall.HallFeatures != null && hall.HallFeatures.Any())
             {
-                dto.FeatureIds = hall.HallFeatures.Select(hf => hf.FeatureId).ToList();
+                dto.FeatureIds = hall.HallFeatures
+                    .Select(hf => hf.FeatureId).ToList();
             }
 
             return dto;

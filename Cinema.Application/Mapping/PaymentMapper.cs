@@ -8,7 +8,9 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class PaymentMapper
     {
-        public Payment CreateCompletedPayment(int bookingId, decimal amount)
+        public Payment CreateCompletedPayment(
+            int bookingId, 
+            decimal amount)
         {
             return new Payment
             {
@@ -22,7 +24,8 @@ namespace onlineCinema.Application.Mapping
         [MapProperty("Booking.EmailAddress", "UserEmail")]
         public partial PaymentAdminDto MapToDto(Payment payment);
 
-        public List<PaymentAdminDto> MapToDtoList(IEnumerable<Payment> payments)
+        public List<PaymentAdminDto> 
+            MapToDtoList(IEnumerable<Payment> payments)
         {
             return payments.Select(p => {
                 var dto = MapToDto(p);
@@ -31,8 +34,12 @@ namespace onlineCinema.Application.Mapping
 
                 dto.OrderDate = booking?.CreatedDateTime ?? p.PaymentDate;
 
-                dto.MovieTitle = firstTicket?.Session?.Movie?.Title ?? "Без фільму";
-                dto.MovieSessionDateTime = firstTicket?.Session?.ShowingDateTime ?? DateTime.MinValue;
+                dto.MovieTitle = 
+                    firstTicket?.Session?.Movie?.Title ?? "Без фільму";
+
+                dto.MovieSessionDateTime = 
+                    firstTicket?.Session?.ShowingDateTime ?? DateTime.MinValue;
+
                 dto.TicketCount = booking?.Tickets.Count ?? 0;
 
                 dto.TicketsInfo = booking?.Tickets

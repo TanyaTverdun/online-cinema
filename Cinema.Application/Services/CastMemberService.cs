@@ -10,7 +10,9 @@ public class CastMemberService : ICastMemberService
     private readonly IUnitOfWork _unitOfWork;
     private readonly CastMemberMapping _mapper;
 
-    public CastMemberService(IUnitOfWork unitOfWork, CastMemberMapping mapper)
+    public CastMemberService(
+        IUnitOfWork unitOfWork, 
+        CastMemberMapping mapper)
     {
         _unitOfWork = unitOfWork;
         _mapper = mapper;
@@ -19,12 +21,14 @@ public class CastMemberService : ICastMemberService
     public async Task<IEnumerable<CastMemberDto>> GetAllAsync()
     {
         var entities = await _unitOfWork.CastMember.GetAllAsync();
+
         return _mapper.MapToDtoList(entities);
     }
 
     public async Task<CastMemberDto?> GetByIdAsync(int id)
     {
         var entity = await _unitOfWork.CastMember.GetByIdAsync(id);
+
         return entity != null ? _mapper.MapToDto(entity) : null;
     }
 

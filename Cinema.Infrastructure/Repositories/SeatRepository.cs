@@ -10,11 +10,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class SeatRepository : GenericRepository<Seat>, ISeatRepository
+    public class SeatRepository 
+        : GenericRepository<Seat>, ISeatRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public SeatRepository(ApplicationDbContext db) : base(db)
+        public SeatRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }
