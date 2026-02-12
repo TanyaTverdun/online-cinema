@@ -29,9 +29,9 @@ namespace onlineCinema.Mapping
         public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
 
         public ProfileViewModel ToProfileViewModel(
-    ApplicationUser user,
-    PagedResultDto<BookingHistoryDto> bookings,
-    string? returnUrl = null)
+            ApplicationUser user,
+            PagedResultDto<BookingHistoryDto> bookings,
+            string? returnUrl = null)
         {
             var viewModel = ToProfileViewModelBase(user);
 
