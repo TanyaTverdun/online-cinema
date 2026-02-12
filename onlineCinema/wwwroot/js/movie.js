@@ -1,109 +1,138 @@
-﻿var dataTable;
-
+﻿
 $(document).ready(function () {
-    loadDataTable();
+    MovieController.init();
 });
 
-function loadDataTable() {
-    dataTable = $('#tblData').DataTable({
-        "ajax": {
-            "url": "/Admin/Movie/GetAll"
-        },
-        "autoWidth": false, 
-        "columns": [
-            {
-                "data": "posterUrl",
-                "className": "py-3 ps-3",
-                "render": function (data) {
-                    var imgUrl = data ? data : '/images/no-poster.png';
-                    return `<img src="${imgUrl}" alt="Poster" class="rounded border border-secondary"
-                                 style="width: 50px; height: 75px; object-fit: cover;">`;
+const MovieController = {
+    dataTable: null,
+
+    init: function () {
+        this.loadDataTable();
+        this.registerEvents();
+    },
+
+    loadDataTable: function () {
+        const table = $('#tblData');
+        const url = table.data('load-url'); 
+        this.dataTable = table.DataTable({
+            "ajax": {
+                "url": url,
+                "type": "GET",
+                "datatype": "json"
+            },
+            "autoWidth": false,
+            "columns": [
+                {
+                    "data": "posterUrl",
+                    "className": "py-3 ps-3",
+                    "render": (data) => {
+                        const imgUrl = data || '/images/no-poster.png';
+                        return `<img src="${imgUrl}" alt="Poster" class="rounded border border-secondary"
+                                     style="width: 50px; height: 75px; object-fit: cover;">`;
+                    },
+                    "width": "80px",
+                    "orderable": false
                 },
-                "width": "60px",
-                "orderable": false
-            },
-            {
-                "data": "title",
-                "render": function (data, type, row) {
-                    return `
-                        <div class="fw-bold text-white">${data}</div>
-                        <small class="text-white opacity-75">${row.genreSummary}</small>
-                    `;
+                {
+                    "data": "title",
+                    "render": (data, type, row) => {
+                        return `
+                            <div class="fw-bold">${data}</div>
+                            <small class="opacity-75">${row.genreSummary}</small>
+                        `;
+                    },
+                    "width": "30%"
                 },
-                "width": "35%"
-            },
-            {
-                "data": "releaseYear",
-                "className": "text-white",
-                "width": "10%"
-            },
-            {
-                "data": "rating",
-                "className": "text-white",
-                "width": "10%",
-                "render": function (data) {
-                   
-                    if (!data || data === 0) {
+                { "data": "releaseYear", "width": "10%" },
+                {
+                    "data": "rating",
+                    "width": "10%",
+                    "render": (data) => {
+                        if (data > 0) {
+                            return `<span class="badge bg-warning text-dark border border-warning">
+                                      <i class="bi bi-star-fill me-1"></i>${parseFloat(data).toFixed(1)}
+                                    </span>`;
+                        }
                         return `<span class="text-muted small">-</span>`;
                     }
-                    return `<span class="badge bg-warning text-dark border border-warning"><i class="bi bi-star-fill me-1"></i>${parseFloat(data).toFixed(1)}</span>`;
-                }
-            },
-            {
-                "data": "status",
-                "render": function (data) {
-                    if (data === 2) {
-                        return `<span class="badge bg-success bg-opacity-10 text-success border border-success">Released</span>`;
-                    } else if (data === 1) {
-                        return `<span class="badge bg-warning bg-opacity-10 text-warning border border-warning">Coming Soon</span>`;
-                    } else {
-                        return `<span class="badge bg-secondary">Unknown</span>`;
-                    }
                 },
-                "width": "15%"
-            },
-            {
-                "data": "id",
-                "className": "text-end pe-3",
-                "render": function (data) {
-                    return `
-                        <div class="btn-group">
-                            <a href="/Admin/Movie/Edit/${data}" class="btn btn-sm btn-outline-info">
-                                <i class="bi bi-pencil-square"></i>
-                            </a>
-                            <a onClick=Delete('/Admin/Movie/Delete/${data}') class="btn btn-sm btn-outline-danger" style="cursor:pointer;">
-                                <i class="bi bi-trash"></i>
-                            </a>
-                        </div>
-                    `
-                },
-                "width": "10%",
-                "orderable": false
-            }
-        ],
-        "language": {
-            "emptyTable": "No movies found. Click 'Add New Movie' to start.",
-            "search": "", 
-            "searchPlaceholder": "Search movies...",
-            "lengthMenu": "Show _MENU_ entries"
-        },
-        "order": [[2, "desc"]] 
-    });
-}
+                {
+                    "data": "status",
+                    "render": (data) => {
+                       
+                        const statusMap = {
+                            2: { text: 'Released', class: 'success' },
+                            1: { text: 'Coming Soon', class: 'warning' }
+                        };
 
-function Delete(url) {
-    if (confirm("Are you sure you want to archive this movie?")) {
+                        const state = statusMap[data] || { text: 'Unknown', class: 'secondary' };
+
+                     
+                        const extraClasses = state.class !== 'secondary'
+                            ? `bg-opacity-10 text-${state.class} border border-${state.class}`
+                            : '';
+
+                        return `<span class="badge bg-${state.class} ${extraClasses}">${state.text}</span>`;
+                    },
+                    "width": "15%"
+                },
+                {
+                    "data": "id",
+                    "className": "text-end pe-3",
+                    "render": (data) => {
+                       
+                        return `
+                            <div class="btn-group">
+                                <a href="/Admin/Movie/Edit/${data}" class="btn btn-sm btn-outline-info">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <button type="button" class="btn btn-sm btn-outline-danger js-delete" data-id="${data}">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            </div>
+                        `;
+                    },
+                    "width": "15%",
+                    "orderable": false
+                }
+            ],
+            "language": {
+                "emptyTable": "No movies found. Click 'Add New Movie' to start.",
+                "search": "",
+                "searchPlaceholder": "Search movies..."
+            },
+            "order": [[2, "desc"]]
+        });
+    },
+
+    registerEvents: function () {
+        
+        $('#tblData').on('click', '.js-delete', (e) => {
+            const button = $(e.currentTarget); 
+            const id = button.data('id');
+
+          
+            if (confirm("Are you sure you want to archive this movie?")) {
+                this.deleteMovie(id);
+            }
+        });
+    },
+
+    deleteMovie: function (id) {
         $.ajax({
-            type: "DELETE",
-            url: url,
-            success: function (data) {
+            url: `/Admin/Movie/Delete/${id}`, 
+            type: 'DELETE',
+            success: (data) => {
                 if (data.success) {
-                    dataTable.ajax.reload();
+                    this.dataTable.ajax.reload();
+                   
+                } else {
+                    alert(data.message); 
                 }
-                else {
-                    alert(data.message);
-                }
+            },
+            error: function () {
+                alert("Error while deleting");
             }
         });
     }
-}
+};
