@@ -25,16 +25,20 @@ namespace onlineCinema.Application.Services
         }
 
         public async Task<PagedResult<PaymentAdminDto>> GetPaymentsForAdminAsync(
-            int? lastId, string? email, string? movie, DateTime? date)
+            int? lastId, 
+            string? email, 
+            string? movie, 
+            DateTime? date)
         {
             int pageSize = _settings.AdminPageSize;
 
-            var (entities, totalCount) = await _unitOfWork.Payment.GetPaymentsSeekAsync(
-                lastId, 
-                pageSize, 
-                email, 
-                movie, 
-                date);
+            var (entities, totalCount) = await _unitOfWork.Payment
+                .GetPaymentsSeekAsync(
+                    lastId, 
+                    pageSize, 
+                    email, 
+                    movie, 
+                    date);
 
             return _mapper.MapToPagedResult(entities, totalCount, pageSize);
         }

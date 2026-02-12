@@ -5,11 +5,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class BookingRepository : GenericRepository<Booking>, IBookingRepository
+    public class BookingRepository 
+        : GenericRepository<Booking>, IBookingRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public BookingRepository(ApplicationDbContext db) : base(db)
+        public BookingRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }
@@ -37,7 +39,8 @@ namespace onlineCinema.Infrastructure.Repositories
           
             foreach (var existingSnack in existingBooking.SnackBookings.ToList())
             {
-                if (!newBookingData.SnackBookings.Any(ns => ns.SnackId == existingSnack.SnackId))
+                if (!newBookingData.SnackBookings
+                    .Any(ns => ns.SnackId == existingSnack.SnackId))
                 {
                     _db.Entry(existingSnack).State = EntityState.Deleted; 
                 }
@@ -64,7 +67,8 @@ namespace onlineCinema.Infrastructure.Repositories
             foreach (var existingTicket in existingBooking.Tickets.ToList())
             {
                 
-                if (!newBookingData.Tickets.Any(nt => nt.SeatId == existingTicket.SeatId))
+                if (!newBookingData.Tickets
+                    .Any(nt => nt.SeatId == existingTicket.SeatId))
                 {
                     _db.Entry(existingTicket).State = EntityState.Deleted;
                 }
@@ -85,7 +89,16 @@ namespace onlineCinema.Infrastructure.Repositories
             }
         }
 
-        public async Task<(IEnumerable<Booking> Items, int TotalCount, bool HasNext, bool HasPrevious)> GetUserBookingsSeekAsync(string userId, int? lastId, int? firstId, int pageSize)
+        public async Task<(
+            IEnumerable<Booking> Items, 
+            int TotalCount, 
+            bool HasNext, 
+            bool HasPrevious)> 
+            GetUserBookingsSeekAsync(
+                string userId, 
+                int? lastId, 
+                int? firstId, 
+                int pageSize)
         {
             var query = _db.Bookings.Where(b => b.ApplicationUserId == userId);
             int totalCount = await query.CountAsync();
@@ -94,11 +107,15 @@ namespace onlineCinema.Infrastructure.Repositories
 
             if (lastId.HasValue)
             {
-                dataQuery = dataQuery.Where(b => b.BookingId < lastId.Value).OrderByDescending(b => b.BookingId);
+                dataQuery = dataQuery
+                    .Where(b => b.BookingId < lastId.Value)
+                    .OrderByDescending(b => b.BookingId);
             }
             else if (firstId.HasValue)
             {
-                dataQuery = dataQuery.Where(b => b.BookingId > firstId.Value).OrderBy(b => b.BookingId);
+                dataQuery = dataQuery
+                    .Where(b => b.BookingId > firstId.Value)
+                    .OrderBy(b => b.BookingId);
             }
             else
             {
@@ -107,10 +124,16 @@ namespace onlineCinema.Infrastructure.Repositories
 
             var items = await dataQuery
                 .Include(b => b.Payment)
-                .Include(b => b.Tickets).ThenInclude(t => t.Seat)
-                .Include(b => b.Tickets).ThenInclude(t => t.Session).ThenInclude(s => s.Movie)
-                .Include(b => b.Tickets).ThenInclude(t => t.Session).ThenInclude(s => s.Hall)
-                .Include(b => b.SnackBookings).ThenInclude(sb => sb.Snack)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Seat)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Session)
+                        .ThenInclude(s => s.Movie)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Session)
+                        .ThenInclude(s => s.Hall)
+                .Include(b => b.SnackBookings)
+                    .ThenInclude(sb => sb.Snack)
                 .Take(pageSize)
                 .ToListAsync();
 
@@ -127,14 +150,19 @@ namespace onlineCinema.Infrastructure.Repositories
                 var currentMaxId = items.First().BookingId;
                 var currentMinId = items.Last().BookingId;
 
-                hasNext = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId < currentMinId);
+                hasNext = await _db.Bookings
+                    .AnyAsync(b => b.ApplicationUserId == userId 
+                        && b.BookingId < currentMinId);
 
-                hasPrevious = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId > currentMaxId);
+                hasPrevious = await _db.Bookings
+                    .AnyAsync(b => b.ApplicationUserId == userId 
+                        && b.BookingId > currentMaxId);
             }
 
             return (items, totalCount, hasNext, hasPrevious);
         }
-        public async Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId)
+        public async Task<IEnumerable<Booking>> 
+            GetUserBookingsWithDetailsAsync(string userId)
         {
             return await _db.Bookings
                 .Where(b => b.ApplicationUserId == userId)

@@ -1,14 +1,11 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using Microsoft.Extensions.Options;
+using onlineCinema.Application.Configurations;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace onlineCinema.Application.Services
 {
@@ -17,15 +14,18 @@ namespace onlineCinema.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly HallMapper _mapper;
         private readonly SeatMapper _seatMapper;
+        private readonly PricingSettings _settings;
 
         public HallService(
             IUnitOfWork unitOfWork, 
             HallMapper hallMapper, 
-            SeatMapper seatMapper)
+            SeatMapper seatMapper,
+            IOptions<PricingSettings> settings)
         {
             _unitOfWork = unitOfWork;
             _mapper = hallMapper;
             _seatMapper = seatMapper;
+            _settings = settings.Value;
         }
 
         public async Task<HallDto?> CreateHallAsync(HallDto hallDto)
@@ -37,7 +37,8 @@ namespace onlineCinema.Application.Services
             }
             if (hallDto.VipRowCount > hallDto.RowCount)
             {
-                throw new ArgumentException("VIP рядів не може бути більше ніж загальна кількість рядів.");
+                throw new ArgumentException("VIP рядів не може бути " +
+                    "більше ніж загальна кількість рядів.");
             }
 
             var hallEntity = _mapper.MapToEntity(hallDto);
@@ -77,7 +78,8 @@ namespace onlineCinema.Application.Services
             
             if (hallDto.VipRowCount > hallDto.RowCount)
             {
-                throw new ArgumentException("VIP рядів не може бути більше ніж загальна кількість рядів.");
+                throw new ArgumentException("VIP рядів не може бути більше " +
+                    "ніж загальна кількість рядів.");
             }
             bool geometryChanged =
                 existing.RowCount != hallDto.RowCount ||
@@ -155,7 +157,8 @@ namespace onlineCinema.Application.Services
                 bool isVipRow = row > startVipRow;
 
                 SeatType type = isVipRow ? SeatType.VIP : SeatType.Standard;
-                float coef = isVipRow ? dto.VipCoefficient : 1.0f;
+                float coef = isVipRow ? dto.VipCoefficient 
+                    : _settings.DefaultVipCoefficient;
 
                 for (byte number = 1; number <= hall.SeatInRowCount; number++)
                 {

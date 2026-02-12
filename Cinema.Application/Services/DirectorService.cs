@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Application.Services
 {
@@ -16,7 +10,9 @@ namespace onlineCinema.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly DirectorMapping _mapper;
 
-        public DirectorService(IUnitOfWork unitOfWork, DirectorMapping mapper)
+        public DirectorService(
+            IUnitOfWork unitOfWork, 
+            DirectorMapping mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
@@ -26,13 +22,13 @@ namespace onlineCinema.Application.Services
         {
             var directors = await _unitOfWork.Director.GetAllAsync();
             var dtos = _mapper.ToDtoList(directors);
+
             return dtos;
         }
 
         public async Task<DirectorFormDto?> GetByIdAsync(int id)
         {
             var director = await _unitOfWork.Director.GetByIdAsync(id);
-
             var dto = _mapper.ToDto(director);
 
             return dto;

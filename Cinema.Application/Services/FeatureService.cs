@@ -12,7 +12,9 @@ namespace onlineCinema.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly FeatureMapping _mapper;
 
-        public FeatureService(IUnitOfWork unitOfWork, FeatureMapping mapper)
+        public FeatureService(
+            IUnitOfWork unitOfWork, 
+            FeatureMapping mapper)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;

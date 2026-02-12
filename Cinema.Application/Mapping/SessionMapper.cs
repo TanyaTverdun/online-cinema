@@ -39,10 +39,14 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Movie.Runtime), nameof(MovieScheduleDto.Runtime))]
         public partial MovieScheduleDto MapMovieToScheduleDtoBase(Movie movie);
 
-        [MapProperty(nameof(Session.ShowingDateTime), nameof(SessionScheduleDto.StartDateTime))]
-        [MapProperty(nameof(Session.BasePrice), nameof(SessionScheduleDto.BasePrice))]
-        [MapProperty(nameof(Session.Hall), nameof(SessionScheduleDto.HallName))]
-        [MapProperty(nameof(Session.Hall.HallFeatures), nameof(SessionScheduleDto.FeatureNames))]
+        [MapProperty(nameof(Session.ShowingDateTime), 
+            nameof(SessionScheduleDto.StartDateTime))]
+        [MapProperty(nameof(Session.BasePrice), 
+            nameof(SessionScheduleDto.BasePrice))]
+        [MapProperty(nameof(Session.Hall), 
+            nameof(SessionScheduleDto.HallName))]
+        [MapProperty(nameof(Session.Hall.HallFeatures), 
+            nameof(SessionScheduleDto.FeatureNames))]
         public partial SessionScheduleDto MapSessionToDto(Session session);
 
         private string MapHallToHallName(Hall hall)
@@ -54,14 +58,19 @@ namespace onlineCinema.Application.Mapping
                 .Select(hf => hf.Feature.Name)
                 .ToList();
 
-        [MapProperty(nameof(Session.SessionId), nameof(SessionDto.Id))]
-        [MapProperty(nameof(Session.Movie.Title), nameof(SessionDto.MovieTitle))]
-        [MapProperty(nameof(Session.Hall.HallNumber), nameof(SessionDto.HallNumber))]
+        [MapProperty(nameof(Session.SessionId), 
+            nameof(SessionDto.Id))]
+        [MapProperty(nameof(Session.Movie.Title), 
+            nameof(SessionDto.MovieTitle))]
+        [MapProperty(nameof(Session.Hall.HallNumber), 
+            nameof(SessionDto.HallNumber))]
         public partial SessionDto MapToDto(Session session);
 
-        public partial IEnumerable<SessionDto> MapToDtoList(IEnumerable<Session> sessions);
+        public partial IEnumerable<SessionDto> 
+            MapToDtoList(IEnumerable<Session> sessions);
 
         [MapperIgnoreTarget(nameof(Session.Tickets))]
-        public partial void UpdateEntityFromDto(SessionUpdateDto dto, Session session);
+        public partial void 
+            UpdateEntityFromDto(SessionUpdateDto dto, Session session);
     }
 }

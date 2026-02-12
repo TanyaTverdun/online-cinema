@@ -377,16 +377,16 @@ namespace onlineCinema.Controllers
                 new PagedResultDto<BookingHistoryItemViewModel>
             {
                 Items = pagedResultDto.Items
-                .Select(dto => 
-                _userMapping
-                .ToBookingHistoryItemViewModel(dto))
-                .ToList(),
-                TotalCount = pagedResultDto.TotalCount,
-                PageSize = pagedResultDto.PageSize,
-                HasNextPage = pagedResultDto.HasNextPage,
-                LastId = pagedResultDto.LastId,
-                FirstId = pagedResultDto.FirstId,
-                HasPreviousPage = pagedResultDto.HasPreviousPage
+                    .Select(dto => 
+                        _userMapping
+                            .ToBookingHistoryItemViewModel(dto))
+                            .ToList(),
+                        TotalCount = pagedResultDto.TotalCount,
+                        PageSize = pagedResultDto.PageSize,
+                        HasNextPage = pagedResultDto.HasNextPage,
+                        LastId = pagedResultDto.LastId,
+                        FirstId = pagedResultDto.FirstId,
+                        HasPreviousPage = pagedResultDto.HasPreviousPage
             };
         }
     }

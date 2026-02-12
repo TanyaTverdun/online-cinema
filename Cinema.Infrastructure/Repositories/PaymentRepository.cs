@@ -5,11 +5,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class PaymentRepository : GenericRepository<Payment>, IPaymentRepository
+    public class PaymentRepository 
+        : GenericRepository<Payment>, IPaymentRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public PaymentRepository(ApplicationDbContext db) : base(db)
+        public PaymentRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }
@@ -28,23 +30,26 @@ namespace onlineCinema.Infrastructure.Repositories
                 .FirstOrDefaultAsync(p => p.PaymentId == id);
         }
 
-        public async Task<(IEnumerable<Payment> Items, int TotalCount)> GetPaymentsSeekAsync(
-            int? lastId, 
-            int pageSize, 
-            string? email, 
-            string? movieTitle, 
-            DateTime? date)
+        public async Task<(IEnumerable<Payment> Items, int TotalCount)> 
+            GetPaymentsSeekAsync(
+                int? lastId, 
+                int pageSize, 
+                string? email, 
+                string? movieTitle, 
+                DateTime? date)
         {
             var baseQuery = dbSet.AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(email))
             {
-                baseQuery = baseQuery.Where(p => p.Booking.EmailAddress.Contains(email));
+                baseQuery = baseQuery
+                    .Where(p => p.Booking.EmailAddress.Contains(email));
             }
 
             if (date.HasValue)
             {
-                baseQuery = baseQuery.Where(p => p.PaymentDate.Date == date.Value.Date);
+                baseQuery = baseQuery
+                    .Where(p => p.PaymentDate.Date == date.Value.Date);
             }
 
             if (!string.IsNullOrWhiteSpace(movieTitle))

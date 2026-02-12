@@ -9,11 +9,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class DirectorRepository : GenericRepository<Director>, IDirectorRepository
+    public class DirectorRepository 
+        : GenericRepository<Director>, IDirectorRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public DirectorRepository(ApplicationDbContext db) : base(db)
+        public DirectorRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }

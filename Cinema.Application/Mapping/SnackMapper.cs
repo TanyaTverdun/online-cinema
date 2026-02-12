@@ -15,13 +15,20 @@ namespace onlineCinema.Application.Mapping
         [MapProperty(nameof(Snack.SnackName), nameof(SnackDto.Name))]
         public partial SnackDto MapSnackToDto(Snack snack);
 
-        public partial List<SnackDto> MapSnacksToDtos(IEnumerable<Snack> snacks);
+        public partial List<SnackDto> 
+            MapSnacksToDtos(IEnumerable<Snack> snacks);
 
-        public partial SnackBooking MapSelectedSnackDtoToEntity(SelectedSnackDto dto);
+        public partial SnackBooking 
+            MapSelectedSnackDtoToEntity(SelectedSnackDto dto);
 
-        public partial List<SnackBooking> MapSelectedSnackDtoToEntityList(List<SelectedSnackDto> dtos, int bookingId);
+        public partial List<SnackBooking> 
+            MapSelectedSnackDtoToEntityList(
+                List<SelectedSnackDto> dtos, 
+                int bookingId);
 
         public partial Snack MapToEntity(SnackDto dto);
-        public partial void UpdateEntityFromDto(SnackDto dto, Snack entity);
+        public partial void UpdateEntityFromDto(
+            SnackDto dto, 
+            Snack entity);
     }
 }

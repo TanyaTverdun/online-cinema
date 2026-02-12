@@ -1,4 +1,6 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using Microsoft.Extensions.Options;
+using onlineCinema.Application.Configurations;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -10,18 +12,22 @@ namespace onlineCinema.Application.Services
     {
         private readonly IUnitOfWork _unitOfWork;
         private readonly SessionMapper _mapper;
+        private readonly TimeSettings _settings;
 
         public SessionService(
             IUnitOfWork unitOfWork,
-            SessionMapper mapper)
+            SessionMapper mapper,
+            IOptions<TimeSettings> settings)
         {
             _unitOfWork = unitOfWork;
             _mapper = mapper;
+            _settings = settings.Value;
         }
 
         public async Task<SessionDto> GetByIdAsync(int id)
         {
-            var session = await _unitOfWork.Session.GetByIdWithMovieAndHallAsync(id);
+            var session = await _unitOfWork.Session
+                .GetByIdWithMovieAndHallAsync(id);
 
             if (session == null)
             {
@@ -39,7 +45,8 @@ namespace onlineCinema.Application.Services
                 throw new KeyNotFoundException($"Фільм з ID {movieId} не знайдено.");
             }
 
-            var sessions = await _unitOfWork.Session.GetFutureSessionsByMovieIdAsync(movieId);
+            var sessions = await _unitOfWork.Session
+                .GetFutureSessionsByMovieIdAsync(movieId);
 
             var scheduleDto = _mapper.MapToMovieSchedule(movie, sessions);
 
@@ -55,7 +62,8 @@ namespace onlineCinema.Application.Services
                 throw new KeyNotFoundException("Фільм не знайдено");
             }
 
-            int days = dto.GenerateForWeek ? 7 : 1;
+            int days = dto.GenerateForWeek ? _settings.DaysInWeek 
+                : _settings.OneDay;
 
             for (int i = 0; i < days; i++)
             {

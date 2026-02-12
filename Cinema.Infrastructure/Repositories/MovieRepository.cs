@@ -10,11 +10,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class MovieRepository : GenericRepository<Movie>, IMovieRepository
+    public class MovieRepository 
+        : GenericRepository<Movie>, IMovieRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public MovieRepository(ApplicationDbContext db) : base(db)
+        public MovieRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }
