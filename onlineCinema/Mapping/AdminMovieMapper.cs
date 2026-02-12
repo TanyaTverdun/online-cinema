@@ -10,10 +10,12 @@ namespace onlineCinema.Mapping
     public partial class AdminMovieMapper
     {
         [MapperIgnoreTarget(nameof(MovieFormDto.Runtime))]
-        private partial MovieFormDto MapToDtoBase(MovieFormViewModel viewModel);
+        private partial MovieFormDto MapToDtoBase(
+            MovieFormViewModel viewModel);
 
         [MapperIgnoreSource(nameof(MovieFormDto.Runtime))]
-        private partial MovieFormViewModel MapToViewModelBase(MovieFormDto dto);
+        private partial MovieFormViewModel MapToViewModelBase(
+            MovieFormDto dto);
 
         public MovieFormDto ToDto(MovieFormViewModel viewModel)
         {
@@ -34,23 +36,39 @@ namespace onlineCinema.Mapping
 
         public partial MovieItemViewModel ToViewModel(MovieCardDto dto);
 
-        [MapProperty(nameof(MovieDropdownsDto.Genres), nameof(MovieFormViewModel.GenresList))]
-        [MapProperty(nameof(MovieDropdownsDto.Actors), nameof(MovieFormViewModel.ActorsList))]
-        [MapProperty(nameof(MovieDropdownsDto.Directors), nameof(MovieFormViewModel.DirectorsList))]
-        [MapProperty(nameof(MovieDropdownsDto.Languages), nameof(MovieFormViewModel.LanguagesList))]
-        [MapProperty(nameof(MovieDropdownsDto.Features), nameof(MovieFormViewModel.FeaturesList))]
-        public partial void Fill(MovieDropdownsDto dto, MovieFormViewModel vm);
+        [MapProperty(
+            nameof(MovieDropdownsDto.Genres),
+            nameof(MovieFormViewModel.GenresList))]
+        [MapProperty(
+            nameof(MovieDropdownsDto.Actors), 
+            nameof(MovieFormViewModel.ActorsList))]
+        [MapProperty(
+            nameof(MovieDropdownsDto.Directors),
+            nameof(MovieFormViewModel.DirectorsList))]
+        [MapProperty(
+            nameof(MovieDropdownsDto.Languages), 
+            nameof(MovieFormViewModel.LanguagesList))]
+        [MapProperty(
+            nameof(MovieDropdownsDto.Features), 
+            nameof(MovieFormViewModel.FeaturesList))]
+        public partial void Fill(
+            MovieDropdownsDto dto,
+            MovieFormViewModel vm);
 
         private SelectListItem MapFeatureToItem(FeatureDto source)
             => new SelectListItem(source.Name, source.Id.ToString());
 
         private SelectListItem MapGenreToItem(GenreDto source)
-            => new SelectListItem(source.GenreName, source.GenreId.ToString());
+            => new SelectListItem(
+                source.GenreName,
+                source.GenreId.ToString());
 
         private SelectListItem MapPersonToItem(PersonDto source)
             => new SelectListItem(source.FullName, source.Id.ToString());
 
         private SelectListItem MapLanguageToItem(LanguageDto source)
-            => new SelectListItem(source.LanguageName, source.LanguageId.ToString());
+            => new SelectListItem(
+                source.LanguageName, 
+                source.LanguageId.ToString());
     }
 }

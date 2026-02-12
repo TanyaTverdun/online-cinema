@@ -13,7 +13,11 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IHallService _hallService;
         private readonly SessionViewModelMapper _sessionMapper;
 
-        public SessionController(ISessionService sessionService, IMovieService movieService, IHallService hallService, SessionViewModelMapper sessionMapper)
+        public SessionController(
+            ISessionService sessionService, 
+            IMovieService movieService,
+            IHallService hallService,
+            SessionViewModelMapper sessionMapper)
         {
             _sessionService = sessionService;
             _movieService = movieService;
@@ -24,7 +28,8 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var sessionDtos = await _sessionService.GetAllSessionsAsync();
-            var viewModels = _sessionMapper.MapToListViewModelList(sessionDtos);
+            var viewModels = _sessionMapper
+                .MapToListViewModelList(sessionDtos);
 
             return View("AllSessions", viewModels);
         }
@@ -48,24 +53,35 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             try
             {
-                await _sessionService.CreateSessionAsync(_sessionMapper.MapToCreateDto(vm));
+                await _sessionService.CreateSessionAsync(
+                    _sessionMapper.MapToCreateDto(vm));
+
                 return RedirectToAction(nameof(Index));
             }
             catch (InvalidOperationException ex)
             {
-                ModelState.AddModelError("ShowingDateTime", ex.Message);
-
-                await PopulateViewModelDropdowns(vm);
-                return View("Session", vm);
+                ModelState.AddModelError(
+                    "ShowingDateTime",
+                    ex.Message);
             }
-            catch (Exception ex)
+            catch (ArgumentException ex)
             {
-                ModelState.AddModelError("", ex.Message);
-
-                await PopulateViewModelDropdowns(vm);
-                return View("Session", vm);
+                ModelState.AddModelError(
+                    string.Empty,
+                    ex.Message);
             }
+            catch (KeyNotFoundException ex)
+            {
+                ModelState.AddModelError(
+                    string.Empty,
+                    ex.Message);
+            }
+
+            await PopulateViewModelDropdowns(vm);
+
+            return View("Session", vm);
         }
+
 
         [HttpGet]
         public async Task<IActionResult> Edit(int id)
@@ -105,7 +121,10 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             if (conflict)
             {
-                ModelState.AddModelError("ShowingDateTime", "У цьому залі вже є інший сеанс у цей час");
+                ModelState.AddModelError(
+                     "ShowingDateTime",
+                        "У цьому залі вже є інший сеанс у цей час");
+
 
                 await PopulateViewModelDropdowns(model);
                 return View("Session", model);
@@ -117,7 +136,6 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             return RedirectToAction(nameof(Index));
         }
-
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Delete(int id)
@@ -125,19 +143,26 @@ namespace onlineCinema.Areas.Admin.Controllers
             try
             {
                 await _sessionService.DeleteSessionAsync(id);
-                TempData["SuccessMessage"] = "Сеанс успішно видалено.";
+
+                TempData["SuccessMessage"] =
+                    "Сеанс успішно видалено.";
             }
             catch (InvalidOperationException ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
             }
-            catch (Exception)
+            catch (KeyNotFoundException ex)
             {
-                TempData["ErrorMessage"] = "Сталася помилка при видаленні сеансу.";
+                TempData["ErrorMessage"] = ex.Message;
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
             }
 
             return RedirectToAction(nameof(Index));
         }
+
 
         private async Task PopulateViewModelDropdowns(SessionViewModel vm)
         {

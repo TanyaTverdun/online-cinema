@@ -26,7 +26,8 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ProfileViewModel.ReturnUrl))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.NewPassword))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.ConfirmPassword))]
-        public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
+        public partial ProfileViewModel ToProfileViewModelBase(
+            ApplicationUser user);
 
         public ProfileViewModel ToProfileViewModel(
             ApplicationUser user,
@@ -35,9 +36,13 @@ namespace onlineCinema.Mapping
         {
             var viewModel = ToProfileViewModelBase(user);
 
-            viewModel.BookingHistory = new PagedResultDto<BookingHistoryItemViewModel>
+            viewModel.BookingHistory = 
+                new PagedResultDto<BookingHistoryItemViewModel>
             {
-                Items = bookings.Items.Select(ToBookingHistoryItemViewModel).ToList(),
+                Items = 
+                bookings.Items
+                .Select(ToBookingHistoryItemViewModel)
+                .ToList(),
                 TotalCount = bookings.TotalCount,
                 PageSize = bookings.PageSize,
 
@@ -51,7 +56,8 @@ namespace onlineCinema.Mapping
             return viewModel;
         }
 
-        public BookingHistoryItemViewModel ToBookingHistoryItemViewModel(BookingHistoryDto dto)
+        public BookingHistoryItemViewModel ToBookingHistoryItemViewModel(
+            BookingHistoryDto dto)
         {
             return new BookingHistoryItemViewModel
             {
@@ -77,12 +83,18 @@ namespace onlineCinema.Mapping
             };
         }
 
-        [MapProperty(nameof(TicketInfoDto.TicketId), nameof(TicketInfoViewModel.TicketId))]
-        [MapProperty(nameof(TicketInfoDto.Price), nameof(TicketInfoViewModel.Price))]
-        [MapProperty(nameof(TicketInfoDto.RowNumber), nameof(TicketInfoViewModel.RowNumber))]
-        [MapProperty(nameof(TicketInfoDto.SeatNumber), nameof(TicketInfoViewModel.SeatNumber))]
-        [MapProperty(nameof(TicketInfoDto.SeatType), nameof(TicketInfoViewModel.SeatType))]
-        public partial TicketInfoViewModel ToTicketInfoViewModel(TicketInfoDto dto);
+        [MapProperty(nameof(TicketInfoDto.TicketId),
+            nameof(TicketInfoViewModel.TicketId))]
+        [MapProperty(nameof(TicketInfoDto.Price),
+            nameof(TicketInfoViewModel.Price))]
+        [MapProperty(nameof(TicketInfoDto.RowNumber), 
+            nameof(TicketInfoViewModel.RowNumber))]
+        [MapProperty(nameof(TicketInfoDto.SeatNumber),
+            nameof(TicketInfoViewModel.SeatNumber))]
+        [MapProperty(nameof(TicketInfoDto.SeatType), 
+            nameof(TicketInfoViewModel.SeatType))]
+        public partial TicketInfoViewModel ToTicketInfoViewModel(
+            TicketInfoDto dto);
 
         private string? MapMoviePoster(byte[]? posterBytes)
         {
@@ -94,8 +106,10 @@ namespace onlineCinema.Mapping
             return Convert.ToBase64String(posterBytes);
         }
 
-        [MapProperty(nameof(RegisterViewModel.Email), nameof(ApplicationUser.UserName))]
-        [MapProperty(nameof(RegisterViewModel.Email), nameof(ApplicationUser.Email))]
+        [MapProperty(nameof(RegisterViewModel.Email),
+            nameof(ApplicationUser.UserName))]
+        [MapProperty(nameof(RegisterViewModel.Email),
+            nameof(ApplicationUser.Email))]
         [MapperIgnoreSource(nameof(RegisterViewModel.Password))]
         [MapperIgnoreSource(nameof(RegisterViewModel.ConfirmPassword))]
         [MapperIgnoreSource(nameof(RegisterViewModel.ReturnUrl))]
@@ -112,7 +126,8 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnd))]
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnabled))]
         [MapperIgnoreTarget(nameof(ApplicationUser.AccessFailedCount))]
-        private partial ApplicationUser ToApplicationUserBase(RegisterViewModel model);
+        private partial ApplicationUser ToApplicationUserBase(
+            RegisterViewModel model);
 
         public ApplicationUser ToApplicationUser(RegisterViewModel model)
         {
@@ -122,11 +137,16 @@ namespace onlineCinema.Mapping
             return user;
         }
 
-        [MapProperty(nameof(ProfileViewModel.PhoneNumber), nameof(ApplicationUser.PhoneNumber))]
-        [MapProperty(nameof(ProfileViewModel.FirstName), nameof(ApplicationUser.FirstName))]
-        [MapProperty(nameof(ProfileViewModel.LastName), nameof(ApplicationUser.LastName))]
-        [MapProperty(nameof(ProfileViewModel.MiddleName), nameof(ApplicationUser.MiddleName))]
-        [MapProperty(nameof(ProfileViewModel.DateOfBirth), nameof(ApplicationUser.DateOfBirth))]
+        [MapProperty(nameof(ProfileViewModel.PhoneNumber),
+            nameof(ApplicationUser.PhoneNumber))]
+        [MapProperty(nameof(ProfileViewModel.FirstName),
+            nameof(ApplicationUser.FirstName))]
+        [MapProperty(nameof(ProfileViewModel.LastName),
+            nameof(ApplicationUser.LastName))]
+        [MapProperty(nameof(ProfileViewModel.MiddleName), 
+            nameof(ApplicationUser.MiddleName))]
+        [MapProperty(nameof(ProfileViewModel.DateOfBirth),
+            nameof(ApplicationUser.DateOfBirth))]
         [MapperIgnoreSource(nameof(ProfileViewModel.Id))]
         [MapperIgnoreSource(nameof(ProfileViewModel.Email))]
         [MapperIgnoreSource(nameof(ProfileViewModel.FullName))]
@@ -147,13 +167,19 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnd))]
         [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnabled))]
         [MapperIgnoreTarget(nameof(ApplicationUser.AccessFailedCount))]
-        private partial void UpdateApplicationUserBase(ProfileViewModel model, ApplicationUser user);
+        private partial void UpdateApplicationUserBase(
+            ProfileViewModel model,
+            ApplicationUser user);
 
-        public void UpdateApplicationUser(ProfileViewModel model, ApplicationUser user)
+        public void UpdateApplicationUser(
+            ProfileViewModel model,
+            ApplicationUser user)
         {
             UpdateApplicationUserBase(model, user);
 
-            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName)
+                ? null 
+                : user.MiddleName.Trim();
         }
     }
 }

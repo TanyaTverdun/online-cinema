@@ -9,27 +9,33 @@ namespace onlineCinema.Validators
         {
             RuleFor(x => x.Title)
                 .NotEmpty().WithMessage("Введіть назву фільму")
-                .MaximumLength(200).WithMessage("Назва занадто довга (макс 200)");
+                .MaximumLength(200)
+                .WithMessage("Назва занадто довга (макс 200)");
 
             RuleFor(x => x.Description)
                 .NotEmpty().WithMessage("Опис є обов'язковим");
 
             RuleFor(x => x.Runtime)
                 .NotEmpty().WithMessage("Вкажіть тривалість фільму")
-                .Must(t => t.HasValue && t.Value.TotalMinutes > 0).WithMessage("Тривалість має бути більшою за 0")
-                .Must(t => t.HasValue && t.Value.TotalMinutes <= 300).WithMessage("Фільм не може тривати довше 5 годин");
+                .Must(t => t.HasValue && t.Value.TotalMinutes > 0)
+                .WithMessage("Тривалість має бути більшою за 0")
+                .Must(t => t.HasValue && t.Value.TotalMinutes <= 300)
+                .WithMessage("Фільм не може тривати довше 5 годин");
 
             RuleFor(x => x.Rating)
-                .InclusiveBetween(0, 10).WithMessage("Рейтинг має бути від 0 до 10")
+                .InclusiveBetween(0, 10)
+                .WithMessage("Рейтинг має бути від 0 до 10")
                 .Must(rating => Math.Round(rating, 1) == rating)
-                .WithMessage("Рейтинг повинен мати не більше 1 цифри після коми ");
+                .WithMessage(
+                "Рейтинг повинен мати не більше 1 цифри після коми ");
 
 
             RuleFor(x => x.ReleaseDate)
                 .NotEmpty().WithMessage("Вкажіть дату виходу");
 
             RuleFor(x => x.GenreIds)
-                .NotEmpty().WithMessage("Виберіть жанр зі списку або додайте новий")
+                .NotEmpty().WithMessage(
+                "Виберіть жанр зі списку або додайте новий")
                 .When(x => string.IsNullOrWhiteSpace(x.GenresInput));
 
             RuleFor(x => x.CastIds)
@@ -37,7 +43,8 @@ namespace onlineCinema.Validators
                 .When(x => string.IsNullOrWhiteSpace(x.ActorsInput));
 
             RuleFor(x => x.DirectorIds)
-                .NotEmpty().WithMessage("Виберіть режисера або додайте нового")
+                .NotEmpty()
+                .WithMessage("Виберіть режисера або додайте нового")
                 .When(x => string.IsNullOrWhiteSpace(x.DirectorsInput));
 
             RuleFor(x => x.LanguageIds)

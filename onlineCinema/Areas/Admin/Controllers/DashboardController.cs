@@ -10,7 +10,9 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IStatisticsService _statisticsService;
         private readonly AdminStatisticsMapper _mapper;
 
-        public DashboardController(IStatisticsService statisticsService, AdminStatisticsMapper mapper)
+        public DashboardController(
+            IStatisticsService statisticsService,
+            AdminStatisticsMapper mapper)
         {
             _statisticsService = statisticsService;
             _mapper = mapper;

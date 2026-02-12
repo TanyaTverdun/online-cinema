@@ -9,17 +9,24 @@ namespace onlineCinema.Mapping
     {
         public partial SessionCreateDto MapToCreateDto(SessionViewModel vm);
 
-        [MapProperty(nameof(SessionViewModel.Id), nameof(SessionUpdateDto.Id))]
+        [MapProperty(nameof(SessionViewModel.Id), 
+            nameof(SessionUpdateDto.Id))]
         public partial SessionUpdateDto MapToUpdateDto(SessionViewModel vm);
 
-        [MapProperty(nameof(SessionDto.Id), nameof(SessionViewModel.Id))]
+        [MapProperty(nameof(SessionDto.Id), 
+            nameof(SessionViewModel.Id))]
         public partial SessionViewModel MapToEditViewModel(SessionDto dto);
-        public partial SessionListViewModel MapToListViewModel(SessionDto dto);
-        public partial IEnumerable<SessionListViewModel> MapToListViewModelList(IEnumerable<SessionDto> dtos);
-        [MapProperty(nameof(SessionDto.HallNumber), nameof(SessionViewModel.HallName), Use = nameof(MapHallNumberToString))]
+        public partial SessionListViewModel MapToListViewModel(
+            SessionDto dto);
+        public partial IEnumerable<SessionListViewModel> 
+            MapToListViewModelList(IEnumerable<SessionDto> dtos);
+        [MapProperty(nameof(SessionDto.HallNumber),
+            nameof(SessionViewModel.HallName),
+            Use = nameof(MapHallNumberToString))]
         public partial SessionViewModel MapToDeleteViewModel(SessionDto dto);
 
-        private string MapHallNumberToString(int hallNumber) => $"Зал {hallNumber}";
+        private string MapHallNumberToString(int hallNumber) =>
+            $"Зал {hallNumber}";
     }
 }
   

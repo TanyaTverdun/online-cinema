@@ -10,9 +10,11 @@ namespace onlineCinema.Mapping
     {
         public partial SeatViewModel MapSeatToViewModel(SeatDto seatDto);
 
-        private partial BookingViewModel MapSessionSeatMapToViewModelBase(SessionSeatMapDto dto);
+        private partial BookingViewModel MapSessionSeatMapToViewModelBase(
+            SessionSeatMapDto dto);
 
-        public BookingViewModel MapSessionSeatMapToViewModel(SessionSeatMapDto dto)
+        public BookingViewModel MapSessionSeatMapToViewModel(
+            SessionSeatMapDto dto)
         {
             var vm = MapSessionSeatMapToViewModelBase(dto);
 
@@ -21,10 +23,13 @@ namespace onlineCinema.Mapping
             return vm;
         }
 
-        [MapProperty(nameof(BookingInputViewModel.SelectedSeatIds), nameof(CreateBookingDto.SeatIds))]
-        private partial CreateBookingDto MapBookingInputViewModeBase(BookingInputViewModel model);
+        [MapProperty(nameof(BookingInputViewModel.SelectedSeatIds), 
+            nameof(CreateBookingDto.SeatIds))]
+        private partial CreateBookingDto MapBookingInputViewModeBase(
+            BookingInputViewModel model);
 
-        public CreateBookingDto MapBookingInputViewModelToDto(BookingInputViewModel model, ApplicationUser user)
+        public CreateBookingDto MapBookingInputViewModelToDto(
+            BookingInputViewModel model, ApplicationUser user)
         {
             var dto = MapBookingInputViewModeBase(model);
 

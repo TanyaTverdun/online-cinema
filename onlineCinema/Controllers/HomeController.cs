@@ -10,7 +10,9 @@ namespace onlineCinema.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly IMovieService _movieService;
-        public HomeController(ILogger<HomeController> logger, IMovieService movieService)
+        public HomeController(
+            ILogger<HomeController> logger,
+            IMovieService movieService)
         {
             _logger = logger;
             _movieService = movieService;
@@ -20,7 +22,10 @@ namespace onlineCinema.Controllers
         {
             if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
             {
-                return RedirectToAction("Index", "Dashboard", new { area = "Admin" });
+                return RedirectToAction(
+                    "Index",
+                    "Dashboard",
+                    new { area = "Admin" });
             }
 
             var movies = await _movieService.GetMoviesForShowcaseAsync();
@@ -44,10 +49,18 @@ namespace onlineCinema.Controllers
             return View();
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+        [ResponseCache(
+            Duration = 0, 
+            Location = ResponseCacheLocation.None,
+            NoStore = true)]
         public IActionResult Error()
         {
-            return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+            return View(
+                new ErrorViewModel 
+                {
+                    RequestId = Activity.Current?.Id ??
+                    HttpContext.TraceIdentifier 
+                });
         }
     }
 }

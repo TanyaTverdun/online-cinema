@@ -9,7 +9,9 @@ namespace onlineCinema.Validators
         {
             RuleFor(x => x.Email)
                  .NotEmpty().WithMessage("Електронна пошта є обов'язковою")
-                 .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$").WithMessage("Невірний формат електронної пошти (you@gmail.com)"); ;
+                 .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
+                 .WithMessage(
+                "Невірний формат електронної пошти (you@gmail.com)"); ;
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Пароль є обов'язковим");

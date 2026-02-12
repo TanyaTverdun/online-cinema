@@ -14,7 +14,10 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly AdminGenreMapper _mapper;
         private readonly IValidator<GenreFormViewModel> _validator;
 
-        public GenreController(IGenreService genreService, AdminGenreMapper mapper, IValidator<GenreFormViewModel> validator)
+        public GenreController(
+            IGenreService genreService,
+            AdminGenreMapper mapper,
+            IValidator<GenreFormViewModel> validator)
         {
             _genreService = genreService;
             _mapper = mapper;
@@ -72,14 +75,17 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Edit(GenreFormViewModel viewModel)
             => await SaveGenre(viewModel);
 
-        private async Task<IActionResult> SaveGenre(GenreFormViewModel viewModel)
+        private async Task<IActionResult> SaveGenre(
+            GenreFormViewModel viewModel)
         {
             var result = await _validator.ValidateAsync(viewModel);
             if (!result.IsValid)
             {
                 foreach (var error in result.Errors)
                 {
-                    ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+                    ModelState.AddModelError(
+                        error.PropertyName,
+                        error.ErrorMessage);
                 }
             }
 

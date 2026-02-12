@@ -4,18 +4,25 @@ using onlineCinema.ViewModels;
 
 namespace onlineCinema.Validators
 {
-    public class HallInputViewModelValidator : AbstractValidator<HallInputViewModel>
+    public class HallInputViewModelValidator 
+        : AbstractValidator<HallInputViewModel>
     {
         public HallInputViewModelValidator()
         {
             RuleFor(x => x.HallNumber)
-                .InclusiveBetween(1, 255).WithMessage("Номер залу повинен бути більшим за 0.");
+                .InclusiveBetween(1, 255)
+                .WithMessage(
+                "Номер залу повинен бути більшим за 0.");
 
             RuleFor(x => x.RowCount)
-                .InclusiveBetween(1, 255).WithMessage("Кількість рядів має бути від 1 до 255.");
+                .InclusiveBetween(1, 255)
+                .WithMessage(
+                "Кількість рядів має бути від 1 до 255.");
 
             RuleFor(x => x.SeatInRowCount)
-                .InclusiveBetween(1, 255).WithMessage("Кількість місць у ряду має бути від 1 до 255.");
+                .InclusiveBetween(1, 255)
+                .WithMessage(
+                "Кількість місць у ряду має бути від 1 до 255.");
 
             RuleFor(x => x.VipRowCount)
                 .GreaterThanOrEqualTo(0)
@@ -23,7 +30,9 @@ namespace onlineCinema.Validators
 
             RuleFor(x => x.VipRowCount)
                 .Must((model, vipRows) => vipRows <= model.RowCount)
-                .WithMessage("Кількість VIP рядів не може перевищувати загальну кількість рядів.");
+                .WithMessage(
+                "Кількість VIP рядів не може перевищувати " +
+                 "загальну кількість рядів.");
 
             RuleFor(x => x.VipCoefficient)
                 .GreaterThan(1.0f)

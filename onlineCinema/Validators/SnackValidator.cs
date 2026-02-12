@@ -14,7 +14,9 @@ namespace onlineCinema.Validators
             RuleFor(x => x.Price)
                 .NotEmpty().WithMessage("Вкажіть ціну")
                 .GreaterThan(0).WithMessage("Ціна має бути більше 0")
-                .PrecisionScale(10, 2, false).WithMessage("Ціна має некоректний формат (макс. 2 знаки після коми)");
+                .PrecisionScale(10, 2, false)
+                .WithMessage(
+                "Ціна має некоректний формат (макс. 2 знаки після коми)");
         }
     }
 }

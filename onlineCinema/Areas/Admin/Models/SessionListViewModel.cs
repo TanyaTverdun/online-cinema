@@ -7,6 +7,7 @@
         public int HallNumber { get; set; }
         public DateTime ShowingDateTime { get; set; }
         public decimal BasePrice { get; set; }
-        public string FormattedDateTime => ShowingDateTime.ToString("dd.MM.yyyy HH:mm");
+        public string FormattedDateTime => 
+            ShowingDateTime.ToString("dd.MM.yyyy HH:mm");
     }
 }

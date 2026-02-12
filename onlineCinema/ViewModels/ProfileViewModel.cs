@@ -14,7 +14,8 @@ namespace onlineCinema.ViewModels
         public string? Email { get; set; } = string.Empty;
         public string? PhoneNumber { get; set; } = string.Empty;
         public DateTime? DateOfBirth { get; set; }
-        public string FullName => $"{LastName} {FirstName} {MiddleName}".Trim();
+        public string FullName => 
+            $"{LastName} {FirstName} {MiddleName}".Trim();
 
         [DataType(DataType.Password)]
         [Display(Name = "Новий пароль")]
@@ -24,7 +25,8 @@ namespace onlineCinema.ViewModels
         [Display(Name = "Підтвердження пароля")]
         [Compare("NewPassword", ErrorMessage = "Паролі не збігаються.")]
         public string? ConfirmPassword { get; set; }
-        public PagedResultDto<BookingHistoryItemViewModel> BookingHistory { get; set; } = new();
+        public PagedResultDto<BookingHistoryItemViewModel> 
+            BookingHistory { get; set; } = new();
         public string? ReturnUrl { get; set; }
 
     }

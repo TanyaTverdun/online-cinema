@@ -9,7 +9,8 @@ namespace onlineCinema.Mapping
     [Mapper]
     public partial class HallViewModelMapper
     {
-        [MapProperty(nameof(HallDto.HallNumber), nameof(HallViewModel.HallNumber))]
+        [MapProperty(nameof(HallDto.HallNumber), 
+            nameof(HallViewModel.HallNumber))]
         private partial HallViewModel MapToViewModelBase(HallDto dto);
 
         public HallViewModel MapToViewModel(HallDto dto)
@@ -20,7 +21,9 @@ namespace onlineCinema.Mapping
 
             if (dto.Sessions != null)
             {
-                vm.Sessions = dto.Sessions.Select(s => new onlineCinema.ViewModels.SessionViewModel
+                vm.Sessions = 
+                    dto.Sessions
+                    .Select(s => new onlineCinema.ViewModels.SessionViewModel
                 {
                     Id = s.SessionId,
                     MovieTitle = s.MovieTitle,
@@ -63,7 +66,8 @@ namespace onlineCinema.Mapping
                 vm.SelectedFeatureIds = hallDto.FeatureIds;
             }
 
-            vm.AvailableFeatures = allFeatures.Select(f => new FeatureCheckboxViewModel
+            vm.AvailableFeatures = 
+                allFeatures.Select(f => new FeatureCheckboxViewModel
             {
                 Id = f.Id,
                 Name = f.Name,

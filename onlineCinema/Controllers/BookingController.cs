@@ -40,9 +40,11 @@ namespace onlineCinema.Controllers
         {
             try
             {
-                var dto = await _bookingService.GetSessionSeatMapAsync(sessionId);
+                var dto = await _bookingService
+                    .GetSessionSeatMapAsync(sessionId);
 
-                var viewModel = _viewMapper.MapSessionSeatMapToViewModel(dto);
+                var viewModel = _viewMapper
+                    .MapSessionSeatMapToViewModel(dto);
 
                 return View(viewModel);
             }
@@ -50,24 +52,29 @@ namespace onlineCinema.Controllers
             {
                 return NotFound();
             }
+            catch (ArgumentException)
+            {
+                return BadRequest();
+            }
+            catch (InvalidOperationException)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize]
-        public async Task<IActionResult> BookSeats(BookingInputViewModel model)
+        public async Task<IActionResult> BookSeats(
+            BookingInputViewModel model)
         {
             if (!ModelState.IsValid)
             {
-                var errors = string.Join("; ", ModelState.Values
-                        .SelectMany(v => v.Errors)
-                        .Select(e => e.ErrorMessage));
-
                 TempData["Error"] = ModelState.Values
                     .SelectMany(v => v.Errors)
                     .FirstOrDefault()?.ErrorMessage;
-                
-                return RedirectToAction(nameof(SelectSeats), 
+
+                return RedirectToAction(nameof(SelectSeats),
                     new { sessionId = model.SessionId });
             }
 
@@ -87,17 +94,29 @@ namespace onlineCinema.Controllers
                 var dto = _viewMapper
                     .MapBookingInputViewModelToDto(model, user);
 
-                int bookingId = await _bookingService.CreateBookingAsync(dto);
+                int bookingId = await _bookingService
+                    .CreateBookingAsync(dto);
 
-                return RedirectToAction(nameof(AddSnacks), new { bookingId });
+                return RedirectToAction(nameof(AddSnacks),
+                    new { bookingId });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
                 TempData["Error"] = ex.Message;
-                return RedirectToAction(nameof(SelectSeats), 
-                    new { sessionId = model.SessionId });
             }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+
+            return RedirectToAction(nameof(SelectSeats),
+                new { sessionId = model.SessionId });
         }
+
 
         [HttpGet]
         public async Task<IActionResult> AddSnacks(int bookingId)
@@ -114,30 +133,49 @@ namespace onlineCinema.Controllers
 
                 var viewModel = _snackMapper
                     .MapToSelectionViewModel(
-                    snackDtos, bookingId, seatsTotalPrice, lockUntil);
+                        snackDtos,
+                        bookingId,
+                        seatsTotalPrice,
+                        lockUntil);
 
                 return View(viewModel);
             }
-            catch (Exception ex)
+            catch (KeyNotFoundException)
             {
-                return RedirectToAction("Index", "Home");
+                return NotFound();
+            }
+            catch (InvalidOperationException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Profile", "Account");
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Profile", "Account");
             }
         }
 
+
+
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> AddSnacks(SnackSelectionViewModel model)
+        public async Task<IActionResult> AddSnacks(
+            SnackSelectionViewModel model)
         {
             var lockUntil = await _bookingService
                 .GetBookingLockUntilAsync(model.BookingId);
+
             if (lockUntil < DateTime.Now)
             {
-                TempData["Error"] = "Час бронювання вийшов. Місця були звільнені.";
+                TempData["Error"] = 
+                    "Час бронювання вийшов. Місця були звільнені.";
                 return RedirectToAction("Index", "Home");
             }
 
-            var chosenItems = model.AvailableSnacks
-                .Where(s => s.Quantity > 0).ToList();
+            var chosenItems = model.AvailableSnacks?
+                .Where(s => s.Quantity > 0)
+                .ToList() ?? new List<SnackItemViewModel>();
 
             try
             {
@@ -147,20 +185,35 @@ namespace onlineCinema.Controllers
                         .MapSnackItemViewModelToSelectedDtoList(chosenItems);
 
                     await _bookingService
-                        .AddSnacksToBookingAsync(model.BookingId, selectedDtos);
+                        .AddSnacksToBookingAsync(
+                        model.BookingId, selectedDtos);
                 }
 
-                await _bookingService.CompletePaymentAsync(model.BookingId);
+                await _bookingService
+                    .CompletePaymentAsync(model.BookingId);
 
-                return RedirectToAction(nameof(BookingSuccess), 
+                return RedirectToAction(
+                    nameof(BookingSuccess),
                     new { id = model.BookingId });
             }
-            catch (Exception ex)
+            catch (InvalidOperationException ex)
             {
-                return RedirectToAction(nameof(BookingSuccess), 
-                    new { id = model.BookingId });
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+            catch (ArgumentException ex)
+            {
+                TempData["Error"] = ex.Message;
+                return RedirectToAction("Index", "Home");
+            }
+            catch (Exception)
+            {
+                TempData["Error"] =
+                    "Сталася помилка під час завершення бронювання.";
+                return RedirectToAction("Index", "Home");
             }
         }
+
 
         [HttpGet]
         public IActionResult BookingSuccess(int id)

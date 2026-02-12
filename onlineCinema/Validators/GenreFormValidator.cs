@@ -9,7 +9,9 @@ namespace onlineCinema.Validators
         {
             RuleFor(x => x.GenreName)
                 .NotEmpty().WithMessage("Вкажіть назву жанру")
-                .MaximumLength(50).WithMessage("Назва не може перевищувати 50 символів");
+                .MaximumLength(50)
+                .WithMessage(
+                "Назва не може перевищувати 50 символів");
         }
     }
 }

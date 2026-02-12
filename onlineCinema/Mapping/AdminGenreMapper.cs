@@ -9,6 +9,7 @@ namespace onlineCinema.Mapping
     {
         public partial GenreFormDto ToDto(GenreFormViewModel viewModel);
         public partial GenreFormViewModel ToViewModel(GenreFormDto dto);
-        public partial IEnumerable<GenreFormViewModel> ToViewModelList(IEnumerable<GenreFormDto> dtos);
+        public partial IEnumerable<GenreFormViewModel> ToViewModelList(
+            IEnumerable<GenreFormDto> dtos);
     }
 }

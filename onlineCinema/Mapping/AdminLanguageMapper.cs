@@ -8,7 +8,8 @@ namespace onlineCinema.Mapping
     public partial class AdminLanguageMapper
     {
         public partial LanguageViewModel ToViewModel(LanguageDto dto);
-        public partial List<LanguageViewModel> ToViewModelList(IEnumerable<LanguageDto> dtos);
+        public partial List<LanguageViewModel> ToViewModelList(
+            IEnumerable<LanguageDto> dtos);
         public partial LanguageDto ToDto(LanguageViewModel model);
     }
 }

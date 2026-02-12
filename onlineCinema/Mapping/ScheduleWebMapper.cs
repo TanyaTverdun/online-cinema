@@ -15,19 +15,25 @@ namespace onlineCinema.Mapping
         private const string IdDateFormat = "yyyyMMdd";
         private const string TabIdPrefix = "day-";
 
-        public MovieScheduleViewModel MapMovieScheduleDtoToViewModel(MovieScheduleDto dto)
+        public MovieScheduleViewModel MapMovieScheduleDtoToViewModel(
+            MovieScheduleDto dto)
         {
             var vm = MapBase(dto);
 
-            vm.Days = dto.Schedule.Select((day, index) => MapToDayVm(day, index)).ToList();
+            vm.Days = 
+                dto.Schedule
+                .Select((day, index) => MapToDayVm(day, index)).ToList();
 
             return vm;
         }
 
-        [MapProperty(nameof(MovieScheduleDto.Schedule), nameof(MovieScheduleViewModel.Days))]
+        [MapProperty(nameof(MovieScheduleDto.Schedule), 
+            nameof(MovieScheduleViewModel.Days))]
         private partial MovieScheduleViewModel MapBase(MovieScheduleDto dto);
 
-        private ScheduleDayViewModel MapToDayVm(DailyScheduleDto day, int index)
+        private ScheduleDayViewModel MapToDayVm(
+            DailyScheduleDto day,
+            int index)
         {
             return new ScheduleDayViewModel
             {

@@ -11,7 +11,8 @@ namespace onlineCinema.Validators
                 .NotEmpty().WithMessage("Назва мови обов'язкова")
                 .MaximumLength(50).WithMessage("Назва мови занадто довга")
                 .Matches(@"^[a-zA-Zа-яА-ЯіІїЇєЄ\s()]+$")
-                .WithMessage("Назва мови може містити тільки літери, пробіли та дужки");
+                .WithMessage(
+                "Назва мови може містити тільки літери, пробіли та дужки");
         }
     }
 }
