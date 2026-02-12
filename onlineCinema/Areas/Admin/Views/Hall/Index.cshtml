@@ -2,14 +2,14 @@
 @model IEnumerable<HallViewModel>
 
 @{
-    ViewData["Title"] = "Hall Management";
+    ViewData["Title"] = "Керування залами";
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3 mb-0">Hall Management</h1>
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування залами</h1>
         <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> Add New Hall
+            <i class="bi bi-plus-lg me-1"></i> Додати новий зал
         </a>
     </div>
 
@@ -19,11 +19,11 @@
                 <table class="table table-hover mb-0 align-middle movie-table">
                     <thead class="bg-black text-uppercase small text-muted">
                         <tr>
-                            <th class="ps-4">Hall #</th>
-                            <th>Geometry (Rows &times; Seats)</th>
-                            <th>Total Capacity</th>
-                            <th>Features</th>
-                            <th class="text-end pe-4">Actions</th>
+                            <th class="ps-4">Зал №</th>
+                            <th>Геометрія (ряди × місця)</th>
+                            <th>Загальна місткість</th>
+                            <th>Особливості</th>
+                            <th class="text-end pe-4">Дії</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -33,19 +33,19 @@
                                 <td class="ps-4 py-3">
                                     <div class="d-flex align-items-center">
                                         <div>
-                                            <div class="fw-bold text-white">Hall @item.HallNumber</div>
+                                            <div class="fw-bold text-white">Зал @item.HallNumber</div>
                                             <small class="text-muted">ID: @item.Id</small>
                                         </div>
                                     </div>
                                 </td>
                                 <td>
-                                    <span class="text-white">@item.RowCount rows</span>
-                                    <span class="text-muted mx-1">&times;</span>
-                                    <span class="text-white">@item.SeatInRowCount seats</span>
+                                    <span class="text-white">@item.RowCount рядів</span>
+                                    <span class="text-muted mx-1">×</span>
+                                    <span class="text-white">@item.SeatInRowCount місць</span>
                                 </td>
                                 <td>
                                     <span class="badge bg-success bg-opacity-10 text-success border border-success">
-                                        @item.TotalSeats seats
+                                        @item.TotalSeats місць
                                     </span>
                                 </td>
                                 <td>
@@ -60,22 +60,33 @@
                                     }
                                     else
                                     {
-                                        <span class="text-muted small">-</span>
+                                        <span class="text-muted small">—</span>
                                     }
                                 </td>
                                 <td class="text-end pe-4">
                                     <div class="btn-group">
-                                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-light" title="Schedule & Info">
+                                        <a asp-action="Details"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-light"
+                                           title="Розклад та інформація">
                                             <i class="bi bi-calendar-week"></i>
                                         </a>
 
-                                        <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-outline-info" title="Edit">
+                                        <a asp-action="Edit"
+                                           asp-route-id="@item.Id"
+                                           class="btn btn-sm btn-outline-info"
+                                           title="Редагувати">
                                             <i class="bi bi-pencil-square"></i>
                                         </a>
 
-                                        <form asp-action="Delete" asp-route-id="@item.Id" method="post" style="display:inline;"
-                                              onsubmit="return confirm('Are you sure you want to delete Hall #@item.HallNumber?');">
-                                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Delete">
+                                        <form asp-action="Delete"
+                                              asp-route-id="@item.Id"
+                                              method="post"
+                                              style="display:inline;"
+                                              onsubmit="return confirm('Ви впевнені, що хочете видалити зал №@item.HallNumber?');">
+                                            <button type="submit"
+                                                    class="btn btn-sm btn-outline-danger"
+                                                    title="Видалити">
                                                 <i class="bi bi-trash"></i>
                                             </button>
                                         </form>
@@ -83,11 +94,12 @@
                                 </td>
                             </tr>
                         }
+
                         @if (!Model.Any())
                         {
                             <tr>
                                 <td colspan="5" class="text-center py-5 text-muted">
-                                    No halls found. Click "Add New Hall" to start.
+                                    Зали не знайдено. Натисніть «Додати новий зал», щоб створити перший.
                                 </td>
                             </tr>
                         }

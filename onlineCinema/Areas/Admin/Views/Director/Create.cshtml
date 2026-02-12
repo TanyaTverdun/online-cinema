@@ -3,9 +3,11 @@
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3">@(Model.DirectorId == 0 ? "Add Director" : "Edit Director")</h1>
+        <h1 class="text-white fw-bold fs-3">
+            @(Model.DirectorId == 0 ? "Додати режисера" : "Редагувати режисера")
+        </h1>
         <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
-            <i class="bi bi-arrow-left me-1"></i> Back to List
+            Назад до списку
         </a>
     </div>
 
@@ -18,26 +20,33 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <label asp-for="DirectorFirstName" class="form-label text-muted small text-uppercase">First Name</label>
-                    <input asp-for="DirectorFirstName" class="form-control bg-dark text-white border-secondary" />
+                    <label asp-for="DirectorFirstName" class="form-label text-white small text-uppercase">
+                        Ім’я
+                    </label>
+                    <input asp-for="DirectorFirstName" class="form-control" />
                     <span asp-validation-for="DirectorFirstName" class="text-danger small"></span>
                 </div>
+
                 <div class="mb-3">
-                    <label asp-for="DirectorLastName" class="form-label text-muted small text-uppercase">Last Name</label>
-                    <input asp-for="DirectorLastName" class="form-control bg-dark text-white border-secondary" />
+                    <label asp-for="DirectorLastName" class="form-label text-white small text-uppercase">
+                        Прізвище
+                    </label>
+                    <input asp-for="DirectorLastName" class="form-control" />
                     <span asp-validation-for="DirectorLastName" class="text-danger small"></span>
                 </div>
+
                 <div class="mb-3">
-                    <label asp-for="DirectorMiddleName" class="form-label text-muted small text-uppercase">Middle Name</label>
-                    <input asp-for="DirectorMiddleName" class="form-control bg-dark text-white border-secondary" />
+                    <label asp-for="DirectorMiddleName" class="form-label text-white small text-uppercase">
+                        По батькові
+                    </label>
+                    <input asp-for="DirectorMiddleName" class="form-control" />
                     <span asp-validation-for="DirectorMiddleName" class="text-danger small"></span>
                 </div>
 
-                <div class="d-grid gap-2 mt-4">
-                    <button type="submit" class="btn btn-danger fw-bold py-2 shadow-sm">
-                        <i class="bi bi-check-lg me-2"></i>Save Director
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold">
+                        Зберегти
                     </button>
-                    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
                 </div>
             </div>
         </div>

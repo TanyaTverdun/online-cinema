@@ -178,7 +178,7 @@ namespace onlineCinema.Application.Services
 
             if (bookings == null)
             {
-                throw new KeyNotFoundException($"Bookings not found for user with ID: {userId}");
+                throw new KeyNotFoundException($"Бронювання для користувача з ID: {userId} не знайдено.");
             }
 
             return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));

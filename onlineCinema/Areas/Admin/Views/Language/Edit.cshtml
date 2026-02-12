@@ -3,8 +3,12 @@
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3">@(Model.LanguageId == 0 ? "Add Language" : "Edit Language")</h1>
-        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">Back to List</a>
+        <h1 class="text-white fw-bold fs-3">
+            @(Model.LanguageId == 0 ? "Додати мову" : "Редагувати мову")
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
+            Назад до списку
+        </a>
     </div>
 
     <form asp-action="@(Model.LanguageId == 0 ? "Create" : "Edit")" method="post">
@@ -16,14 +20,21 @@
             </div>
             <div class="card-body">
                 <div class="mb-3">
-                    <label asp-for="LanguageName" class="form-label text-muted small text-uppercase">Language Name</label>
-                    <input asp-for="LanguageName" class="form-control bg-dark text-white border-secondary" placeholder="e.g. English, Ukrainian" />
+                    <label asp-for="LanguageName" class="form-label text-white small text-uppercase">
+                        Назва мови
+                    </label>
+                    <input asp-for="LanguageName"
+                           class="form-control"
+                           placeholder="Наприклад: українська, англійська" />
                     <span asp-validation-for="LanguageName" class="text-danger small"></span>
                 </div>
 
                 <div class="d-grid mt-4">
-                    <button type="submit" class="btn btn-danger fw-bold py-2 shadow-sm">Save Language</button>
+                    <button type="submit" class="btn btn-danger fw-bold">
+                        Зберегти
+                    </button>
                 </div>
+
             </div>
         </div>
     </form>

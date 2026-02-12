@@ -19,7 +19,7 @@
     var builder = WebApplication.CreateBuilder(args);
 
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") 
-        ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
+        ?? throw new InvalidOperationException("Рядок підключення 'DefaultConnection' не знайдено.");
 
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
     {

@@ -32,7 +32,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             _validator = validator;
         }
 
-        [HttpGet] //Hall
+        [HttpGet]
         public async Task<IActionResult> Index()
         {
             var dtos = await _hallService.GetAllHallsAsync();
@@ -43,7 +43,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             return View(viewModels);
         }
 
-        [HttpGet] //Hall/Details/{id}
+        [HttpGet]
         public async Task<IActionResult> Details(int id)
         {
             try
@@ -60,7 +60,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             }
         }
 
-        [HttpGet] //Hall/Create
+        [HttpGet]
         public async Task<IActionResult> Create()
         {
 
@@ -71,11 +71,10 @@ namespace onlineCinema.Areas.Admin.Controllers
             return View(viewModel);
         }
 
-        [HttpPost] //Hall/Create
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(HallInputViewModel model)
         {
-            //чиста валідація, бо не бачить складні методи валідації
             var validationResult = await _validator.ValidateAsync(model);
 
             if (!validationResult.IsValid)
@@ -110,7 +109,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpGet] //Hall/Edit/{id}
+        [HttpGet]
         public async Task<IActionResult> Edit(int id)
         {
             try
@@ -128,7 +127,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             }
         }
 
-        [HttpPost] //Hall/Edit/{id}
+        [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(HallInputViewModel model)
         {
@@ -137,12 +136,6 @@ namespace onlineCinema.Areas.Admin.Controllers
                 var features = await _hallService.GetAllFeaturesAsync();
                 model.AvailableFeatures = _mapper
                     .PrepareInputViewModel(features).AvailableFeatures;
-                //Select(f => new FeatureCheckboxViewModel
-                //{
-                //    Id = f.Id,
-                //    Name = f.Name,
-                //    IsSelected = model.SelectedFeatureIds.Contains(f.Id)
-                //}).ToList();
                 return View(model);
             }
 

@@ -11,28 +11,24 @@
 <div class="container success-wrapper">
     <div class="success-card">
 
-        <!-- Іконка -->
         <div class="icon-box">
             <i class="bi bi-check-circle-fill"></i>
         </div>
 
-        <!-- Заголовок -->
-        <h1 class="success-title">Success!</h1>
+        <h1 class="success-title">Бронювання успішне!</h1>
         <p class="success-desc">
-            Your booking has been successfully confirmed.
-            <br>Check your email for the tickets.
+            Ваше замовлення успішно підтверджено.
+            <br>Квитки надіслано на вашу електронну пошту.
         </p>
 
-        <!-- Номер замовлення -->
         <div class="order-number-box">
-            <span class="order-label">Order Number</span>
+            <span class="order-label">Номер замовлення</span>
             <span class="order-value">#@Model</span>
         </div>
 
-        <!-- Кнопки -->
         <div class="d-flex flex-column justify-content-center gap-3">
-            <a href="/" class="btn btn-lux btn-lux-primary">
-                Back to Home
+            <a asp-controller="Home" asp-action="Index" class="btn btn-lux btn-lux-primary">
+                На головну
             </a>
         </div>
 

@@ -152,7 +152,8 @@ namespace onlineCinema.Mapping
         public void UpdateApplicationUser(ProfileViewModel model, ApplicationUser user)
         {
             UpdateApplicationUserBase(model, user);
-            user.MiddleName ??= string.Empty;
+
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
         }
     }
 }

@@ -48,7 +48,7 @@ namespace onlineCinema.Controllers
         public async Task<IActionResult> Register(RegisterViewModel model, string? returnUrl = null)
         {
             model.ReturnUrl = returnUrl ?? model.ReturnUrl;
-            
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -70,6 +70,8 @@ namespace onlineCinema.Controllers
 
             var user = _userMapping.ToApplicationUser(model);
 
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
+
             var result = await _userManager.CreateAsync(user, model.Password ?? string.Empty);
 
             if (result.Succeeded)
@@ -77,14 +79,14 @@ namespace onlineCinema.Controllers
                 await _userManager.AddToRoleAsync(user, userRoleName);
 
                 _logger.LogInformation("Користувач {Email} успішно зареєстрований з роллю {Role}", model.Email, userRoleName);
-                
+
                 await _signInManager.SignInAsync(user, isPersistent: false);
-                
+
                 if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
                     return Redirect(model.ReturnUrl);
                 }
-                
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -124,12 +126,12 @@ namespace onlineCinema.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation("Користувач {Email} успішно увійшов", model.Email);
-                
+
                 if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
                 {
                     return Redirect(model.ReturnUrl);
                 }
-                
+
                 return RedirectToAction("Index", "Home");
             }
 
@@ -185,6 +187,7 @@ namespace onlineCinema.Controllers
                 }
                 return View(model);
             }
+
 
             var user = await _userManager.GetUserAsync(User);
 
@@ -316,4 +319,3 @@ namespace onlineCinema.Controllers
         }
     }
 }
-
