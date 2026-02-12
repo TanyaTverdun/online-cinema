@@ -29,9 +29,9 @@ namespace onlineCinema.Mapping
         public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
 
         public ProfileViewModel ToProfileViewModel(
-    ApplicationUser user,
-    PagedResultDto<BookingHistoryDto> bookings,
-    string? returnUrl = null)
+            ApplicationUser user,
+            IEnumerable<BookingHistoryDto> bookings,
+            string? returnUrl = null)
         {
             var viewModel = ToProfileViewModelBase(user);
 
@@ -152,7 +152,8 @@ namespace onlineCinema.Mapping
         public void UpdateApplicationUser(ProfileViewModel model, ApplicationUser user)
         {
             UpdateApplicationUserBase(model, user);
-            user.MiddleName ??= string.Empty;
+
+            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
         }
     }
 }

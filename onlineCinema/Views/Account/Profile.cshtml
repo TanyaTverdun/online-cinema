@@ -25,6 +25,7 @@
                 <div class="card-header">
                     <h5 class="mb-0">Особиста інформація</h5>
                 </div>
+
                 <div class="card-body">
                     <div class="row">
                         <div class="col-md-4 mb-3">
@@ -40,7 +41,9 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label asp-for="MiddleName" class="form-label">По батькові</label>
+                            <label asp-for="MiddleName" class="form-label">
+                                По батькові <span class="text-muted">(необов'язково)</span>
+                            </label>
                             <input asp-for="MiddleName" class="form-control" />
                             <span asp-validation-for="MiddleName" class="text-danger"></span>
                         </div>
@@ -48,7 +51,7 @@
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label asp-for="Email" class="form-label">Електронна  пошта</label>
+                            <label asp-for="Email" class="form-label">Електронна пошта</label>
                             <input asp-for="Email" class="form-control" />
                             <span asp-validation-for="Email" class="text-danger"></span>
                         </div>
@@ -115,6 +118,7 @@
                     <div class="card-header">
                         <h5 class="mb-0">Історія замовлень</h5>
                     </div>
+
                     <div class="card-body">
                         <div class="row">
                             @foreach (var booking in Model.BookingHistory.Items)
@@ -132,27 +136,39 @@
                                                              style="max-height: 150px; object-fit: cover;" />
                                                     </div>
                                                 }
+
                                                 <div class="@(string.IsNullOrEmpty(booking.MoviePoster) ? "col-md-12" : "col-md-10")">
                                                     <h5 class="card-title">@booking.MovieTitle</h5>
+
                                                     <div class="row mb-2">
                                                         <div class="col-md-6">
-                                                            <strong>Дата сеансу:</strong> @booking.SessionDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                            <strong>Дата сеансу:</strong>
+                                                            @booking.SessionDateTime.ToString("dd.MM.yyyy HH:mm")
                                                         </div>
                                                         <div class="col-md-6">
                                                             <strong>Зал:</strong> @booking.HallName
                                                         </div>
                                                     </div>
+
                                                     <div class="row mb-2">
                                                         <div class="col-md-6">
-                                                            <strong>Дата замовлення:</strong> @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                            <strong>Дата замовлення:</strong>
+                                                            @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
                                                         </div>
                                                         <div class="col-md-6">
                                                             <strong>Статус оплати:</strong>
-                                                            <span class="badge @(booking.PaymentStatus == "Оплачено" ? "bg-success" : booking.PaymentStatus == "Очікується" ? "bg-warning" : booking.PaymentStatus == "Помилка" ? "bg-danger" : "bg-secondary")">
+                                                            <span class="badge @(booking.PaymentStatus == "Оплачено"
+                                                                ? "bg-success"
+                                                                : booking.PaymentStatus == "Очікується"
+                                                                    ? "bg-warning"
+                                                                    : booking.PaymentStatus == "Помилка"
+                                                                        ? "bg-danger"
+                                                                        : "bg-secondary")">
                                                                 @booking.PaymentStatus
                                                             </span>
                                                         </div>
                                                     </div>
+
                                                     <div class="mb-2">
                                                         <div class="d-flex justify-content-between align-items-center mb-1" style="max-width: 400px;">
                                                             <strong>Квитки:</strong>

@@ -1,7 +1,7 @@
 ﻿@model onlineCinema.Areas.Admin.Models.AdminStatisticsViewModel
 
 @{
-    ViewData["Title"] = "Аналітика";
+    ViewData["Title"] = "Аналітика кінотеатру";
 }
 
 <div class="container-fluid py-4 px-4">
@@ -96,6 +96,8 @@
         document.addEventListener('DOMContentLoaded', () => {
             if (typeof initDashboardCharts === "function") {
                 initDashboardCharts(config);
+            } else {
+                console.error("Помилка: функцію initDashboardCharts не знайдено у файлі «Панель керування.js»");
             }
         });
     </script>

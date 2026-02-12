@@ -82,10 +82,10 @@ namespace onlineCinema.Infrastructure.Repositories
                 .FirstOrDefaultAsync(h => h.HallId == hall.HallId);
 
             if (existingHall == null)
-            { 
-            throw new KeyNotFoundException("Hall not found");
-             }
-            
+            {
+                throw new KeyNotFoundException("Зал не знайдено.");
+            }
+
             existingHall.HallNumber = hall.HallNumber;
             existingHall.RowCount = hall.RowCount;
             existingHall.SeatInRowCount = hall.SeatInRowCount;
@@ -149,9 +149,10 @@ namespace onlineCinema.Infrastructure.Repositories
                         {
                             SessionId = s.SessionId,
                             ShowingDate = s.ShowingDateTime,
-                            MovieTitle = s.Movie.Title
-                        })
-                        .ToList()
+                            MovieTitle = s.Movie.Title,
+
+                        }).ToList()
+
                 })
                 .FirstOrDefaultAsync();
         }

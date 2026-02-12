@@ -15,7 +15,7 @@
     <section class="position-relative overflow-hidden" style="height: 75vh;">
         <div class="position-absolute w-100 h-100">
             <img src="@heroMovie.PosterUrl"
-                 alt="@heroMovie.Title Backdrop"
+                 alt="@heroMovie.Title Фон"
                  class="w-100 h-100 object-fit-cover opacity-50"
                  style="filter: blur(4px);">
         </div>
@@ -45,11 +45,11 @@
                 <div class="d-flex gap-3">
                     <a asp-controller="Home" asp-action="Details" asp-route-id="@heroMovie.Id"
                        class="btn btn-primary btn-lg px-4">
-                        <i class="bi bi-ticket-perforated me-2"></i>Get Tickets
+                        <i class="bi bi-ticket-perforated me-2"></i>Купити квитки
                     </a>
                     <a asp-controller="Home" asp-action="Details" asp-route-id="@heroMovie.Id"
                        class="btn btn-outline-light btn-lg px-4">
-                        Info
+                        Детальніше
                     </a>
                 </div>
             </div>
@@ -59,10 +59,10 @@
 
 <section class="py-5">
     <div class="container">
-        <div class="d-flex justify-content-between align-items-end mb-4 border-bottom  pb-2">
+        <div class="d-flex justify-content-between align-items-end mb-4 border-bottom pb-2">
             <div>
-                <h2 class="text-white fw-bold mb-0">NOW SHOWING</h2>
-                <small class="text-muted">In theaters</small>
+                <h2 class="text-white fw-bold mb-0">У ПРОКАТІ</h2>
+                <small class="text-muted">У кінотеатрах</small>
             </div>
             
         </div>
@@ -74,7 +74,9 @@
                     <div class="card h-100 border-0 shadow-sm movie-card-hover movie-table">
                         <div class="position-relative overflow-hidden">
                             <a asp-action="Details" asp-route-id="@movie.Id">
-                                <img src="@movie.PosterUrl" class="card-img-top object-fit-cover" alt="@movie.Title"
+                                <img src="@movie.PosterUrl"
+                                     class="card-img-top object-fit-cover"
+                                     alt="@movie.Title"
                                      style="height: 400px; transition: transform 0.3s;">
                             </a>
 
@@ -112,7 +114,7 @@
                             </div>
                             <a asp-action="Details" asp-route-id="@movie.Id"
                                class="btn btn-sm btn-primary w-100">
-                                Buy Ticket
+                                Купити квиток
                             </a>
                         </div>
                     </div>
@@ -120,7 +122,7 @@
             }
             @if (!nowShowing.Any())
             {
-                <div class="col-12 text-center py-5 text-muted">No movies currently showing.</div>
+                <div class="col-12 text-center py-5 text-muted">Наразі немає фільмів у прокаті.</div>
             }
         </div>
     </div>
@@ -129,7 +131,7 @@
 <section class="py-5 bg-opacity-10 bg-secondary">
     <div class="container">
         <div class="d-flex align-items-center mb-4">
-            <h2 class="text-white fw-bold border-start border-4 border-warning ps-3">COMING SOON</h2>
+            <h2 class="text-white fw-bold border-start border-4 border-warning ps-3">СКОРО У ПРОКАТІ</h2>
         </div>
 
         <div class="row g-4">
@@ -138,7 +140,9 @@
                 <div class="col-12 col-sm-6 col-md-4 col-lg-3">
                     <div class="card h-100 border-secondary">
                         <div class="position-relative">
-                            <img src="@movie.PosterUrl" class="card-img-top opacity-75" alt="@movie.Title"
+                            <img src="@movie.PosterUrl"
+                                 class="card-img-top opacity-75"
+                                 alt="@movie.Title"
                                  style="height: 400px; object-fit: cover; filter: grayscale(80%);">
 
                            
@@ -150,7 +154,7 @@
                             }
 
                             <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
-                                <span class="badge bg-warning text-dark fs-6 shadow">COMING SOON</span>
+                                <span class="badge bg-warning text-dark fs-6 shadow">СКОРО У ПРОКАТІ</span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -162,7 +166,7 @@
             }
             @if (!comingSoon.Any())
             {
-                <div class="col-12 text-center py-5 text-muted">No upcoming movies.</div>
+                <div class="col-12 text-center py-5 text-muted">Немає найближчих прем’єр.</div>
             }
         </div>
     </div>

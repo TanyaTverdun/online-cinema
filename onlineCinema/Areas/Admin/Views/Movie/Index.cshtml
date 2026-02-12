@@ -1,14 +1,14 @@
 ﻿@using onlineCinema.Application.DTOs.Movie
 @model IEnumerable<MovieItemViewModel>
 @{
-    ViewData["Title"] = "Movie Management";
+    ViewData["Title"] = "Керування фільмами";
 }
 
 <div class="container py-4">
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h1 class="text-white fw-bold fs-3 mb-0">Movie Management</h1>
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування фільмами</h1>
         <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
-            <i class="bi bi-plus-lg me-1"></i> Add New Movie
+            <i class="bi bi-plus-lg me-1"></i> Додати новий фільм
         </a>
     </div>
 
@@ -20,12 +20,11 @@
                        data-load-url="@Url.Action("GetAll", "Movie", new { area = "Admin" })">
                     <thead class="bg-black text-uppercase small text-muted">
                         <tr>
-                            <th style="width: 80px;">Poster</th>
-                            <th>Title & Genres</th>
-                            <th>Release</th>
-                            <th>Rating</th>
-                            <th>Status</th>
-                            <th class="text-end">Actions</th>
+                            <th style="width: 80px;">Постер</th>
+                            <th>Назва та жанри</th>
+                            <th>Рік виходу</th>
+                            <th>Статус</th>
+                            <th class="text-end">Дії</th>
                         </tr>
                     </thead>
                 </table>
