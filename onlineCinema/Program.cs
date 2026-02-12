@@ -147,7 +147,7 @@
 //    }
 //}
 
-    var supportedCultures = new[] { new CultureInfo("uk-UA") };
+var supportedCultures = new[] { new CultureInfo("uk-UA") };
     app.UseRequestLocalization(new RequestLocalizationOptions
     {
         DefaultRequestCulture = new RequestCulture("uk-UA"),
