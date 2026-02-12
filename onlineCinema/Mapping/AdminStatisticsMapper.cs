@@ -9,17 +9,17 @@ namespace onlineCinema.Mapping
         {
             return new AdminStatisticsViewModel
             {
-                TotalTicketsSold = dto.TotalTicketsSold,
-                TotalRevenue = dto.TotalRevenue,
+                OccupancyLabels = dto.MovieOccupancy.Select(x => x.MovieTitle).ToList(),
+                OccupancyData = dto.MovieOccupancy.Select(x => x.OccupancyPercentage).ToList(),
 
-                SnackLabels = dto.TopSnacks.Select(s => s.Name).ToList(),
-                SnackRevenueData = dto.TopSnacks.Select(s => s.Revenue).ToList(),
+                PopularMoviesLabels = dto.MostPopularMovies.Select(x => x.Name).ToList(),
+                PopularMoviesData = dto.MostPopularMovies.Select(x => x.Count).ToList(),
 
-                MovieLabels = dto.TopMovies.Select(m => m.Name).ToList(),
-                MovieRevenueData = dto.TopMovies.Select(m => m.Revenue).ToList(),
+                LeastMoviesLabels = dto.LeastPopularMovies.Select(x => x.Name).ToList(),
+                LeastMoviesData = dto.LeastPopularMovies.Select(x => x.Count).ToList(),
 
-                DaysLabels = dto.RevenueByDay.Select(d => d.Date.ToString("dd.MM")).ToList(),
-                DailyRevenueData = dto.RevenueByDay.Select(d => d.Revenue).ToList()
+                LeastSnacksLabels = dto.LeastPopularSnacks.Select(x => x.Name).ToList(),
+                LeastSnacksData = dto.LeastPopularSnacks.Select(x => x.Count).ToList()
             };
         }
     }

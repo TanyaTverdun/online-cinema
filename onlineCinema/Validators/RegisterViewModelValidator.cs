@@ -37,11 +37,10 @@ namespace onlineCinema.Validators
 
             RuleFor(x => x.Password)
                 .NotEmpty().WithMessage("Пароль є обов'язковим")
-                .MinimumLength(6).WithMessage("Пароль має бути не менше 6 символів");
-
-            RuleFor(x => x.ConfirmPassword)
-                .NotEmpty().WithMessage("Підтвердьте пароль")
-                .Equal(x => x.Password).WithMessage("Паролі не співпадають");
+                .MinimumLength(6).WithMessage("Пароль має бути не менше 6 символів")
+                .Matches(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{6,}$")
+                .WithMessage("Пароль повинен містити мінімум 6 символів, " 
+                        + "хоча б одну велику літеру (A-Z), одну малу літеру (a-z) та одну цифру (0-9)");
 
             RuleFor(x => x.DateOfBirth)
                 .NotEmpty().WithMessage("Дата народження є обов'язковою")

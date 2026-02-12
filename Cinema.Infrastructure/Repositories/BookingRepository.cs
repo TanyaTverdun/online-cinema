@@ -85,6 +85,55 @@ namespace onlineCinema.Infrastructure.Repositories
             }
         }
 
+        public async Task<(IEnumerable<Booking> Items, int TotalCount, bool HasNext, bool HasPrevious)> GetUserBookingsSeekAsync(string userId, int? lastId, int? firstId, int pageSize)
+        {
+            var query = _db.Bookings.Where(b => b.ApplicationUserId == userId);
+            int totalCount = await query.CountAsync();
+
+            IQueryable<Booking> dataQuery = query;
+
+            if (lastId.HasValue)
+            {
+                dataQuery = dataQuery.Where(b => b.BookingId < lastId.Value).OrderByDescending(b => b.BookingId);
+            }
+            else if (firstId.HasValue)
+            {
+                dataQuery = dataQuery.Where(b => b.BookingId > firstId.Value).OrderBy(b => b.BookingId);
+            }
+            else
+            {
+                dataQuery = dataQuery.OrderByDescending(b => b.BookingId);
+            }
+
+            var items = await dataQuery
+                .Include(b => b.Payment)
+                .Include(b => b.Tickets).ThenInclude(t => t.Seat)
+                .Include(b => b.Tickets).ThenInclude(t => t.Session).ThenInclude(s => s.Movie)
+                .Include(b => b.Tickets).ThenInclude(t => t.Session).ThenInclude(s => s.Hall)
+                .Include(b => b.SnackBookings).ThenInclude(sb => sb.Snack)
+                .Take(pageSize)
+                .ToListAsync();
+
+            if (firstId.HasValue)
+            {
+                items.Reverse();
+            }
+
+            bool hasNext = false;
+            bool hasPrevious = false;
+
+            if (items.Any())
+            {
+                var currentMaxId = items.First().BookingId;
+                var currentMinId = items.Last().BookingId;
+
+                hasNext = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId < currentMinId);
+
+                hasPrevious = await _db.Bookings.AnyAsync(b => b.ApplicationUserId == userId && b.BookingId > currentMaxId);
+            }
+
+            return (items, totalCount, hasNext, hasPrevious);
+        }
         public async Task<IEnumerable<Booking>> GetUserBookingsWithDetailsAsync(string userId)
         {
             return await _db.Bookings
@@ -98,6 +147,8 @@ namespace onlineCinema.Infrastructure.Repositories
                 .Include(b => b.Tickets)
                     .ThenInclude(t => t.Session)
                         .ThenInclude(s => s.Hall)
+                .Include(b => b.SnackBookings)
+                    .ThenInclude(sb => sb.Snack)
                 .OrderByDescending(b => b.CreatedDateTime)
                 .ToListAsync();
         }

@@ -7,7 +7,7 @@
 
     var nowShowing = Model.Where(m => m.Status == MovieStatus.Released).ToList();
     var comingSoon = Model.Where(m => m.Status == MovieStatus.ComingSoon).ToList();
-    var heroMovie = nowShowing.FirstOrDefault();
+    var heroMovie = nowShowing.FirstOrDefault(); 
 }
 
 @if (heroMovie != null)
@@ -25,7 +25,17 @@
 
         <div class="container position-relative h-100 d-flex align-items-center">
             <div class="col-12 col-lg-7">
-                <span class="badge bg-danger mb-3">ПРЕМ’ЄРА</span>
+                <div class="d-flex align-items-center gap-2 mb-3">
+                    <span class="badge bg-danger">PREMIER</span>
+                 
+                    @if (heroMovie.Rating > 0)
+                    {
+                        <span class="badge bg-warning  border border-warning">
+                            <i class="bi bi-star-fill me-1 text-white"></i>@heroMovie.Rating.ToString("0.0")
+                        </span>
+                    }
+                </div>
+
                 <h1 class="display-3 fw-bold text-uppercase text-white mb-3" style="text-shadow: 0 0 10px rgba(0,0,0,0.8);">@heroMovie.Title</h1>
 
                 <p class="lead mb-4 text-white opacity-75">
@@ -54,7 +64,7 @@
                 <h2 class="text-white fw-bold mb-0">У ПРОКАТІ</h2>
                 <small class="text-muted">У кінотеатрах</small>
             </div>
-            <a href="#" class="btn btn-sm btn-outline-secondary">Показати всі</a>
+            
         </div>
 
         <div class="row g-4">
@@ -77,6 +87,17 @@
                             <span class="badge bg-black bg-opacity-75 position-absolute top-0 start-0 m-2 shadow small">
                                 @movie.ReleaseYear
                             </span>
+
+                          
+                            @if (movie.Rating > 0)
+                            {
+                                <div class="position-absolute bottom-0 end-0 m-2">
+                                    <span class="badge    d-flex align-items-center gap-1">
+                                        <i class="bi bi-star-fill" style="font-size: 0.8rem;"></i>
+                                        <span class="fw-bold text-white">@movie.Rating.ToString("0.0")</span>
+                                    </span>
+                                </div>
+                            }
                         </div>
                         <div class="card-body">
                             <h5 class="card-title text-truncate fw-bold text-white">@movie.Title</h5>
@@ -123,6 +144,15 @@
                                  class="card-img-top opacity-75"
                                  alt="@movie.Title"
                                  style="height: 400px; object-fit: cover; filter: grayscale(80%);">
+
+                           
+                            @if (movie.Rating > 0)
+                            {
+                                <span class="badge bg-warning position-absolute top-0 end-0 m-2 shadow">
+                                    <i class="bi bi-star-fill me-1"></i>@movie.Rating.ToString("0.0")
+                                </span>
+                            }
+
                             <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center">
                                 <span class="badge bg-warning text-dark fs-6 shadow">СКОРО У ПРОКАТІ</span>
                             </div>

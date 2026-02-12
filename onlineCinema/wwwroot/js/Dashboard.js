@@ -1,16 +1,20 @@
 ﻿function initDashboardCharts(config) {
-    const accentRed = '#e50914';
-    const mutedGray = '#9a9a9a';
-    const cardBg = '#181818';
-    const gridLineColor = 'rgba(255, 255, 255, 0.05)';
+    const colors = {
+        red: '#e50914', 
+        yellow: '#ffc107', 
+        cyan: '#0dcaf0',  
+        text: '#9a9a9a',  
+        grid: 'rgba(255, 255, 255, 0.05)', 
+        cardBg: '#181818'
+    };
 
-    Chart.defaults.color = mutedGray;
+    Chart.defaults.color = colors.text;
     Chart.defaults.font.family = "'Segoe UI', 'Roboto', sans-serif";
+    Chart.defaults.borderColor = colors.grid;
 
-    const defaultScales = {
+    const commonScales = {
         y: {
-            grid: { color: gridLineColor },
-            border: { display: false },
+            grid: { color: colors.grid, drawBorder: false },
             ticks: { padding: 10 }
         },
         x: {
@@ -19,77 +23,124 @@
         }
     };
 
-    // 1. Графік доходу (Line)
-    const revCtx = document.getElementById('revenueChart');
-    if (revCtx) {
-        new Chart(revCtx, {
-            type: 'line',
-            data: {
-                labels: config.daysLabels,
-                datasets: [{
-                    label: 'Дохід (грн)',
-                    data: config.dailyRevenue,
-                    borderColor: accentRed,
-                    backgroundColor: 'rgba(229, 9, 20, 0.1)',
-                    fill: true,
-                    tension: 0.4,
-                    borderWidth: 3,
-                    pointBackgroundColor: accentRed,
-                    pointRadius: 4
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: defaultScales
-            }
-        });
-    }
-
-    // 2. Топ фільмів (Bar)
-    const movCtx = document.getElementById('moviesChart');
-    if (movCtx) {
-        new Chart(movCtx, {
+    // графік заповненості
+    const ctxOccupancy = document.getElementById('occupancyChart');
+    if (ctxOccupancy) {
+        new Chart(ctxOccupancy, {
             type: 'bar',
             data: {
-                labels: config.movieLabels,
+                labels: config.occupancy.labels,
                 datasets: [{
-                    label: 'Прибуток',
-                    data: config.movieRevenue,
-                    backgroundColor: accentRed,
-                    borderRadius: 5,
-                    barThickness: 25
+                    label: 'Заповненість',
+                    data: config.occupancy.data,
+                    backgroundColor: colors.red,
+                    borderRadius: 4,
+                    barThickness: 30
                 }]
             },
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
-                plugins: { legend: { display: false } },
-                scales: defaultScales
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: (context) => ` ${context.raw}%`
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        ...commonScales.y,
+                        beginAtZero: true,
+                        max: 100,
+                        title: { display: true, text: 'Відсоток (%)' }
+                    },
+                    x: commonScales.x
+                }
             }
         });
     }
 
-    // 3. Топ снеків (Doughnut)
-    const snackCtx = document.getElementById('snacksChart');
-    if (snackCtx) {
-        new Chart(snackCtx, {
+    // графік популярних фільмів
+    const ctxPopMovies = document.getElementById('popularMoviesChart');
+    if (ctxPopMovies) {
+        new Chart(ctxPopMovies, {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: config.popularMovies.labels,
+                datasets: [{
+                    label: 'Продано квитків',
+                    data: config.popularMovies.data,
+                    backgroundColor: colors.yellow,
+                    borderRadius: 4,
+                    barThickness: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { ...commonScales.y, grid: { display: false } },
+                    y: { ...commonScales.x, grid: { color: colors.grid } }
+                }
+            }
+        });
+    }
+
+    // графік не популярних фільмів
+    const ctxLeastMovies = document.getElementById('leastMoviesChart');
+    if (ctxLeastMovies) {
+        new Chart(ctxLeastMovies, {
+            type: 'bar',
+            indexAxis: 'y',
+            data: {
+                labels: config.leastMovies.labels,
+                datasets: [{
+                    label: 'Продано квитків',
+                    data: config.leastMovies.data,
+                    backgroundColor: colors.cyan,
+                    borderRadius: 4,
+                    barThickness: 20
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    x: { ...commonScales.y, grid: { display: false } },
+                    y: { ...commonScales.x, grid: { color: colors.grid } }
+                }
+            }
+        });
+    }
+
+    //графік снеків 
+    const ctxLeastSnacks = document.getElementById('leastSnacksChart');
+    if (ctxLeastSnacks) {
+        new Chart(ctxLeastSnacks, {
             type: 'doughnut',
             data: {
-                labels: config.snackLabels,
+                labels: config.leastSnacks.labels,
                 datasets: [{
-                    data: config.snackRevenue,
+                    data: config.leastSnacks.data,
                     backgroundColor: [
-                        '#ffd6cc',
-                        '#ff8080',
-                        '#ff0000',
-                        '#800000',
-                        '#330a00'
+                        '#6c757d',
+                        '#495057',
+                        '#343a40',
+                        '#adb5bd',
+                        '#ced4da'
                     ],
-                    borderWidth: 4,
-                    borderColor: cardBg,
-                    hoverOffset: 20
+                    borderColor: colors.cardBg, 
+                    borderWidth: 2,
+                    hoverOffset: 10
                 }]
             },
             options: {
@@ -98,16 +149,16 @@
                 cutout: '70%',
                 plugins: {
                     legend: {
-                        position: 'bottom',
+                        position: 'right',
                         labels: {
-                            padding: 20,
                             usePointStyle: true,
-                            color: '#FFFFFF'
+                            padding: 20,
+                            color: '#fff'
                         }
                     },
                     tooltip: {
                         callbacks: {
-                            label: (ctx) => ` ${ctx.label}: ${ctx.raw.toLocaleString()} ₴`
+                            label: (ctx) => ` ${ctx.label}: ${ctx.raw} шт.`
                         }
                     }
                 }

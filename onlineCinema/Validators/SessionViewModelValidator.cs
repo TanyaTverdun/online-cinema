@@ -1,11 +1,12 @@
 ﻿using FluentValidation;
 using onlineCinema.Areas.Admin.Models;
 
-namespace onlineCinema.Validators
+namespace onlineCinema.Web.Validation
 {
-    public class SessionCreateViewModelValidator : AbstractValidator<SessionCreateViewModel>
+    public class SessionViewModelValidator
+        : AbstractValidator<SessionViewModel>
     {
-        public SessionCreateViewModelValidator()
+        public SessionViewModelValidator()
         {
             RuleFor(x => x.MovieId)
                 .NotEmpty().WithMessage("Виберіть фільм для сеансу")

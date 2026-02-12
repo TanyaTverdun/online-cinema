@@ -77,7 +77,6 @@
     });
     builder.Services.AddFluentValidationClientsideAdapters();
 
-    builder.Services.AddSingleton<MovieMapper>();
     builder.Services.AddSingleton<SessionMapper>();
     builder.Services.AddSingleton<PaymentMapper>();
     builder.Services.AddSingleton<BookingMapper>();
@@ -148,7 +147,7 @@
 //    }
 //}
 
-    var supportedCultures = new[] { new CultureInfo("uk-UA") };
+var supportedCultures = new[] { new CultureInfo("uk-UA") };
     app.UseRequestLocalization(new RequestLocalizationOptions
     {
         DefaultRequestCulture = new RequestCulture("uk-UA"),

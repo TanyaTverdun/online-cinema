@@ -28,7 +28,19 @@
 
             <div class="col-12 col-md-8 col-lg-9 pt-md-5">
                 <div class="mb-4">
-                    <span class="badge bg-info text-dark mb-2">@Model.AgeRating+</span>
+                    <div class="d-flex align-items-center gap-1 mb-2">
+                        <span class="badge bg-info ">@Model.AgeRating+</span>
+
+                    
+                        @if (Model.Rating > 0)
+                        {
+                            <span class="badge bg-warning d-flex align-items-center gap-1">
+                                <i class="bi bi-star-fill"></i>
+                                <span class="fw-bold">@Model.Rating.ToString("0.0")</span> 
+                            </span>
+                        }
+                    </div>
+
                     <h1 class="display-3 fw-bold text-white mb-2">@Model.Title</h1>
 
                     <div class="d-flex align-items-center gap-3 text-muted small">

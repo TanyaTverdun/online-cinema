@@ -30,7 +30,7 @@ namespace onlineCinema.Application.Services
 
         public async Task<IEnumerable<MovieDto>> GetAllMoviesAsync()
         {
-            var movies = await _unitOfWork.Movie.GetAllAsync();
+            var movies = await _unitOfWork.Movie.GetAllAsync(includeProperties: "MovieFeatures");
 
             return _mapper.MapToDtoList(movies);
         }

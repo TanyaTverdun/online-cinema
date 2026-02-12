@@ -14,19 +14,19 @@ namespace onlineCinema.Application.Mapping
     public partial class StatisticsMapping
     {
         public AdminStatisticsDto CreateSummaryDto(
-            int totalTickets,
-            decimal totalRevenue,
-            List<TopItemDto> topSnacks,
-            List<TopItemDto> topMovies,
-            List<DailyRevenueDto> dailyRevenue)
+            List<MovieOccupancyDto> movieOccupancy,
+            List<TopItemDto> mostPopularMovies,
+            List<TopItemDto> leastPopularMovies,
+            List<TopItemDto> mostPopularSnacks,
+            List<TopItemDto> leastPopularSnacks)
         {
             return new AdminStatisticsDto
             {
-                TotalTicketsSold = totalTickets,
-                TotalRevenue = totalRevenue,
-                TopSnacks = topSnacks,
-                TopMovies = topMovies,
-                RevenueByDay = dailyRevenue
+                MovieOccupancy = movieOccupancy,
+                MostPopularMovies = mostPopularMovies,
+                LeastPopularMovies = leastPopularMovies,
+                MostPopularSnacks = mostPopularSnacks,
+                LeastPopularSnacks = leastPopularSnacks
             };
         }
     }

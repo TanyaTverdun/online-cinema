@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.AdminTickets;
 
 namespace onlineCinema.Application.Services.Interfaces
 {
@@ -16,5 +17,7 @@ namespace onlineCinema.Application.Services.Interfaces
         Task<DateTime> GetBookingLockUntilAsync(int bookingId);
         Task CompletePaymentAsync(int bookingId);
         Task<IEnumerable<BookingHistoryDto>> GetBookingHistoryAsync(string userId);
+        Task CancelBookingAsync(int bookingId, string userId);
+        Task<PagedResultDto<BookingHistoryDto>> GetBookingHistorySeekAsync(string userId, int? lastId, int? firstId);
     }
 }

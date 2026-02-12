@@ -24,6 +24,8 @@ namespace onlineCinema.Mapping
         [MapperIgnoreTarget(nameof(ProfileViewModel.FullName))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.BookingHistory))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.ReturnUrl))]
+        [MapperIgnoreTarget(nameof(ProfileViewModel.NewPassword))]
+        [MapperIgnoreTarget(nameof(ProfileViewModel.ConfirmPassword))]
         public partial ProfileViewModel ToProfileViewModelBase(ApplicationUser user);
 
         public ProfileViewModel ToProfileViewModel(
@@ -32,7 +34,19 @@ namespace onlineCinema.Mapping
             string? returnUrl = null)
         {
             var viewModel = ToProfileViewModelBase(user);
-            viewModel.BookingHistory = bookings.Select(ToBookingHistoryItemViewModel).ToList();
+
+            viewModel.BookingHistory = new PagedResultDto<BookingHistoryItemViewModel>
+            {
+                Items = bookings.Items.Select(ToBookingHistoryItemViewModel).ToList(),
+                TotalCount = bookings.TotalCount,
+                PageSize = bookings.PageSize,
+
+                HasNextPage = bookings.HasNextPage,
+                HasPreviousPage = bookings.HasPreviousPage,
+                LastId = bookings.LastId,
+                FirstId = bookings.FirstId
+            };
+
             viewModel.ReturnUrl = returnUrl;
             return viewModel;
         }
@@ -49,7 +63,17 @@ namespace onlineCinema.Mapping
                 MoviePoster = MapMoviePoster(dto.MoviePoster),
                 PaymentStatus = dto.PaymentStatus,
                 HallName = dto.HallName,
-                Tickets = dto.Tickets.Select(ToTicketInfoViewModel).ToList()
+                Tickets = dto.Tickets.Select(ToTicketInfoViewModel).ToList(),
+
+                Snacks = dto.Snacks.Select(s => new SnackInfoViewModel
+                {
+                    Name = s.Name,
+                    Quantity = s.Quantity,
+                    Price = s.Price,
+                    TotalPrice = s.TotalPrice
+                }).ToList(),
+
+                CanRefund = dto.CanRefund
             };
         }
 
@@ -94,9 +118,7 @@ namespace onlineCinema.Mapping
         {
             var user = ToApplicationUserBase(model);
             user.EmailConfirmed = true;
-
-            user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName) ? null : user.MiddleName.Trim();
-
+            user.MiddleName ??= string.Empty;
             return user;
         }
 
@@ -108,6 +130,8 @@ namespace onlineCinema.Mapping
         [MapperIgnoreSource(nameof(ProfileViewModel.Id))]
         [MapperIgnoreSource(nameof(ProfileViewModel.Email))]
         [MapperIgnoreSource(nameof(ProfileViewModel.FullName))]
+        [MapperIgnoreSource(nameof(ProfileViewModel.NewPassword))]
+        [MapperIgnoreSource(nameof(ProfileViewModel.ConfirmPassword))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Id))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Email))]
         [MapperIgnoreTarget(nameof(ApplicationUser.Bookings))]

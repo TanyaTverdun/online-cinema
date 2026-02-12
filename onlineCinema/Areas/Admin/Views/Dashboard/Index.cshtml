@@ -5,39 +5,21 @@
 }
 
 <div class="container-fluid py-4 px-4">
-    <div class="mb-5">
+    <div class="mb-4">
         <h1 class="text-white fw-bold text-uppercase mb-1" style="letter-spacing: 2px;">
-            <i class="bi bi-speedometer2 text-danger me-2"></i> Аналітика <span class="text-danger">Кінотеатру</span>
+            <i class="bi bi-graph-up-arrow text-danger me-2"></i> Статистика <span class="text-danger">Популярності</span>
         </h1>
     </div>
 
-    <div class="row g-4 mb-5">
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm" style="border: 1px solid var(--border-soft) !important;">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <p class="text-muted text-uppercase small fw-bold mb-2" style="letter-spacing: 1px;">Продано квитків</p>
-                            <h2 class="text-white display-5 fw-bold mb-0">@Model.TotalTicketsSold.ToString("N0")</h2>
-                        </div>
-                        <div class="rounded-3 bg-danger bg-opacity-10 p-3">
-                            <i class="bi bi-ticket-perforated text-danger fs-3"></i>
-                        </div>
-                    </div>
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-people-fill text-danger me-2"></i> Середня заповненість залу (%)
                 </div>
-            </div>
-        </div>
-        <div class="col-md-6">
-            <div class="card h-100 shadow-sm" style="border: 1px solid var(--border-soft) !important;">
-                <div class="card-body p-4">
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div>
-                            <p class="text-muted text-uppercase small fw-bold mb-2" style="letter-spacing: 1px;">Загальний дохід</p>
-                            <h2 class="text-white display-5 fw-bold mb-0">@Model.TotalRevenue.ToString("N2") <span class="fs-4 text-muted">₴</span></h2>
-                        </div>
-                        <div class="rounded-3 bg-success bg-opacity-10 p-3">
-                            <i class="bi bi-cash-stack text-success fs-3"></i>
-                        </div>
+                <div class="card-body">
+                    <div style="height: 350px;">
+                        <canvas id="occupancyChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -45,43 +27,40 @@
     </div>
 
     <div class="row g-4">
-        <!-- Графік Динаміки -->
-        <div class="col-12">
-            <div class="card shadow-sm" style="border: 1px solid var(--border-soft) !important;">
-                <div class="card-body p-4">
-                    <h5 class="text-white text-uppercase small fw-bold mb-4" style="letter-spacing: 1px;">
-                        <i class="bi bi-graph-up text-danger me-2"></i> Динаміка доходів
-                    </h5>
-                    <div style="height: 350px;">
-                        <canvas id="revenueChart"></canvas>
-                    </div>
+        <div class="col-lg-6">
+            <div class="card h-100 border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-star-fill text-warning me-2"></i> Найпопулярніші фільми (квитки)
                 </div>
-            </div>
-        </div>
-
-        <!-- Топ Фільмів -->
-        <div class="col-lg-7">
-            <div class="card h-100 shadow-sm" style="border: 1px solid var(--border-soft) !important;">
-                <div class="card-body p-4">
-                    <h5 class="text-white text-uppercase small fw-bold mb-4" style="letter-spacing: 1px;">
-                        <i class="bi bi-star-fill text-danger me-2"></i> Найприбутковіші фільми
-                    </h5>
+                <div class="card-body">
                     <div style="height: 300px;">
-                        <canvas id="moviesChart"></canvas>
+                        <canvas id="popularMoviesChart"></canvas>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Топ Снеків -->
-        <div class="col-lg-5">
-            <div class="card h-100 shadow-sm" style="border: 1px solid var(--border-soft) !important;">
-                <div class="card-body p-4">
-                    <h5 class="text-white text-uppercase small fw-bold mb-4" style="letter-spacing: 1px;">
-                        <i class="bi bi-cup-straw text-danger me-2"></i> Популярність снеків
-                    </h5>
-                    <div style="height: 280px;" class="d-flex justify-content-center">
-                        <canvas id="snacksChart"></canvas>
+        <div class="col-lg-6">
+            <div class="card h-100 border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-emoji-frown text-primary me-2"></i> Фільми з найменшими відвідуваннями
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="leastMoviesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card h-100 border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-cup-straw text-muted me-2"></i> Найменш популярні снеки
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="leastSnacksChart"></canvas>
                     </div>
                 </div>
             </div>
@@ -92,14 +71,26 @@
 @section Scripts {
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="~/js/Dashboard.js" asp-append-version="true"></script>
+
     <script>
+        // Собираем конфиг из новых данных
         const config = {
-            daysLabels: @Html.Raw(Json.Serialize(Model.DaysLabels)),
-            dailyRevenue: @Html.Raw(Json.Serialize(Model.DailyRevenueData)),
-            movieLabels: @Html.Raw(Json.Serialize(Model.MovieLabels)),
-            movieRevenue: @Html.Raw(Json.Serialize(Model.MovieRevenueData)),
-            snackLabels: @Html.Raw(Json.Serialize(Model.SnackLabels)),
-            snackRevenue: @Html.Raw(Json.Serialize(Model.SnackRevenueData))
+            occupancy: {
+                labels: @Html.Raw(Json.Serialize(Model.OccupancyLabels)),
+                data: @Html.Raw(Json.Serialize(Model.OccupancyData))
+            },
+            popularMovies: {
+                labels: @Html.Raw(Json.Serialize(Model.PopularMoviesLabels)),
+                data: @Html.Raw(Json.Serialize(Model.PopularMoviesData))
+            },
+            leastMovies: {
+                labels: @Html.Raw(Json.Serialize(Model.LeastMoviesLabels)),
+                data: @Html.Raw(Json.Serialize(Model.LeastMoviesData))
+            },
+            leastSnacks: {
+                labels: @Html.Raw(Json.Serialize(Model.LeastSnacksLabels)),
+                data: @Html.Raw(Json.Serialize(Model.LeastSnacksData))
+            }
         };
 
         document.addEventListener('DOMContentLoaded', () => {

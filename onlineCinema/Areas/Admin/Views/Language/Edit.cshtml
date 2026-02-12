@@ -13,9 +13,12 @@
 
     <form asp-action="@(Model.LanguageId == 0 ? "Create" : "Edit")" method="post">
         <input type="hidden" asp-for="LanguageId" />
-        <div class="card border-secondary movie-table mx-auto" style="max-width: 600px;">
-            <div class="card-body">
 
+        <div class="card border-secondary bg-black text-white mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                <i class="bi bi-translate me-2"></i>Language Details
+            </div>
+            <div class="card-body">
                 <div class="mb-3">
                     <label asp-for="LanguageName" class="form-label text-white small text-uppercase">
                         Назва мови
