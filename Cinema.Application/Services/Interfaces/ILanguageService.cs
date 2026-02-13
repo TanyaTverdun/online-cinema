@@ -1,12 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using onlineCinema.Application.DTOs;
 
-namespace onlineCinema.Application.Services.Interfaces
+namespace onlineCinema.Application.Services.Interfaces;
+
+public interface ILanguageService
 {
-    public interface ILanguageService
-    {
-    }
+    Task<IEnumerable<LanguageDto>> GetAllAsync();
+    Task<LanguageDto?> GetByIdAsync(int id);
+    Task CreateAsync(LanguageDto dto);
+    Task UpdateAsync(LanguageDto dto);
+    Task DeleteAsync(int id);
 }

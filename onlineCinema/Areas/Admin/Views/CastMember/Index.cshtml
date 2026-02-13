@@ -1,0 +1,50 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@model IEnumerable<CastMemberViewModel>
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування акторським складом</h1>
+        <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
+            <i class="bi bi-plus-lg me-1"></i> Додати учасника акторського складу
+        </a>
+    </div>
+
+    <div class="card border-secondary bg-dark">
+        <table class="table table-hover mb-0 align-middle movie-table">
+            <thead class="bg-black text-uppercase small text-muted">
+                <tr>
+                    <th>Ім’я</th>
+                    <th>Прізвище</th>
+                    <th>По батькові</th>
+                    <th class="text-end">Дії</th>
+                </tr>
+            </thead>
+            <tbody class="text-white">
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>@item.CastFirstName</td>
+                        <td>@item.CastLastName</td>
+                        <td>@item.CastMiddleName</td>
+                        <td class="text-end">
+                            <div class="btn-group">
+                                <a asp-action="Edit" asp-route-id="@item.CastId" class="btn btn-sm btn-outline-info" title="Редагувати">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <form asp-action="Delete"
+                                      asp-route-id="@item.CastId"
+                                      method="post"
+                                      onsubmit="return confirm('Видалити цю людину?');"
+                                      style="display:inline;">
+                                    <button type="submit" class="btn btn-sm btn-outline-danger" title="Видалити">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

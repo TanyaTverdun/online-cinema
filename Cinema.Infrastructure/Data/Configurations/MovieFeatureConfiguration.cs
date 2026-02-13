@@ -17,11 +17,13 @@ namespace onlineCinema.Infrastructure.Data.Configurations
 
             builder.HasOne(mf => mf.Movie)
                 .WithMany(m => m.MovieFeatures)
-                .HasForeignKey(mf => mf.MovieId);
+                .HasForeignKey(mf => mf.MovieId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(mf => mf.Feature)
                 .WithMany(f => f.MovieFeatures)
-                .HasForeignKey(mf => mf.FeatureId);
+                .HasForeignKey(mf => mf.FeatureId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

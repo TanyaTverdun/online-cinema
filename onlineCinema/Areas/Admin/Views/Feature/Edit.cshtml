@@ -1,0 +1,48 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@model FeatureViewModel
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3">
+            @(Model.FeatureId == 0 ? "Додати характеристику" : "Редагувати характеристику")
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
+            Назад до списку
+        </a>
+    </div>
+
+    <form asp-action="@(Model.FeatureId == 0 ? "Create" : "Edit")" method="post">
+        <input type="hidden" asp-for="FeatureId" />
+
+        <div class="card border-secondary bg-black text-white mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                <i class="bi bi-hdd-network me-2"></i>Feature Details
+            </div>
+            <div class="card-body">
+
+                <div class="mb-3">
+                    <label asp-for="FeatureName" class="form-label text-white small text-uppercase">
+                        Назва
+                    </label>
+                    <input asp-for="FeatureName" class="form-control" />
+                    <span asp-validation-for="FeatureName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="FeatureDescription" class="form-label text-white small text-uppercase">
+                        Опис
+                    </label>
+                    <textarea asp-for="FeatureDescription" class="form-control" rows="3"></textarea>
+                    <span asp-validation-for="FeatureDescription" class="text-danger small"></span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold">
+                        Зберегти
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </form>
+</div>

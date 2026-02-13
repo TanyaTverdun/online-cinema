@@ -1,0 +1,104 @@
+﻿@model onlineCinema.Areas.Admin.Models.AdminStatisticsViewModel
+
+@{
+    ViewData["Title"] = "Аналітика кінотеатру";
+}
+
+<div class="container-fluid py-4 px-4">
+    <div class="mb-4">
+        <h1 class="text-white fw-bold text-uppercase mb-1" style="letter-spacing: 2px;">
+            <i class="bi bi-graph-up-arrow text-danger me-2"></i> Статистика <span class="text-danger">Популярності</span>
+        </h1>
+    </div>
+
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="card border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-people-fill text-danger me-2"></i> Середня заповненість залу (%)
+                </div>
+                <div class="card-body">
+                    <div style="height: 350px;">
+                        <canvas id="occupancyChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-lg-6">
+            <div class="card h-100 border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-star-fill text-warning me-2"></i> Найпопулярніші фільми (квитки)
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="popularMoviesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="card h-100 border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-emoji-frown text-primary me-2"></i> Фільми з найменшими відвідуваннями
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="leastMoviesChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-12">
+            <div class="card h-100 border-secondary bg-black text-white shadow-sm">
+                <div class="card-header bg-black border-bottom border-secondary fw-bold text-uppercase">
+                    <i class="bi bi-cup-straw text-muted me-2"></i> Найменш популярні снеки
+                </div>
+                <div class="card-body">
+                    <div style="height: 300px;">
+                        <canvas id="leastSnacksChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="~/js/Dashboard.js" asp-append-version="true"></script>
+
+    <script>
+        // Собираем конфиг из новых данных
+        const config = {
+            occupancy: {
+                labels: @Html.Raw(Json.Serialize(Model.OccupancyLabels)),
+                data: @Html.Raw(Json.Serialize(Model.OccupancyData))
+            },
+            popularMovies: {
+                labels: @Html.Raw(Json.Serialize(Model.PopularMoviesLabels)),
+                data: @Html.Raw(Json.Serialize(Model.PopularMoviesData))
+            },
+            leastMovies: {
+                labels: @Html.Raw(Json.Serialize(Model.LeastMoviesLabels)),
+                data: @Html.Raw(Json.Serialize(Model.LeastMoviesData))
+            },
+            leastSnacks: {
+                labels: @Html.Raw(Json.Serialize(Model.LeastSnacksLabels)),
+                data: @Html.Raw(Json.Serialize(Model.LeastSnacksData))
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof initDashboardCharts === "function") {
+                initDashboardCharts(config);
+            } else {
+                console.error("Помилка: функцію initDashboardCharts не знайдено у файлі «Панель керування.js»");
+            }
+        });
+    </script>
+}

@@ -1,0 +1,209 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@using onlineCinema.Domain.Enums
+@model MovieFormViewModel
+
+@{
+    ViewData["Title"] = "Додати новий фільм";
+    var hasErrors = !ViewData.ModelState.IsValid;
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Додати новий фільм</h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white ">
+            <i class="bi bi-arrow-left me-1"></i> Назад до списку
+        </a>
+    </div>
+
+    <form asp-action="Create" method="post" enctype="multipart/form-data">
+
+        <div class="row g-4">
+            <div class="col-lg-8">
+                <div class="card border-secondary bg-black text-white mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-info-circle me-2"></i>Загальна інформація
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Title" class="form-label text-white small text-uppercase">Назва фільму</label>
+                            <input asp-for="Title" class="form-control" placeholder="Наприклад: Інтерстеллар" />
+                            <span asp-validation-for="Title" class="text-danger small"></span>
+                        </div>
+
+                        <div class="mb-3">
+                            <label asp-for="Description" class="form-label text-white small text-uppercase">Опис</label>
+                            <textarea asp-for="Description" class="form-control" rows="5" placeholder="Введіть опис фільму..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger small"></span>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="ReleaseDate" class="form-label text-white small text-uppercase">Дата виходу</label>
+                                <input asp-for="ReleaseDate" type="date" class="form-control" />
+                                <span asp-validation-for="ReleaseDate" class="text-danger small"></span>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label asp-for="TrailerLink" class="form-label text-white small text-uppercase">Посилання на трейлер YouTube</label>
+                                <div class="input-group">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-youtube"></i></span>
+                                    <input asp-for="TrailerLink" class="form-control bg-dark text-white border-secondary" placeholder="https://..." />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-secondary bg-black text-white">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-people me-2"></i>Актори та знімальна група
+                    </div>
+                    <div class="card-body">
+                        <div class="row g-3">
+                            <div class="form-text text-white fw-bold small">Утримуйте Ctrl, щоб вибрати декілька</div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Жанри</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="GenreIds" placeholder="Пошук жанрів...">
+                                </div>
+                                <select asp-for="GenreIds" asp-items="Model.GenresList" class="form-select bg-dark text-white border-secondary" multiple size="4"></select>
+                                <span asp-validation-for="GenreIds" class="text-danger small"></span>
+                                <input asp-for="GenresInput" class="form-control mt-2 form-control-sm" placeholder="Додати нові (через кому)" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Актори</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="CastIds" placeholder="Пошук акторів...">
+                                </div>
+                                <select asp-for="CastIds" asp-items="Model.ActorsList" class="form-select bg-dark text-white border-secondary" multiple size="4"></select>
+                                <span asp-validation-for="CastIds" class="text-danger small"></span>
+                                <input asp-for="ActorsInput" class="form-control mt-2 form-control-sm" placeholder="Додати нового (Ім’я Прізвище)" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Режисери</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="DirectorIds" placeholder="Пошук режисерів...">
+                                </div>
+                                <select asp-for="DirectorIds" asp-items="Model.DirectorsList" class="form-select bg-dark text-white border-secondary" multiple size="3"></select>
+                                <span asp-validation-for="DirectorIds" class="text-danger small"></span>
+                                <input asp-for="DirectorsInput" class="form-control mt-2 form-control-sm" placeholder="Додати нового режисера" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Мови</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="LanguageIds" placeholder="Пошук мов...">
+                                </div>
+                                <select asp-for="LanguageIds" asp-items="Model.LanguagesList" class="form-select bg-dark text-white border-secondary" multiple size="3"></select>
+                                <span asp-validation-for="LanguageIds" class="text-danger small"></span>
+                                <input asp-for="LanguagesInput" class="form-control mt-2 form-control-sm" placeholder="Додати нову мову" />
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label text-white small text-uppercase">Особливості (технології)</label>
+                                <div class="input-group input-group-sm mb-1">
+                                    <span class="input-group-text bg-dark border-secondary text-white"><i class="bi bi-search"></i></span>
+                                    <input type="text" class="form-control list-search" data-target="FeatureIds" placeholder="Пошук особливостей...">
+                                </div>
+                                <select asp-for="FeatureIds" asp-items="Model.FeaturesList" class="form-select bg-dark text-white border-secondary" multiple size="3"></select>
+                                <span asp-validation-for="FeatureIds" class="text-danger small"></span>
+                                <input asp-for="FeaturesInput" class="form-control mt-2 form-control-sm" placeholder="Додати нові (через кому)" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-lg-4">
+                <div class="card border-secondary bg-black text-white mb-4">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-gear me-2"></i>Налаштування
+                    </div>
+                    <div class="card-body">
+                        <div class="mb-3">
+                            <label asp-for="Status" class="form-label text-white small text-uppercase">Статус</label>
+                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<MovieStatus>()" class="form-select mb-3"></select>
+                        </div>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <label asp-for="Runtime" class="form-label text-muted small text-uppercase">Тривалість (год:хв)</label>
+                                <input asp-for="Runtime"
+                                       type="time"
+                                       class="form-control bg-dark text-white border-secondary"
+                                       value="@(Model.Runtime?.ToString(@"hh\:mm"))" />
+                                <span asp-validation-for="Runtime" class="text-danger small"></span>
+                            </div>
+
+
+                            <div class="col-6">
+                                <label asp-for="AgeRating" class="form-label text-white small text-uppercase ">Вікове обмеження</label>
+                                <select asp-for="AgeRating" asp-items="Html.GetEnumSelectList<AgeRating>()" class="form-select border-secondary"></select>
+                                <span asp-validation-for="AgeRating" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-4">
+                                <label asp-for="Rating" class="form-label text-white small text-uppercase">Rating (0-10)</label>
+                                <input asp-for="Rating" type="number" step="0.1" min="0" max="10" class="form-control" placeholder="8.5" />
+                                <span asp-validation-for="Rating" class="text-danger small"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card border-secondary bg-black text-white">
+                    <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                        <i class="bi bi-image me-2"></i>Постер
+                    </div>
+                    <div class="card-body text-center">
+                        <div class="mb-3">
+                            <div class="ratio ratio-2x3 bg-dark border border-secondary rounded mb-3 d-flex align-items-center justify-content-center">
+                                <i class="   display-4 text-secondary"></i>
+                            </div>
+                            <input asp-for="PosterFile" type="file" class="form-control form-control-sm bg-dark text-white border-secondary" accept="image/*" />
+                            <span asp-validation-for="PosterFile" class="text-danger small"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold py-2 shadow-sm">
+                        <i class="bi bi-check-lg me-2"></i>Створити фільм
+                    </button>
+                    <a asp-action="Index" class="btn btn-outline-secondary">Скасувати</a>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <script>
+        $(document).ready(function () {
+            $('.list-search').on('keyup', function () {
+                var value = $(this).val().toLowerCase();
+                var targetId = $(this).data('target');
+                $('#' + targetId + ' option').filter(function () {
+                    $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+                });
+            });
+        });
+
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datepicker-input", {
+                theme: "dark",
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "d.m.Y",
+                locale: "uk",
+                disableMobile: "true"
+            });
+        });
+    </script>
+}

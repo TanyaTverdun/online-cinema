@@ -26,6 +26,7 @@ namespace onlineCinema.Infrastructure.Repositories
         public ISessionRepository Session { get; private set; }
         public ISnackRepository Snack { get; private set; }
         public ITicketRepository Ticket { get; private set; }
+        public IStatisticsRepository Statistics { get; private set; }
 
         public UnitOfWork(ApplicationDbContext db)
         {
@@ -44,6 +45,7 @@ namespace onlineCinema.Infrastructure.Repositories
             this.Session = new SessionRepository(_db);
             this.Snack = new SnackRepository(_db);
             this.Ticket = new TicketRepository(_db);
+            this.Statistics = new StatisticsRepository(_db);
         }
 
         public async Task SaveAsync()

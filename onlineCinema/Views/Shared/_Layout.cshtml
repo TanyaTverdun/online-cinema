@@ -1,50 +1,166 @@
-﻿<!DOCTYPE html>
-<html lang="en">
+<!DOCTYPE html>
+<html lang="uk">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - onlineCinema</title>
+
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootswatch@5.3.2/dist/lux/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css">
+
+    <link rel="stylesheet" href="~/css/cyborg.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    
+
+    <link rel="stylesheet" href="~/css/layout-styles.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/onlineCinema.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.7/css/dataTables.bootstrap5.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/dark.css">
+    <link rel="stylesheet" href="~/css/DataTables.css" asp-append-version="true" />
+
+    @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
-    <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
-            <div class="container-fluid">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">onlineCinema</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
-                    <ul class="navbar-nav flex-grow-1">
+
+<body class="bg-black text-white d-flex flex-column min-vh-100">
+<header>
+    <nav class="navbar navbar-expand-lg header-bg py-3 navbar-dark">
+        <div class="container-fluid px-4">
+
+            <a class="navbar-brand d-flex align-items-center gap-2" asp-area="" asp-controller="Home" asp-action="Index">
+                <div class="logo-icon d-flex align-items-center justify-content-center logo-box">
+                    <i class="bi bi-film fs-4"></i>
+                </div>
+                <div class="fw-bold fs-4 lh-1 text-uppercase" style="letter-spacing: 1px;">
+                    <span style="color: white;">Online</span><span class="text-danger">Cinema</span>
+                </div>
+            </a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav mx-auto mb-2 mb-lg-0 gap-lg-4">
+
+                    @if (User.IsInRole("Admin"))
+                    {
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                            <a class="nav-link nav-custom-link" asp-area="Admin" asp-controller="Dashboard" asp-action="Index">
+                                <i class="bi text-danger me-1"></i> Панель
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+                            <a class="nav-link nav-custom-link" asp-area="Admin" asp-controller="Payment" asp-action="Index">
+                                <i class="bi text-danger me-1"></i> Платежі
+                            </a>
                         </li>
-                    </ul>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle nav-custom-link" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                Панель адміністратора
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Movie" asp-action="Index">
+                                        <i class="bi bi-film me-2 text-danger"></i> Фільми
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Director" asp-action="Index">
+                                        <i class="bi bi-person-video2 text-danger me-2"></i> Режисери
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Session" asp-action="Index">
+                                        <i class="bi bi-person-video2 text-danger me-2"></i> Сеанси
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Hall" asp-action="Index">
+                                        <i class="bi bi-person-video2 text-danger me-2"></i> Зали
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="CastMember" asp-action="Index">
+                                        <i class="bi bi-people text-danger me-2"></i> Акторський склад
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Genre" asp-action="Index">
+                                        <i class="bi bi-tags text-danger me-2"></i> Жанри
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Snack" asp-action="Index">
+                                        <i class="bi bi-egg-fried text-danger me-2"></i> Снеки
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Feature" asp-action="Index">
+                                        <i class="bi bi-stars text-danger me-2"></i> Особливості
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Language" asp-action="Index">
+                                        <i class="bi bi-translate text-danger me-2"></i> Мови
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+
+                <div class="d-flex align-items-center gap-3 mt-3 mt-lg-0">
                     <partial name="_LoginPartial" />
                 </div>
             </div>
-        </nav>
-    </header>
-    <div class="container">
-        <main role="main" class="pb-3">
+        </div>
+    </nav>
+</header>
+
+@if ((bool?)ViewData["UseFullWidthLayout"] == true)
+{
+    <main role="main" class="flex-grow-1">
+        @RenderBody()
+    </main>
+}
+else
+{
+    <div class="container py-4 flex-grow-1">
+        <main role="main">
             @RenderBody()
         </main>
     </div>
+}
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2026 - onlineCinema - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
-        </div>
-    </footer>
+<footer class="footer mt-auto py-3 bg-black border-top border-secondary border-opacity-25 mt-5">
+    <div class="container text-center">
+        <span class="text-white-50 small">
+            &copy; @DateTime.Now.Year onlineCinema •
+            <a asp-controller="Home" asp-action="Privacy" class="text-white-50 text-decoration-none">
+                Політика конфіденційності
+            </a>
+        </span>
+    </div>
+</footer>
+
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/uk.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="//cdn.datatables.net/2.3.6/js/dataTables.min.js " asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

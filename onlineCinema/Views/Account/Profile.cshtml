@@ -1,0 +1,347 @@
+
+@model onlineCinema.ViewModels.ProfileViewModel
+@{
+    ViewData["Title"] = "Особистий кабінет";
+}
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <h2 class="mb-4">@ViewData["Title"]</h2>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["SuccessMessage"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        <form asp-action="Profile" method="post" id="profileForm">
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <input asp-for="Id" type="hidden" />
+
+            <div class="card mb-4">
+                <div class="card-header">
+                    <h5 class="mb-0">Особиста інформація</h5>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="FirstName" class="form-label">Ім'я</label>
+                            <input asp-for="FirstName" class="form-control" />
+                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="LastName" class="form-label">Прізвище</label>
+                            <input asp-for="LastName" class="form-control" />
+                            <span asp-validation-for="LastName" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label asp-for="MiddleName" class="form-label">
+                                По батькові <span class="text-muted">(необов'язково)</span>
+                            </label>
+                            <input asp-for="MiddleName" class="form-control" />
+                            <span asp-validation-for="MiddleName" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="Email" class="form-label">Електронна пошта</label>
+                            <input asp-for="Email" class="form-control" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="PhoneNumber" class="form-label">Номер телефону</label>
+                            <input asp-for="PhoneNumber" class="form-control" />
+                            <span asp-validation-for="PhoneNumber" class="text-danger"></span>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label asp-for="DateOfBirth" class="form-label">Дата народження</label>
+                        <input asp-for="DateOfBirth" class="form-control  bg-dark text-white datepicker-input" type="date" />
+                        <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                    </div>
+
+                    <hr class="my-4" />
+                    <h6 class="text-uppercase text-muted mb-3" style="letter-spacing: 1px;">
+                        <i class="bi bi-shield-lock me-2"></i>Зміна пароля
+                    </h6>
+                    <p class="small text-secondary mb-3">Заповніть ці поля лише якщо хочете встановити новий пароль. В іншому випадку залиште їх порожніми.</p>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="NewPassword" class="form-label fw-bold">Новий пароль</label>
+                            <div class="input-group">
+                                <input asp-for="NewPassword" class="form-control" type="password" id="passwordInput" autocomplete="new-password" />
+                                <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                    <i class="bi bi-eye" id="eyeIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="NewPassword" class="text-danger small"></span>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label asp-for="ConfirmPassword" class="form-label fw-bold">Підтвердження пароля</label>
+                            <div class="input-group">
+                                <input asp-for="ConfirmPassword" class="form-control" type="password" id="confirmPasswordInput" autocomplete="new-password" />
+                                <button class="btn btn-outline-secondary" type="button" id="toggleConfirmPassword">
+                                    <i class="bi bi-eye" id="confirmEyeIcon"></i>
+                                </button>
+                            </div>
+                            <span asp-validation-for="ConfirmPassword" class="text-danger small"></span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div id="action-buttons" class="d-none">
+                <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-3">
+                    <button type="submit" class="btn btn-primary">Зберегти зміни</button>
+                    <button type="button" id="cancel-changes" class="btn btn-secondary">Скасувати</button>
+                </div>
+            </div>
+        </form>
+
+        @if (!User.IsInRole("Admin"))
+        {
+            @if (Model.BookingHistory != null && Model.BookingHistory.Items.Any())
+            {
+                <div class="card mt-4">
+                    <div class="card-header">
+                        <h5 class="mb-0">Історія замовлень</h5>
+                    </div>
+
+                    <div class="card-body">
+                        <div class="row">
+                            @foreach (var booking in Model.BookingHistory.Items)
+                            {
+                                <div class="col-md-12 mb-4">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="row">
+                                                @if (!string.IsNullOrEmpty(booking.MoviePoster))
+                                                {
+                                                    <div class="col-md-2">
+                                                        <img src="data:image/jpeg;base64,@booking.MoviePoster"
+                                                             alt="@booking.MovieTitle"
+                                                             class="img-fluid rounded"
+                                                             style="max-height: 150px; object-fit: cover;" />
+                                                    </div>
+                                                }
+
+                                                <div class="@(string.IsNullOrEmpty(booking.MoviePoster) ? "col-md-12" : "col-md-10")">
+                                                    <h5 class="card-title">@booking.MovieTitle</h5>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-md-6">
+                                                            <strong>Дата сеансу:</strong>
+                                                            @booking.SessionDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <strong>Зал:</strong> @booking.HallName
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row mb-2">
+                                                        <div class="col-md-6">
+                                                            <strong>Дата замовлення:</strong>
+                                                            @booking.CreatedDateTime.ToString("dd.MM.yyyy HH:mm")
+                                                        </div>
+                                                        <div class="col-md-6">
+                                                            <strong>Статус оплати:</strong>
+                                                            <span class="badge @(booking.PaymentStatus == "Оплачено"
+                                                                ? "bg-success"
+                                                                : booking.PaymentStatus == "Очікується"
+                                                                    ? "bg-warning"
+                                                                    : booking.PaymentStatus == "Помилка"
+                                                                        ? "bg-danger"
+                                                                        : "bg-secondary")">
+                                                                @booking.PaymentStatus
+                                                            </span>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="mb-2">
+                                                        <div class="d-flex justify-content-between align-items-center mb-1" style="max-width: 400px;">
+                                                            <strong>Квитки:</strong>
+                                                            <strong>Ціна</strong>
+                                                        </div>
+
+                                                        <ul class="list-unstyled ms-3 mb-0">
+                                                            @foreach (var ticket in booking.Tickets)
+                                                            {
+                                                                <li class="d-flex justify-content-between align-items-center" style="max-width: 400px;">
+                                                                    <span>
+                                                                        <i class="bi bi-ticket-perforated text-muted me-1"></i>
+                                                                        Ряд @ticket.RowNumber, Місце @ticket.SeatNumber
+                                                                        <span class="text-muted">(@ticket.SeatType)</span>
+                                                                    </span>
+                                                                    <span>@ticket.Price.ToString("C")</span>
+                                                                </li>
+                                                            }
+                                                        </ul>
+                                                    </div>
+                                                    @if (booking.Snacks != null && booking.Snacks.Any())
+                                                    {
+                                                        <div class="mb-2 border-top pt-2">
+                                                            <strong>Снеки та напої:</strong>
+                                                            <ul class="list-unstyled ms-3 mb-0">
+                                                                @foreach (var snack in booking.Snacks)
+                                                                {
+                                                                    <li class="d-flex justify-content-between align-items-center" style="max-width: 400px;">
+                                                                        <span>
+                                                                            <i class="bi bi-cup-straw text-muted me-1"></i> @snack.Name <span class="text-muted">x @snack.Quantity</span>
+                                                                        </span>
+                                                                        <span>@snack.TotalPrice.ToString("C")</span>
+                                                                    </li>
+                                                                }
+                                                            </ul>
+                                                        </div>
+                                                    }
+
+                                                    <div class="mt-2 d-flex justify-content-between align-items-center">
+                                                        <div>
+                                                            <strong>Загальна сума:</strong>
+                                                            <span class="text-primary fw-bold">@booking.TotalAmount.ToString("C")</span>
+                                                        </div>
+
+                                                        @if (booking.CanRefund)
+                                                        {
+                                                            <button type="button" class="btn btn-outline-danger btn-sm"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#refundModal-@booking.BookingId">
+                                                                Повернути квитки
+                                                            </button>
+
+                                                            <div class="modal fade" id="refundModal-@booking.BookingId" tabindex="-1" aria-labelledby="refundModalLabel-@booking.BookingId" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                    <div class="modal-content text-dark">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="refundModalLabel-@booking.BookingId">Підтвердження повернення</h5>
+                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <p>Ви дійсно хочете скасувати бронювання на фільм <strong>"@booking.MovieTitle"</strong>?</p>
+
+                                                                            <div class="alert alert-warning py-2" role="alert">
+                                                                                <small><i class="bi bi-info-circle"></i> Кошти у сумі <strong>@booking.TotalAmount.ToString("C")</strong> будуть повернуті на ваш баланс.</small>
+                                                                            </div>
+
+                                                                            <p class="mb-1"><strong>Місця, що будуть звільнені:</strong></p>
+                                                                            <ul class="list-group list-group-flush mb-3">
+                                                                                @foreach (var t in booking.Tickets)
+                                                                                {
+                                                                                    <li class="list-group-item px-0 py-1 border-0">
+                                                                                        • Ряд @t.RowNumber, Місце @t.SeatNumber (@t.SeatType)
+                                                                                    </li>
+                                                                                }
+                                                                            </ul>
+                                                                        </div>
+                                                                        <div class="modal-footer border-0">
+                                                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ні, залишити</button>
+
+                                                                            <form asp-controller="Account" asp-action="CancelBooking" asp-route-id="@booking.BookingId" method="post">
+                                                                                <button type="submit" class="btn btn-danger">Так, повернути квитки</button>
+                                                                            </form>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        }
+                                                        else if (booking.PaymentStatus == "Повернуто")
+                                                        {
+                                                            <span class="badge bg-secondary">Скасовано</span>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        @if (Model.BookingHistory.Items.Any())
+                        {
+                            bool isNotAtStart = Model.BookingHistory.HasPreviousPage;
+
+                            bool hasMoreOld = Model.BookingHistory.HasNextPage;
+
+                            @if (isNotAtStart || hasMoreOld)
+                            {
+                                <div class="d-flex justify-content-between mt-4 mb-3 align-items-center">
+
+                                    <div class="d-flex gap-2">
+                                        @if (isNotAtStart)
+                                        {
+                                            <a asp-action="Profile" asp-route-firstId="@Model.BookingHistory.FirstId" class="btn btn-outline-primary">
+                                                <i class="bi bi-arrow-left"></i> Новіші
+                                            </a>
+                                        }
+
+                                        @if (isNotAtStart)
+                                        {
+                                            <a asp-action="Profile" class="btn btn-outline-secondary" title="На першу сторінку">
+                                                <i class="bi bi-arrow-counterclockwise"></i>
+                                            </a>
+                                        }
+                                    </div>
+
+                                    @if (hasMoreOld)
+                                    {
+                                        <a asp-action="Profile" asp-route-lastId="@Model.BookingHistory.LastId" class="btn btn-outline-primary">
+                                            Старіші <i class="bi bi-arrow-right"></i>
+                                        </a>
+                                    }
+                                </div>
+                            }
+                        }
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="card mt-4">
+                    <div class="card-body text-center">
+                        <p class="text-muted mb-0">У вас поки що немає замовлень</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            flatpickr(".datepicker-input", {
+                theme: "dark",
+                dateFormat: "Y-m-d",
+                altInput: true,
+                altFormat: "d.m.Y",
+                locale: "uk",
+                disableMobile: "true"
+            });
+        });
+    </script>
+}
+
+    <script src="~/js/PasswordToggle.js" asp-append-version="true"></script>
+    <script src="~/js/EditProfile.js" asp-append-version="true"></script>
+
+    <script>
+        // Ініціалізація для пароля
+        initPasswordToggle('togglePassword', 'passwordInput', 'eyeIcon');
+
+        // Ініціалізація для підтвердження пароля
+        initPasswordToggle('toggleConfirmPassword', 'confirmPasswordInput', 'confirmEyeIcon');
+    </script>
+}

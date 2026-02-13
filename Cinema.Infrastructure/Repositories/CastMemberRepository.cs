@@ -9,11 +9,13 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class CastMemberRepository : GenericRepository<CastMember>, ICastMemberRepository
+    public class CastMemberRepository 
+        : GenericRepository<CastMember>, ICastMemberRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public CastMemberRepository(ApplicationDbContext db) : base(db)
+        public CastMemberRepository(ApplicationDbContext db) 
+            : base(db)
         {
             _db = db;
         }

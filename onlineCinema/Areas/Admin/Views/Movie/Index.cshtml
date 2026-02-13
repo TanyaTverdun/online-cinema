@@ -1,0 +1,41 @@
+﻿@using onlineCinema.Application.DTOs.Movie
+@model IEnumerable<MovieItemViewModel>
+@{
+    ViewData["Title"] = "Керування фільмами";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування фільмами</h1>
+        <a asp-action="Create" class="btn btn-danger btn-sm fw-bold">
+            <i class="bi bi-plus-lg me-1"></i> Додати новий фільм
+        </a>
+    </div>
+
+    <div class="card border-secondary bg-dark">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table id="tblData"
+                       class="table table-hover mb-0 align-middle movie-table w-100"
+                       data-load-url="@Url.Action("GetAll", "Movie", new { area = "Admin" })">
+                    <thead class="bg-black text-uppercase small text-muted">
+                        <tr>
+                            <th style="width: 80px;">Постер</th>
+                            <th>Назва та жанри</th>
+                            <th>Рік виходу</th>
+                            <th>Рейтинг</th>
+                            <th>Статус</th>
+                            <th class="text-end">Дії</th>
+                        </tr>
+                    </thead>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="https://cdn.datatables.net/1.13.7/js/jquery.dataTables.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.7/js/dataTables.bootstrap5.min.js"></script>
+    <script src="~/js/movie.js"></script>
+}

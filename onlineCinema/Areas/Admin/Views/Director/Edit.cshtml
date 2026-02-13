@@ -1,0 +1,54 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@model DirectorFormViewModel
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3">
+            @(Model.DirectorId == 0 ? "Додати режисера" : "Редагувати режисера")
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">
+            Назад до списку
+        </a>
+    </div>
+
+    <form asp-action="@(Model.DirectorId == 0 ? "Create" : "Edit")" method="post">
+        <input type="hidden" asp-for="DirectorId" />
+
+        <div class="card border-secondary bg-black text-white mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                <i class="bi bi-person-badge me-2"></i>Director Information
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label asp-for="DirectorFirstName" class="form-label text-white small text-uppercase">
+                        Ім’я
+                    </label>
+                    <input asp-for="DirectorFirstName" class="form-control" />
+                    <span asp-validation-for="DirectorFirstName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DirectorLastName" class="form-label text-white small text-uppercase">
+                        Прізвище
+                    </label>
+                    <input asp-for="DirectorLastName" class="form-control" />
+                    <span asp-validation-for="DirectorLastName" class="text-danger small"></span>
+                </div>
+
+                <div class="mb-3">
+                    <label asp-for="DirectorMiddleName" class="form-label text-white small text-uppercase">
+                        По батькові
+                    </label>
+                    <input asp-for="DirectorMiddleName" class="form-control" />
+                    <span asp-validation-for="DirectorMiddleName" class="text-danger small"></span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold">
+                        Зберегти
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

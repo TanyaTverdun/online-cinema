@@ -1,0 +1,42 @@
+﻿@using onlineCinema.Areas.Admin.Models
+@model CastMemberViewModel
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3">
+            @(Model.CastId == 0 ? "Додати учасника акторського складу" : "Редагувати учасника акторського складу")
+        </h1>
+        <a asp-action="Index" class="btn btn-outline-light btn-sm text-white">Назад до списку</a>
+    </div>
+
+    <form asp-action="@(Model.CastId == 0 ? "Create" : "Edit")" method="post">
+        <input type="hidden" asp-for="CastId" />
+
+        <div class="card border-secondary bg-black text-white mx-auto" style="max-width: 600px;">
+            <div class="card-header bg-black border-bottom border-secondary text-white fw-bold">
+                <i class="bi bi-person me-2"></i>Actor Information
+            </div>
+            <div class="card-body">
+                <div class="mb-3">
+                    <label asp-for="CastFirstName" class="form-label text-white small text-uppercase">Ім’я</label>
+                    <input asp-for="CastFirstName" class="form-control" />
+                    <span asp-validation-for="CastFirstName" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CastLastName" class="form-label text-white small text-uppercase">Прізвище</label>
+                    <input asp-for="CastLastName" class="form-control" />
+                    <span asp-validation-for="CastLastName" class="text-danger small"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="CastMiddleName" class="form-label text-white small text-uppercase">По батькові</label>
+                    <input asp-for="CastMiddleName" class="form-control" />
+                    <span asp-validation-for="CastMiddleName" class="text-danger small"></span>
+                </div>
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-danger fw-bold">Зберегти</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

@@ -16,7 +16,9 @@ namespace onlineCinema.Domain.Entities
         public DateTime ReleaseDate { get; set; }
         public string? TrailerLink { get; set; }
         public string? Description { get; set; }
+        public decimal Rating { get; set; }
         public string? PosterImage { get; set; }
+
 
         public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
         public ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();

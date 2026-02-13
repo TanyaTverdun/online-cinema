@@ -1,0 +1,125 @@
+﻿@using onlineCinema.Application.DTOs.Movie
+@using onlineCinema.Domain.Enums
+@model IEnumerable<MovieCardDto>
+
+@{
+    ViewData["Title"] = "Панель адміністратора";
+}
+
+<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування фільмами</h1>
+        <a asp-action="Create" class="btn btn-danger fw-bold text-white">
+            <i class="bi bi-plus-lg me-1"></i> Додати новий фільм
+        </a>
+    </div>
+
+    <div class="card border-secondary mb-5 bg-dark">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0 align-middle">
+                <thead class="bg-black text-muted small text-uppercase">
+                    <tr>
+                        <th class="px-4 py-3">Постер</th>
+                        <th class="px-4 py-3">Назва</th>
+                        <th class="px-4 py-3">Жанри</th>
+                        <th class="px-4 py-3">Статус</th>
+                        <th class="px-4 py-3">Рік</th>
+                        <th class="px-4 py-3 text-end">Дії</th>
+                    </tr>
+                </thead>
+                <tbody class="text-light">
+                    @foreach (var movie in Model)
+                    {
+                        <tr>
+                            <td class="px-4 py-3">
+                                <img src="@movie.PosterUrl"
+                                     alt="Постер"
+                                     class="rounded border border-secondary"
+                                     style="width: 40px; height: 60px; object-fit: cover;">
+                            </td>
+
+                            <td class="px-4 py-3 fw-semibold text-white">
+                                @movie.Title
+                            </td>
+
+                            <td class="px-4 py-3 text-muted small">
+                                @movie.GenreSummary
+                            </td>
+
+                            <td class="px-4 py-3">
+                                @if (movie.Status == MovieStatus.Released)
+                                {
+                                    <span class="badge bg-success bg-opacity-75 border border-success">У прокаті</span>
+                                }
+                                else
+                                {
+                                    <span class="badge bg-warning text-dark border border-warning">Скоро у прокаті</span>
+                                }
+                            </td>
+
+                            <td class="px-4 py-3 text-muted">@movie.ReleaseYear</td>
+
+                            <td class="px-4 py-3 text-end">
+                                <a asp-action="Edit"
+                                   asp-route-id="@movie.Id"
+                                   class="btn btn-sm btn-link text-primary text-decoration-none">
+                                    Редагувати
+                                </a>
+
+                                <form asp-action="Delete"
+                                      asp-route-id="@movie.Id"
+                                      method="post"
+                                      class="d-inline"
+                                      onsubmit="return confirm('Видалити цей фільм?');">
+                                    <button type="submit"
+                                            class="btn btn-sm btn-link text-danger text-decoration-none">
+                                        Видалити
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    }
+
+                    @if (!Model.Any())
+                    {
+                        <tr>
+                            <td colspan="6" class="text-center py-4 text-muted">
+                                Фільми відсутні. Натисніть «Додати новий фільм», щоб створити перший.
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="text-white fw-bold fs-3 mb-0">Керування сеансами</h1>
+        <button class="btn btn-outline-light fw-bold" disabled>
+            + Додати сеанс (Незабаром)
+        </button>
+    </div>
+
+    <div class="card border-secondary bg-dark opacity-50">
+        <div class="table-responsive">
+            <table class="table table-dark table-hover mb-0">
+                <thead class="bg-black text-muted small text-uppercase">
+                    <tr>
+                        <th class="px-4 py-3">Фільм</th>
+                        <th class="px-4 py-3">Зал</th>
+                        <th class="px-4 py-3">Час</th>
+                        <th class="px-4 py-3">Ціна</th>
+                        <th class="px-4 py-3 text-end">Дії</th>
+                    </tr>
+                </thead>
+                <tbody class="text-light">
+                    <tr>
+                        <td colspan="5" class="text-center py-4 text-muted">
+                            Функціонал керування сеансами знаходиться в розробці.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

@@ -1,19 +1,51 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.Interfaces;
+﻿using System.Diagnostics;
+using System.Globalization;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc;
+using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Domain.Entities;
+using onlineCinema.Mapping;
+using onlineCinema.Models;
+using onlineCinema.ViewModels;
 
 namespace onlineCinema.Controllers
 {
-    public class SessionController
+    public class SessionController : Controller
     {
-        private readonly IUnitOfWork _unitOfWork;
+        private readonly ISessionService _sessionService;
+        private readonly MovieScheduleViewModelMapper _sessionMapper;
 
-        public SessionController(IUnitOfWork unitOfWork)
+        public SessionController(
+            ISessionService sessionService,
+            MovieScheduleViewModelMapper sessionMapper)
         {
-            _unitOfWork = unitOfWork;
+            _sessionService = sessionService;
+            _sessionMapper = sessionMapper;
         }
+
+        [HttpGet]
+        public async Task<IActionResult> Schedule(int id)
+        {
+            try
+            {
+                var dto = await _sessionService
+                    .GetMovieScheduleAsync(id);
+
+                var viewModel = _sessionMapper
+                    .MapMovieScheduleDtoToViewModel(dto);
+
+                return View(viewModel);
+            }
+            catch (KeyNotFoundException)
+            {
+                return NotFound();
+            }
+            catch (Exception)
+            {
+                return RedirectToAction("Index", "Home");
+            }
+        }
+
     }
 }
