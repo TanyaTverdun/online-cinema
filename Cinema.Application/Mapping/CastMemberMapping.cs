@@ -10,13 +10,13 @@ namespace onlineCinema.Application.Mapping
     {
         public partial CastMemberDto MapToDto(CastMember castMember);
 
-        public partial List<CastMemberDto> 
+        public partial List<CastMemberDto>
             MapToDtoList(IEnumerable<CastMember> castMembers);
 
         public partial CastMember MapToEntity(CastMemberCreateUpdateDto dto);
 
         public partial void UpdateEntityFromDto(
-            CastMemberCreateUpdateDto dto, 
+            CastMemberCreateUpdateDto dto,
             CastMember entity);
     }
 }

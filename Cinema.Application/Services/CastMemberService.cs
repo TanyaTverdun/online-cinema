@@ -11,7 +11,7 @@ public class CastMemberService : ICastMemberService
     private readonly CastMemberMapping _mapper;
 
     public CastMemberService(
-        IUnitOfWork unitOfWork, 
+        IUnitOfWork unitOfWork,
         CastMemberMapping mapper)
     {
         _unitOfWork = unitOfWork;
@@ -55,7 +55,7 @@ public class CastMemberService : ICastMemberService
         var entity = await _unitOfWork.CastMember.GetByIdAsync(id);
         if (entity != null)
         {
-            _unitOfWork.CastMember.Remove(entity); 
+            _unitOfWork.CastMember.Remove(entity);
             await _unitOfWork.SaveAsync();
         }
     }
