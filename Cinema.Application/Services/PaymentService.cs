@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using onlineCinema.Application.Configurations;
+using onlineCinema.Application.DTOs;
 using onlineCinema.Application.DTOs.AdminTickets;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
@@ -24,20 +25,20 @@ namespace onlineCinema.Application.Services
             _settings = settings.Value;
         }
 
-        public async Task<PagedResult<PaymentAdminDto>> GetPaymentsForAdminAsync(
-            int? lastId, 
-            string? email, 
-            string? movie, 
+        public async Task<PagedResultDto<PaymentAdminDto>> GetPaymentsForAdminAsync(
+            int? lastId,
+            string? email,
+            string? movie,
             DateTime? date)
         {
             int pageSize = _settings.AdminPageSize;
 
             var (entities, totalCount) = await _unitOfWork.Payment
                 .GetPaymentsSeekAsync(
-                    lastId, 
-                    pageSize, 
-                    email, 
-                    movie, 
+                    lastId,
+                    pageSize,
+                    email,
+                    movie,
                     date);
 
             return _mapper.MapToPagedResult(entities, totalCount, pageSize);

@@ -57,7 +57,7 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             try
             {
-                var dto = _mapper.ToCreateUpdateDto(model);
+                var dto = _mapper.ToDto(model);
                 await _castMemberService.CreateAsync(dto);
 
                 return RedirectToAction(nameof(Index));
@@ -110,7 +110,7 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             try
             {
-                var dto = _mapper.ToCreateUpdateDto(model);
+                var dto = _mapper.ToDto(model);
                 await _castMemberService.UpdateAsync(dto);
 
                 return RedirectToAction(nameof(Index));

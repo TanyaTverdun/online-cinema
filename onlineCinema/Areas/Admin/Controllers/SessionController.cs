@@ -14,7 +14,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly SessionViewModelMapper _sessionMapper;
 
         public SessionController(
-            ISessionService sessionService, 
+            ISessionService sessionService,
             IMovieService movieService,
             IHallService hallService,
             SessionViewModelMapper sessionMapper)
@@ -54,7 +54,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             try
             {
                 await _sessionService.CreateSessionAsync(
-                    _sessionMapper.MapToCreateDto(vm));
+                    _sessionMapper.MapToDto(vm));
 
                 return RedirectToAction(nameof(Index));
             }
@@ -130,7 +130,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 return View("Session", model);
             }
 
-            var updateDto = _sessionMapper.MapToUpdateDto(model);
+            var updateDto = _sessionMapper.MapToDto(model);
 
             await _sessionService.UpdateSessionAsync(updateDto);
 

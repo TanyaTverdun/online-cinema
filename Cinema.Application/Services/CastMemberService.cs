@@ -32,14 +32,14 @@ public class CastMemberService : ICastMemberService
         return entity != null ? _mapper.MapToDto(entity) : null;
     }
 
-    public async Task CreateAsync(CastMemberCreateUpdateDto dto)
+    public async Task CreateAsync(CastMemberDto dto)
     {
         var entity = _mapper.MapToEntity(dto);
         await _unitOfWork.CastMember.AddAsync(entity);
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task UpdateAsync(CastMemberCreateUpdateDto dto)
+    public async Task UpdateAsync(CastMemberDto dto)
     {
         var entity = await _unitOfWork.CastMember.GetByIdAsync(dto.CastId);
         if (entity != null)

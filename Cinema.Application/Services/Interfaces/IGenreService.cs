@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
 using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.Genre;
 
 namespace onlineCinema.Application.Services.Interfaces
 {
@@ -11,9 +10,9 @@ namespace onlineCinema.Application.Services.Interfaces
 
         Task<GenreDto?> GetByIdAsync(int id);
 
-        Task CreateAsync(GenreFormDto dto);
+        Task CreateAsync(GenreDto dto);
 
-        Task UpdateAsync(GenreFormDto dto);
+        Task UpdateAsync(GenreDto dto);
 
         Task DeleteAsync(int id);
     }

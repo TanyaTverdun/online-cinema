@@ -11,7 +11,6 @@ namespace onlineCinema.Mapping
         public partial List<CastMemberViewModel> ToViewModelList(
             IEnumerable<CastMemberDto> dtos);
 
-        public partial CastMemberCreateUpdateDto ToCreateUpdateDto(
-            CastMemberViewModel model);
+        public partial CastMemberDto ToDto(CastMemberViewModel model);
     }
 }

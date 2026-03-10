@@ -1,5 +1,4 @@
 ﻿using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.Genre;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -42,14 +41,14 @@ namespace onlineCinema.Application.Services
             };
         }
 
-        public async Task CreateAsync(GenreFormDto dto)
+        public async Task CreateAsync(GenreDto dto)
         {
             var genre = _mapper.ToEntity(dto);
             await _unitOfWork.Genre.AddAsync(genre);
             await _unitOfWork.SaveAsync();
         }
 
-        public async Task UpdateAsync(GenreFormDto dto)
+        public async Task UpdateAsync(GenreDto dto)
         {
             var genre = await _unitOfWork.Genre.GetByIdAsync(dto.GenreId);
 

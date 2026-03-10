@@ -53,7 +53,7 @@ namespace onlineCinema.Application.Services
             return scheduleDto;
         }
 
-        public async Task CreateSessionAsync(SessionCreateDto dto)
+        public async Task CreateSessionAsync(SessionFormDto dto)
         {
             var movie = await _unitOfWork.Movie.GetByIdAsync(dto.MovieId);
 
@@ -62,7 +62,7 @@ namespace onlineCinema.Application.Services
                 throw new KeyNotFoundException("Фільм не знайдено");
             }
 
-            int days = dto.GenerateForWeek ? _settings.DaysInWeek 
+            int days = dto.GenerateForWeek ? _settings.DaysInWeek
                 : _settings.OneDay;
 
             for (int i = 0; i < days; i++)
@@ -92,9 +92,14 @@ namespace onlineCinema.Application.Services
 
 
 
-        public async Task UpdateSessionAsync(SessionUpdateDto dto)
+        public async Task UpdateSessionAsync(SessionFormDto dto)
         {
-            var session = await _unitOfWork.Session.GetByIdAsync(dto.Id);
+            if (!dto.Id.HasValue)
+            {
+                throw new ArgumentException("Id є обов'язковим для оновлення");
+            }
+
+            var session = await _unitOfWork.Session.GetByIdAsync(dto.Id.Value);
 
             if (session == null)
             {
@@ -113,7 +118,7 @@ namespace onlineCinema.Application.Services
                     dto.HallId,
                     dto.ShowingDateTime,
                     movie.Runtime,
-                    dto.Id);
+                    dto.Id.Value);
 
             if (hasConflict)
             {
