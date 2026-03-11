@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Extensions;
 using onlineCinema.Mapping;
 using onlineCinema.ViewModels;
 
@@ -72,12 +73,7 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             if (!validationResult.IsValid)
             {
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(
-                        error.PropertyName,
-                        error.ErrorMessage);
-                }
+                ModelState.AddFluentErrors(validationResult);
             }
 
             if (!ModelState.IsValid)
@@ -126,6 +122,13 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(HallInputViewModel model)
         {
+            var validationResult = await _validator.ValidateAsync(model);
+
+            if (!validationResult.IsValid)
+            {
+                ModelState.AddFluentErrors(validationResult);
+            }
+
             if (!ModelState.IsValid)
             {
                 var features = await _hallService.GetAllFeaturesAsync();

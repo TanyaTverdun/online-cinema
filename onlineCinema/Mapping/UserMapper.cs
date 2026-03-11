@@ -8,7 +8,7 @@ using onlineCinema.ViewModels;
 namespace onlineCinema.Mapping
 {
     [Mapper]
-    public partial class UserMapping
+    public partial class UserMapper
     {
         [MapperIgnoreSource(nameof(ApplicationUser.Bookings))]
         [MapperIgnoreSource(nameof(ApplicationUser.UserName))]

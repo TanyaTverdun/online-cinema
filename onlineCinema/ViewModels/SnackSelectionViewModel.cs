@@ -9,6 +9,6 @@
         public decimal SeatsTotalPrice { get; set; }
         public decimal GrandTotal => SeatsTotalPrice + TotalSnacksPrice;
         public DateTime LockUntil { get; set; }
-        public string initialSeconds { get; set; }
+        public string InitialSeconds { get; set; }
     }
 }

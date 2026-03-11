@@ -16,6 +16,8 @@ using onlineCinema.Infrastructure.Data;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Application.Configurations;
 
+using onlineCinema.Domain.Constants;
+
 var builder = WebApplication.CreateBuilder(args);
 
 var connectionString =
@@ -29,9 +31,13 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         connectionString,
         b => b.MigrationsAssembly("onlineCinema.Infrastructure")
     );
-    options.LogTo(Console.WriteLine, LogLevel.Information);
-    options.EnableSensitiveDataLogging();
-    options.EnableDetailedErrors();
+
+    if (builder.Environment.IsDevelopment())
+    {
+        options.LogTo(Console.WriteLine, LogLevel.Information);
+        options.EnableSensitiveDataLogging();
+        options.EnableDetailedErrors();
+    }
 });
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
@@ -67,7 +73,7 @@ Microsoft.AspNetCore.Identity.IdentityRole>(
 
 builder.Services.AddAuthorization(options =>
 {
-    options.AddPolicy("AdminOnly", policy => policy.RequireRole("Admin"));
+    options.AddPolicy("AdminOnly", policy => policy.RequireRole(Roles.Admin));
 });
 
 builder.Services.AddControllersWithViews(options =>
@@ -90,9 +96,6 @@ builder.Services.Configure<StatisticsSettings>(
 
 builder.Services.Configure<BookingSettings>(
     builder.Configuration.GetSection("BookingSettings"));
-
-builder.Services.Configure<PaginationSettings>(
-    builder.Configuration.GetSection("PaginationSettings"));
 
 builder.Services.Configure<TimeSettings>(
     builder.Configuration.GetSection("TimeSettings"));
@@ -120,14 +123,14 @@ builder.Services.AddScoped<SnackViewModelMapper>();
 builder.Services.AddScoped<HallViewModelMapper>();
 builder.Services.AddScoped<SessionViewModelMapper>();
 builder.Services.AddScoped<AdminMovieMapper>();
-builder.Services.AddScoped<UserMapping>();
+builder.Services.AddScoped<UserMapper>();
 builder.Services.AddScoped<AdminGenreMapper>();
 builder.Services.AddScoped<AdminCastMemberMapper>();
 builder.Services.AddScoped<AdminFeatureMapper>();
 builder.Services.AddScoped<AdminLanguageMapper>();
 builder.Services.AddScoped<AdminSnackMapper>();
 builder.Services.AddScoped<AdminStatisticsMapper>();
-builder.Services.AddScoped<AdminPaymentMapping>();
+builder.Services.AddScoped<AdminPaymentMapper>();
 
 builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 builder.Services.AddScoped<IMovieService, MovieService>();
@@ -207,10 +210,6 @@ app.MapAreaControllerRoute(
     areaName: "Admin",
     pattern: "Admin/{controller=Home}/{action=Index}/{id?}"
 ).RequireAuthorization("AdminOnly");
-
-app.MapControllerRoute(
-    name: "areas",
-    pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
 
 app.MapControllerRoute(
     name: "default",

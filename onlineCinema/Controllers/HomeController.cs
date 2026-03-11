@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 using onlineCinema.Models;
 using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Domain.Constants;
 
 namespace onlineCinema.Controllers
 {
@@ -19,7 +20,7 @@ namespace onlineCinema.Controllers
 
         public async Task<IActionResult> Index()
         {
-            if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+            if (User.Identity.IsAuthenticated && User.IsInRole(Roles.Admin))
             {
                 return RedirectToAction(
                     "Index",

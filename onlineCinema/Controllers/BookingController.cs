@@ -68,7 +68,7 @@ namespace onlineCinema.Controllers
         {
             if (!ModelState.IsValid)
             {
-                TempData["Error"] = ModelState.Values
+                TempData["ErrorMessage"] = ModelState.Values
                     .SelectMany(v => v.Errors)
                     .FirstOrDefault()?.ErrorMessage;
 
@@ -100,11 +100,11 @@ namespace onlineCinema.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TempData["Error"] = ex.Message;
+                TempData["ErrorMessage"] = ex.Message;
             }
             catch (ArgumentException ex)
             {
-                TempData["Error"] = ex.Message;
+                TempData["ErrorMessage"] = ex.Message;
             }
             catch (KeyNotFoundException)
             {
@@ -147,12 +147,12 @@ namespace onlineCinema.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TempData["Error"] = ex.Message;
+                TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction("Profile", "Account");
             }
             catch (ArgumentException ex)
             {
-                TempData["Error"] = ex.Message;
+                TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction("Profile", "Account");
             }
         }
@@ -169,7 +169,7 @@ namespace onlineCinema.Controllers
 
             if (lockUntil < DateTime.Now)
             {
-                TempData["Error"] =
+                TempData["ErrorMessage"] =
                     "Час бронювання вийшов. Місця були звільнені.";
                 return RedirectToAction("Index", "Home");
             }
@@ -199,17 +199,17 @@ namespace onlineCinema.Controllers
             }
             catch (InvalidOperationException ex)
             {
-                TempData["Error"] = ex.Message;
+                TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction("Index", "Home");
             }
             catch (ArgumentException ex)
             {
-                TempData["Error"] = ex.Message;
+                TempData["ErrorMessage"] = ex.Message;
                 return RedirectToAction("Index", "Home");
             }
             catch (Exception)
             {
-                TempData["Error"] =
+                TempData["ErrorMessage"] =
                     "Сталася помилка під час завершення бронювання.";
                 return RedirectToAction("Index", "Home");
             }

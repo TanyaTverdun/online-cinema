@@ -7,7 +7,7 @@ using Riok.Mapperly.Abstractions;
 namespace onlineCinema.Mapping
 {
     [Mapper]
-    public partial class AdminPaymentMapping
+    public partial class AdminPaymentMapper
     {
         [MapProperty
             (nameof(PaymentAdminDto.Status),

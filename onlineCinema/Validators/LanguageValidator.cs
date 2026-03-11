@@ -1,4 +1,5 @@
 ﻿using FluentValidation;
+using onlineCinema.Areas.Admin.Models;
 using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators

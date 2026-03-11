@@ -42,6 +42,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SessionViewModel vm)
         {
             if (!ModelState.IsValid)
@@ -99,6 +100,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, SessionViewModel model)
         {
             if (model.Id == null || model.Id == 0)

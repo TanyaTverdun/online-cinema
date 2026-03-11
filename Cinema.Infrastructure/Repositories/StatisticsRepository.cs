@@ -28,8 +28,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     Count = m.Sessions
                         .SelectMany(s => s.Tickets)
                         .Count(t => t.Booking.Payment != null
-                            && t.Booking.Payment.Status == PaymentStatus.Completed),
-                    Revenue = 0
+                            && t.Booking.Payment.Status == PaymentStatus.Completed)
                 });
 
             query = ascending ? query.OrderBy(x => x.Count)
@@ -49,8 +48,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     Count = s.SnackBookings
                         .Where(sb => sb.Booking.Payment != null
                             && sb.Booking.Payment.Status == PaymentStatus.Completed)
-                        .Sum(sb => (int)sb.Quantity),
-                    Revenue = 0
+                        .Sum(sb => (int)sb.Quantity)
                 });
 
             query = ascending ? query.OrderBy(x => x.Count)

@@ -8,10 +8,10 @@ namespace onlineCinema.Areas.Admin.Controllers
     public class PaymentController : Controller
     {
         private readonly IPaymentService _paymentService;
-        private readonly AdminPaymentMapping _viewMapper;
+        private readonly AdminPaymentMapper _viewMapper;
 
         public PaymentController(IPaymentService paymentService,
-            AdminPaymentMapping viewMapper)
+            AdminPaymentMapper viewMapper)
         {
             _paymentService = paymentService;
             _viewMapper = viewMapper;

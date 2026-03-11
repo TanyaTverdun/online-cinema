@@ -33,7 +33,8 @@ namespace onlineCinema.Application.Mapping
             return dto;
         }
 
-        public partial IEnumerable<HallDto> MapToDtoList(IEnumerable<Hall> hall);
+        public IEnumerable<HallDto> MapToDtoList(IEnumerable<Hall> halls)
+            => halls.Select(MapToHallDto);
 
         [MapProperty(nameof(HallDto.Id), nameof(Hall.HallId))]
         private partial Hall MapToHallEntityBase(HallDto dto);

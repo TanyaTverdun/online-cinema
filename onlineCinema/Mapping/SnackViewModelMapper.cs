@@ -25,7 +25,7 @@ namespace onlineCinema.Mapping
                 SeatsTotalPrice = seatsTotalPrice,
                 AvailableSnacks = MapSnackDtoToViewModelList(snacks),
                 LockUntil = lockUntil,
-                initialSeconds = $"{initialSeconds / 60:D2}:{initialSeconds % 60:D2}"
+                InitialSeconds = $"{initialSeconds / 60:D2}:{initialSeconds % 60:D2}"
             };
         }
 

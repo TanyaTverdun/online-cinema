@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.DTOs.Booking;
 using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Application.Services.Interfaces;
+using onlineCinema.Domain.Constants;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Mapping;
 using onlineCinema.ViewModels;
@@ -17,7 +18,7 @@ namespace onlineCinema.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly UserMapping _userMapping;
+        private readonly UserMapper _userMapping;
         private readonly IBookingService _bookingService;
 
         public AccountController(
@@ -25,7 +26,7 @@ namespace onlineCinema.Controllers
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<AccountController> logger,
-            UserMapping userMapping,
+            UserMapper userMapping,
             IBookingService bookingService)
         {
             _userManager = userManager;
@@ -68,7 +69,7 @@ namespace onlineCinema.Controllers
                 return View(model);
             }
 
-            const string userRoleName = "User";
+            const string userRoleName = Roles.User;
             if (!await _roleManager.RoleExistsAsync(userRoleName))
             {
                 await _roleManager
@@ -187,7 +188,7 @@ namespace onlineCinema.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            bool isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
 
             var pagedResultDto = isAdmin
                 ? new PagedResultDto<BookingHistoryDto>()
@@ -367,7 +368,7 @@ namespace onlineCinema.Controllers
             int? lastId = null,
             int? firstId = null)
         {
-            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            bool isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
 
             var pagedResultDto = isAdmin
                 ? new PagedResultDto<BookingHistoryDto>()

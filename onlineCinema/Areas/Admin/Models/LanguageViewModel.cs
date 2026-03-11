@@ -1,5 +1,8 @@
-﻿public class LanguageViewModel
+namespace onlineCinema.Areas.Admin.Models
 {
-    public int LanguageId { get; set; }
-    public string LanguageName { get; set; } = string.Empty;
+    public class LanguageViewModel
+    {
+        public int LanguageId { get; set; }
+        public string LanguageName { get; set; } = string.Empty;
+    }
 }
