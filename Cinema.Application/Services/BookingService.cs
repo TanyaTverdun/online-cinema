@@ -57,7 +57,8 @@ namespace onlineCinema.Application.Services
             var activeTickets = await this._unitOfWork.Ticket.GetAllAsync(t =>
                 t.SessionId == sessionId &&
                     (t.LockUntil > DateTime.Now
-                        || (t.Booking.Payment != null
+                        || (t.Booking != null
+                            && t.Booking.Payment != null
                             && t.Booking.Payment.Status == PaymentStatus.Completed)),
                 includeProperties: "Booking,Booking.Payment"
              );
@@ -274,7 +275,7 @@ namespace onlineCinema.Application.Services
                 await _unitOfWork.SaveAsync();
             }
 
-            // Скасування блокування з місць!
+            // Скасування блокування з місць
             // Час блокування -1, щоб карта місць не бачила ці квитки як активні
             foreach (var ticket in booking.Tickets)
             {

@@ -176,7 +176,7 @@ namespace onlineCinema.Controllers
 
             var chosenItems = model.AvailableSnacks?
                 .Where(s => s.Quantity > 0)
-                .ToList() ?? new List<SnackItemViewModel>();
+                .ToList() ?? [];
 
             try
             {

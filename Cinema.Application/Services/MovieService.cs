@@ -171,12 +171,14 @@ namespace onlineCinema.Application.Services
             if (!string.IsNullOrWhiteSpace(model.GenresInput))
             {
                 var names = SplitInput(model.GenresInput);
+
+                var existingGenres = await _unitOfWork.Genre.GetAllAsync();
+                var genresToCreate = new List<Genre>();
+
                 foreach (var name in names)
                 {
-                    var existing = (await _unitOfWork.Genre
-                        .GetAllAsync(x => x.GenreName
-                        .ToLower() == name.ToLower()))
-                        .FirstOrDefault();
+                    var existing = existingGenres.FirstOrDefault(x =>
+                        x.GenreName.ToLower() == name.ToLower());
 
                     if (existing != null)
                     {
@@ -184,10 +186,21 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new Genre { GenreName = name };
-                        await _unitOfWork.Genre.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allIds.Add(newEntity.GenreId);
+                        genresToCreate.Add(new Genre { GenreName = name });
+                    }
+                }
+
+                if (genresToCreate.Any())
+                {
+                    foreach (var genre in genresToCreate)
+                    {
+                        await _unitOfWork.Genre.AddAsync(genre);
+                    }
+                    await _unitOfWork.SaveAsync();
+
+                    foreach (var genre in genresToCreate)
+                    {
+                        allIds.Add(genre.GenreId);
                     }
                 }
             }
@@ -205,12 +218,16 @@ namespace onlineCinema.Application.Services
             if (!string.IsNullOrWhiteSpace(model.ActorsInput))
             {
                 var names = SplitInput(model.ActorsInput);
+
+                var existingActors = await _unitOfWork.CastMember.GetAllAsync();
+                var actorsToCreate = new List<CastMember>();
+
                 foreach (var fullName in names)
                 {
                     var (first, last) = ParseName(fullName);
-                    var existing = (await _unitOfWork.CastMember
-                        .GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower()
-                            && x.CastLastName.ToLower() == last.ToLower())).FirstOrDefault();
+                    var existing = existingActors.FirstOrDefault(x =>
+                        x.CastFirstName.ToLower() == first.ToLower()
+                        && x.CastLastName.ToLower() == last.ToLower());
 
                     if (existing != null)
                     {
@@ -218,10 +235,25 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new CastMember { CastFirstName = first, CastLastName = last };
-                        await _unitOfWork.CastMember.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allIds.Add(newEntity.CastId);
+                        actorsToCreate.Add(new CastMember
+                        {
+                            CastFirstName = first,
+                            CastLastName = last
+                        });
+                    }
+                }
+
+                if (actorsToCreate.Any())
+                {
+                    foreach (var actor in actorsToCreate)
+                    {
+                        await _unitOfWork.CastMember.AddAsync(actor);
+                    }
+                    await _unitOfWork.SaveAsync();
+
+                    foreach (var actor in actorsToCreate)
+                    {
+                        allIds.Add(actor.CastId);
                     }
                 }
             }
@@ -239,12 +271,16 @@ namespace onlineCinema.Application.Services
             if (!string.IsNullOrWhiteSpace(model.DirectorsInput))
             {
                 var names = SplitInput(model.DirectorsInput);
+
+                var existingDirectors = await _unitOfWork.Director.GetAllAsync();
+                var directorsToCreate = new List<Director>();
+
                 foreach (var fullName in names)
                 {
                     var (first, last) = ParseName(fullName);
-                    var existing = (await _unitOfWork.Director
-                        .GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower()
-                            && x.DirectorLastName.ToLower() == last.ToLower())).FirstOrDefault();
+                    var existing = existingDirectors.FirstOrDefault(x =>
+                        x.DirectorFirstName.ToLower() == first.ToLower()
+                        && x.DirectorLastName.ToLower() == last.ToLower());
 
                     if (existing != null)
                     {
@@ -252,10 +288,25 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new Director { DirectorFirstName = first, DirectorLastName = last };
-                        await _unitOfWork.Director.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allIds.Add(newEntity.DirectorId);
+                        directorsToCreate.Add(new Director
+                        {
+                            DirectorFirstName = first,
+                            DirectorLastName = last
+                        });
+                    }
+                }
+
+                if (directorsToCreate.Any())
+                {
+                    foreach (var director in directorsToCreate)
+                    {
+                        await _unitOfWork.Director.AddAsync(director);
+                    }
+                    await _unitOfWork.SaveAsync();
+
+                    foreach (var director in directorsToCreate)
+                    {
+                        allIds.Add(director.DirectorId);
                     }
                 }
             }
@@ -273,21 +324,36 @@ namespace onlineCinema.Application.Services
             if (!string.IsNullOrWhiteSpace(model.LanguagesInput))
             {
                 var names = SplitInput(model.LanguagesInput);
+
+                var existingLanguages = await _unitOfWork.Language.GetAllAsync();
+                var languagesToCreate = new List<Language>();
+
                 foreach (var name in names)
                 {
-                    var existing = (await _unitOfWork.Language
-                        .GetAllAsync(x => x.LanguageName.ToLower() == name.ToLower()))
-                        .FirstOrDefault();
+                    var existing = existingLanguages.FirstOrDefault(x =>
+                        x.LanguageName.ToLower() == name.ToLower());
+
                     if (existing != null)
                     {
                         allIds.Add(existing.LanguageId);
                     }
                     else
                     {
-                        var newEntity = new Language { LanguageName = name };
-                        await _unitOfWork.Language.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allIds.Add(newEntity.LanguageId);
+                        languagesToCreate.Add(new Language { LanguageName = name });
+                    }
+                }
+
+                if (languagesToCreate.Any())
+                {
+                    foreach (var language in languagesToCreate)
+                    {
+                        await _unitOfWork.Language.AddAsync(language);
+                    }
+                    await _unitOfWork.SaveAsync();
+
+                    foreach (var language in languagesToCreate)
+                    {
+                        allIds.Add(language.LanguageId);
                     }
                 }
             }
@@ -361,21 +427,36 @@ namespace onlineCinema.Application.Services
             if (!string.IsNullOrWhiteSpace(model.FeaturesInput))
             {
                 var names = SplitInput(model.FeaturesInput);
+
+                var existingFeatures = await _unitOfWork.Feature.GetAllAsync();
+                var featuresToCreate = new List<Feature>();
+
                 foreach (var name in names)
                 {
-                    var existing = (await _unitOfWork.Feature
-                        .GetAllAsync(x => x.Name.ToLower() == name.ToLower()))
-                        .FirstOrDefault();
+                    var existing = existingFeatures.FirstOrDefault(x =>
+                        x.Name.ToLower() == name.ToLower());
+
                     if (existing != null)
                     {
                         allIds.Add(existing.Id);
                     }
                     else
                     {
-                        var newEntity = new Feature { Name = name };
-                        await _unitOfWork.Feature.AddAsync(newEntity);
-                        await _unitOfWork.SaveAsync();
-                        allIds.Add(newEntity.Id);
+                        featuresToCreate.Add(new Feature { Name = name });
+                    }
+                }
+
+                if (featuresToCreate.Any())
+                {
+                    foreach (var feature in featuresToCreate)
+                    {
+                        await _unitOfWork.Feature.AddAsync(feature);
+                    }
+                    await _unitOfWork.SaveAsync();
+
+                    foreach (var feature in featuresToCreate)
+                    {
+                        allIds.Add(feature.Id);
                     }
                 }
             }

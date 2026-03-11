@@ -13,9 +13,7 @@ namespace onlineCinema.Areas.Admin.Models
         public DateTime? ShowingDateTime { get; set; }
         public decimal? BasePrice { get; set; }
         public bool GenerateForWeek { get; set; }
-        public IEnumerable<MovieDto> MoviesList { get; set; }
-            = new List<MovieDto>();
-        public IEnumerable<HallDto> HallsList { get; set; }
-            = new List<HallDto>();
+        public IEnumerable<MovieDto> MoviesList { get; set; } = [];
+        public IEnumerable<HallDto> HallsList { get; set; } = [];
     }
 }

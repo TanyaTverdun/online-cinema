@@ -14,5 +14,5 @@ public class Seat
 
     public Hall Hall { get; set; } = null!;
 
-    public ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public ICollection<Ticket> Tickets { get; set; } = [];
 }

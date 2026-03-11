@@ -10,7 +10,7 @@ public class Hall
     public byte SeatInRowCount { get; set; }
 
     public Cinema Cinema { get; set; } = null!;
-    public ICollection<Seat> Seats { get; set; } = new List<Seat>();
-    public ICollection<Session> Sessions { get; set; } = new List<Session>();
-    public ICollection<HallFeature> HallFeatures { get; set; } = new List<HallFeature>();
+    public ICollection<Seat> Seats { get; set; } = [];
+    public ICollection<Session> Sessions { get; set; } = [];
+    public ICollection<HallFeature> HallFeatures { get; set; } = [];
 }

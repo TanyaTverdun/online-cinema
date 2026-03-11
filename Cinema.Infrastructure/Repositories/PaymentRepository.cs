@@ -38,7 +38,7 @@ namespace onlineCinema.Infrastructure.Repositories
                 string? movieTitle,
                 DateTime? date)
         {
-            var baseQuery = dbSet.AsNoTracking().AsQueryable();
+            var baseQuery = DbSet.AsNoTracking().AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(email))
             {

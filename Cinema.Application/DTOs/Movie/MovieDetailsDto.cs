@@ -16,10 +16,10 @@ namespace onlineCinema.Application.DTOs.Movie
         public decimal Rating { get; set; }
         public MovieStatus Status { get; set; }
 
-        public List<string> Genres { get; set; } = new List<string>();
-        public List<string> Directors { get; set; } = new List<string>();
-        public List<string> Actors { get; set; } = new List<string>();
-        public List<string> Languages { get; set; } = new List<string>();
-        public List<string> Features { get; set; } = new();
+        public List<string> Genres { get; set; } = [];
+        public List<string> Directors { get; set; } = [];
+        public List<string> Actors { get; set; } = [];
+        public List<string> Languages { get; set; } = [];
+        public List<string> Features { get; set; } = [];
     }
 }

@@ -23,7 +23,7 @@ namespace onlineCinema.Application.Mapping
 
             dto.FeatureNames = hall.HallFeatures?
                 .Select(hf => hf.Feature.Name)
-                .ToList() ?? new List<string>();
+                .ToList() ?? [];
             if (hall.HallFeatures != null && hall.HallFeatures.Any())
             {
                 dto.FeatureIds = hall.HallFeatures
@@ -43,8 +43,8 @@ namespace onlineCinema.Application.Mapping
         {
             var entity = MapToHallEntityBase(dto);
 
-            entity.HallFeatures = new List<HallFeature>();
-            entity.Seats = new List<Seat>();
+            entity.HallFeatures = [];
+            entity.Seats = [];
             entity.CinemaId = 1;
 
             return entity;

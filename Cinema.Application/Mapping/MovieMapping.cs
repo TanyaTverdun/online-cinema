@@ -142,7 +142,7 @@ namespace onlineCinema.Application.Mapping
             languages.Select(ml => ml.Language.LanguageName).ToList();
 
         private List<string> MapFeaturesList(ICollection<MovieFeature> features) =>
-            features?.Select(mf => mf.Feature.Name).ToList() ?? new List<string>();
+            features?.Select(mf => mf.Feature.Name).ToList() ?? [];
 
         private List<int> MapGenreIds(ICollection<MovieGenre> genres) =>
             genres.Select(x => x.GenreId).ToList();

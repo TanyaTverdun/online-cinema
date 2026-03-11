@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 
 namespace onlineCinema.Domain.Entities
 {
@@ -13,6 +11,6 @@ namespace onlineCinema.Domain.Entities
         public new string? PhoneNumber { get; set; }
 
         public DateTime? DateOfBirth { get; set; }
-        public ICollection<Booking> Bookings { get; set; } = new List<Booking>();
+        public ICollection<Booking> Bookings { get; set; } = [];
     }
 }

@@ -6,5 +6,5 @@ public class CastMember
     public string CastFirstName { get; set; } = string.Empty;
     public string CastLastName { get; set; } = string.Empty;
     public string? CastMiddleName { get; set; }
-    public ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
+    public ICollection<MovieCast> MovieCasts { get; set; } = [];
 }

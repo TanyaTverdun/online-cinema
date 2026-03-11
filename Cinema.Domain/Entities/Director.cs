@@ -6,5 +6,5 @@ public class Director
     public string DirectorFirstName { get; set; } = string.Empty;
     public string DirectorLastName { get; set; } = string.Empty;
     public string? DirectorMiddleName { get; set; }
-    public ICollection<DirectorMovie> DirectorMovies { get; set; } = new List<DirectorMovie>();
+    public ICollection<DirectorMovie> DirectorMovies { get; set; } = [];
 }

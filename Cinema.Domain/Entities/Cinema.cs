@@ -10,5 +10,5 @@ public class Cinema
     public int Building { get; set; }
     public TimeSpan TimeOpen { get; set; }
     public TimeSpan TimeClose { get; set; }
-    public ICollection<Hall> Halls { get; set; } = new List<Hall>();
+    public ICollection<Hall> Halls { get; set; } = [];
 }

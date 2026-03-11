@@ -61,7 +61,7 @@ namespace onlineCinema.Application.Mapping
 
             booking.CreatedDateTime = DateTime.Now;
 
-            booking.Tickets = new List<Ticket>();
+            booking.Tickets = [];
 
             return booking;
         }

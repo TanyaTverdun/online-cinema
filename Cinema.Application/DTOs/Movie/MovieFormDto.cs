@@ -33,10 +33,10 @@ namespace onlineCinema.Application.DTOs.Movie
         public string? LanguagesInput { get; set; }
         public string? FeaturesInput { get; set; }
 
-        public List<int> GenreIds { get; set; } = new List<int>();
-        public List<int> CastIds { get; set; } = new List<int>();
-        public List<int> DirectorIds { get; set; } = new List<int>();
-        public List<int> LanguageIds { get; set; } = new List<int>();
-        public List<int> FeatureIds { get; set; } = new List<int>();
+        public List<int> GenreIds { get; set; } = [];
+        public List<int> CastIds { get; set; } = [];
+        public List<int> DirectorIds { get; set; } = [];
+        public List<int> LanguageIds { get; set; } = [];
+        public List<int> FeatureIds { get; set; } = [];
     }
 }

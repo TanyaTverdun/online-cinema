@@ -44,7 +44,7 @@ namespace onlineCinema.Mapping
                 RowCount = model.RowCount,
                 SeatInRowCount = model.SeatInRowCount,
 
-                FeatureIds = model.SelectedFeatureIds ?? new List<int>(),
+                FeatureIds = model.SelectedFeatureIds ?? [],
 
                 VipRowCount = model.VipRowCount,
                 VipCoefficient = model.VipCoefficient
