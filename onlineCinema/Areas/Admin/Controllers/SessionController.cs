@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Mapping;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using onlineCinema.Areas.Admin.Models;
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -14,7 +13,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly SessionViewModelMapper _sessionMapper;
 
         public SessionController(
-            ISessionService sessionService, 
+            ISessionService sessionService,
             IMovieService movieService,
             IHallService hallService,
             SessionViewModelMapper sessionMapper)
@@ -43,6 +42,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create(SessionViewModel vm)
         {
             if (!ModelState.IsValid)
@@ -54,7 +54,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             try
             {
                 await _sessionService.CreateSessionAsync(
-                    _sessionMapper.MapToCreateDto(vm));
+                    _sessionMapper.MapToDto(vm));
 
                 return RedirectToAction(nameof(Index));
             }
@@ -100,6 +100,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, SessionViewModel model)
         {
             if (model.Id == null || model.Id == 0)
@@ -130,7 +131,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 return View("Session", model);
             }
 
-            var updateDto = _sessionMapper.MapToUpdateDto(model);
+            var updateDto = _sessionMapper.MapToDto(model);
 
             await _sessionService.UpdateSessionAsync(updateDto);
 

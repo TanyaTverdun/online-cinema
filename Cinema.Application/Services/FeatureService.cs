@@ -1,9 +1,7 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.Interfaces;
-using onlineCinema.Domain.Entities;
-using onlineCinema.Application.DTOs.Movie;
 
 namespace onlineCinema.Application.Services
 {
@@ -13,7 +11,7 @@ namespace onlineCinema.Application.Services
         private readonly FeatureMapping _mapper;
 
         public FeatureService(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             FeatureMapping mapper)
         {
             _unitOfWork = unitOfWork;

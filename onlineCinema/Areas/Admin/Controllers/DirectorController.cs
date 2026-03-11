@@ -1,8 +1,8 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Extensions;
 using onlineCinema.Mapping;
 
 namespace onlineCinema.Areas.Admin.Controllers
@@ -42,12 +42,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             var result = await _validator.ValidateAsync(viewModel);
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(
-                        error.PropertyName,
-                        error.ErrorMessage);
-                }
+                ModelState.AddFluentErrors(result);
             }
 
             if (ModelState.IsValid)
@@ -77,12 +72,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             var result = await _validator.ValidateAsync(viewModel);
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(
-                        error.PropertyName,
-                        error.ErrorMessage);
-                }
+                ModelState.AddFluentErrors(result);
             }
 
             if (ModelState.IsValid)

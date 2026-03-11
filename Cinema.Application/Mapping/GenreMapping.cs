@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using onlineCinema.Application.DTOs.Genre;
+﻿using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
 
@@ -9,17 +8,17 @@ namespace onlineCinema.Application.Mapping
     public partial class GenreMapping
     {
         [MapperIgnoreSource(nameof(Genre.MovieGenres))]
-        public partial GenreFormDto? ToDto(Genre? genre);
+        public partial GenreDto? ToDto(Genre? genre);
 
         [MapperIgnoreTarget(nameof(Genre.MovieGenres))]
-        public partial Genre ToEntity(GenreFormDto dto);
+        public partial Genre ToEntity(GenreDto dto);
 
         [MapperIgnoreTarget(nameof(Genre.MovieGenres))]
         public partial void UpdateEntityFromDto(
-            GenreFormDto dto, 
+            GenreDto dto,
             Genre genre);
 
-        public partial IEnumerable<GenreFormDto> 
+        public partial IEnumerable<GenreDto>
             ToDtoList(IEnumerable<Genre> genres);
     }
 }

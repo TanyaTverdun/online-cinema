@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.DTOs.AdminStatistics;
-using onlineCinema.Domain.Entities;
-using onlineCinema.Domain.Enums;
+﻿using onlineCinema.Application.DTOs.AdminStatistics;
 using Riok.Mapperly.Abstractions;
 
 namespace onlineCinema.Application.Mapping

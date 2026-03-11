@@ -6,12 +6,12 @@ using CinemaEntity = onlineCinema.Domain.Entities.Cinema;
 
 namespace onlineCinema.Infrastructure.Data
 {
-	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
     {
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-			: base(options)
-		{
-		}
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
         public DbSet<CinemaEntity> Cinemas { get; set; }
         public DbSet<Hall> Halls { get; set; }
         public DbSet<Seat> Seats { get; set; }

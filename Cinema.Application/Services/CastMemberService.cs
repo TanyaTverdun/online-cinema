@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Person;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.Interfaces;
@@ -11,7 +11,7 @@ public class CastMemberService : ICastMemberService
     private readonly CastMemberMapping _mapper;
 
     public CastMemberService(
-        IUnitOfWork unitOfWork, 
+        IUnitOfWork unitOfWork,
         CastMemberMapping mapper)
     {
         _unitOfWork = unitOfWork;
@@ -32,14 +32,14 @@ public class CastMemberService : ICastMemberService
         return entity != null ? _mapper.MapToDto(entity) : null;
     }
 
-    public async Task CreateAsync(CastMemberCreateUpdateDto dto)
+    public async Task CreateAsync(CastMemberDto dto)
     {
         var entity = _mapper.MapToEntity(dto);
         await _unitOfWork.CastMember.AddAsync(entity);
         await _unitOfWork.SaveAsync();
     }
 
-    public async Task UpdateAsync(CastMemberCreateUpdateDto dto)
+    public async Task UpdateAsync(CastMemberDto dto)
     {
         var entity = await _unitOfWork.CastMember.GetByIdAsync(dto.CastId);
         if (entity != null)
@@ -55,7 +55,7 @@ public class CastMemberService : ICastMemberService
         var entity = await _unitOfWork.CastMember.GetByIdAsync(id);
         if (entity != null)
         {
-            _unitOfWork.CastMember.Remove(entity); 
+            _unitOfWork.CastMember.Remove(entity);
             await _unitOfWork.SaveAsync();
         }
     }

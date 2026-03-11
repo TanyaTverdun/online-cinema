@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Domain.Entities;
+﻿using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Application.Interfaces
 {
@@ -15,9 +10,9 @@ namespace onlineCinema.Application.Interfaces
         Task<(
             IEnumerable<Booking> Items, int TotalCount, bool HasNext, bool HasPrevious)>
             GetUserBookingsSeekAsync(
-            string userId, 
-            int? lastId, 
-            int? firstId, 
+            string userId,
+            int? lastId,
+            int? firstId,
             int pageSize);
     }
 }

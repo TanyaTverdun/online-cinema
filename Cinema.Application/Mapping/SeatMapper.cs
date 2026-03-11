@@ -8,10 +8,10 @@ namespace onlineCinema.Application.Mapping
     public partial class SeatMapper
     {
         public Seat CreateSeatEntity(
-            int hallId, 
-            int row, 
-            int number, 
-            SeatType type, 
+            int hallId,
+            int row,
+            int number,
+            SeatType type,
             float coefficient)
         {
             return new Seat

@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Extensions;
 using onlineCinema.Mapping;
-using onlineCinema.Application.DTOs.Genre;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -27,14 +27,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Index()
         {
             var genresDto = await _genreService.GetAllAsync();
-
-            var formDtos = genresDto.Select(g => new GenreFormDto
-            {
-                GenreId = g.GenreId,
-                GenreName = g.GenreName
-            });
-
-            var viewModel = _mapper.ToViewModelList(formDtos);
+            var viewModel = _mapper.ToViewModelList(genresDto);
             return View(viewModel);
         }
 
@@ -54,13 +47,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 return NotFound();
             }
 
-            var formDto = new GenreFormDto
-            {
-                GenreId = dto.GenreId,
-                GenreName = dto.GenreName
-            };
-
-            var viewModel = _mapper.ToViewModel(formDto);
+            var viewModel = _mapper.ToViewModel(dto);
 
             return View("GenreValueInput", viewModel);
         }
@@ -81,12 +68,7 @@ namespace onlineCinema.Areas.Admin.Controllers
             var result = await _validator.ValidateAsync(viewModel);
             if (!result.IsValid)
             {
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError(
-                        error.PropertyName,
-                        error.ErrorMessage);
-                }
+                ModelState.AddFluentErrors(result);
             }
 
             if (ModelState.IsValid)

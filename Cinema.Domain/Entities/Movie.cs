@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-using onlineCinema.Domain.Enums;
+﻿using onlineCinema.Domain.Enums;
 
 namespace onlineCinema.Domain.Entities
 {
@@ -19,12 +15,11 @@ namespace onlineCinema.Domain.Entities
         public decimal Rating { get; set; }
         public string? PosterImage { get; set; }
 
-
-        public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
-        public ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();
-        public ICollection<DirectorMovie> MovieDirectors { get; set; } = new List<DirectorMovie>();
-        public ICollection<LanguageMovie> MovieLanguages { get; set; } = new List<LanguageMovie>();
-        public ICollection<MovieFeature> MovieFeatures { get; set; } = new List<MovieFeature>();
-        public ICollection<Session> Sessions { get; set; } = new List<Session>();
+        public ICollection<MovieGenre> MovieGenres { get; set; } = [];
+        public ICollection<MovieCast> MovieCasts { get; set; } = [];
+        public ICollection<DirectorMovie> MovieDirectors { get; set; } = [];
+        public ICollection<LanguageMovie> MovieLanguages { get; set; } = [];
+        public ICollection<MovieFeature> MovieFeatures { get; set; } = [];
+        public ICollection<Session> Sessions { get; set; } = [];
     }
 }

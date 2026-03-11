@@ -23,7 +23,7 @@
             {
                 clearInterval(timerInterval);
                 countdownElement.innerHTML = "00:00";
-                alert("Reservation time expired!");
+                alert("Час бронювання вичерпано!");
                 window.location.href = "/";
                 return;
             }
@@ -81,6 +81,7 @@
         });
 
         const grandTotal = baseSeatsPrice + snacksTotal;
-        document.getElementById('grandTotalDisplay').innerText = grandTotal.toFixed(2);
+        const el = document.getElementById('grandTotalDisplay');
+        if (el) el.innerText = grandTotal.toFixed(2);
     }
 });

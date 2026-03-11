@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Hall;
 using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Domain.Entities;
 using onlineCinema.ViewModels;
@@ -9,7 +9,7 @@ namespace onlineCinema.Mapping
     [Mapper]
     public partial class HallViewModelMapper
     {
-        [MapProperty(nameof(HallDto.HallNumber), 
+        [MapProperty(nameof(HallDto.HallNumber),
             nameof(HallViewModel.HallNumber))]
         private partial HallViewModel MapToViewModelBase(HallDto dto);
 
@@ -21,15 +21,15 @@ namespace onlineCinema.Mapping
 
             if (dto.Sessions != null)
             {
-                vm.Sessions = 
+                vm.Sessions =
                     dto.Sessions
                     .Select(s => new onlineCinema.ViewModels.SessionViewModel
-                {
-                    Id = s.SessionId,
-                    MovieTitle = s.MovieTitle,
-                    Date = s.ShowingDate.ToString("dd.MM.yyyy"),
-                    Time = s.ShowingDate.ToString("HH:mm")
-                }).ToList();
+                    {
+                        Id = s.SessionId,
+                        MovieTitle = s.MovieTitle,
+                        Date = s.ShowingDate.ToString("dd.MM.yyyy"),
+                        Time = s.ShowingDate.ToString("HH:mm")
+                    }).ToList();
             }
 
             return vm;
@@ -44,7 +44,7 @@ namespace onlineCinema.Mapping
                 RowCount = model.RowCount,
                 SeatInRowCount = model.SeatInRowCount,
 
-                FeatureIds = model.SelectedFeatureIds ?? new List<int>(),
+                FeatureIds = model.SelectedFeatureIds ?? [],
 
                 VipRowCount = model.VipRowCount,
                 VipCoefficient = model.VipCoefficient
@@ -66,13 +66,13 @@ namespace onlineCinema.Mapping
                 vm.SelectedFeatureIds = hallDto.FeatureIds;
             }
 
-            vm.AvailableFeatures = 
+            vm.AvailableFeatures =
                 allFeatures.Select(f => new FeatureCheckboxViewModel
-            {
-                Id = f.Id,
-                Name = f.Name,
-                IsSelected = vm.SelectedFeatureIds.Contains(f.Id)
-            }).ToList();
+                {
+                    Id = f.Id,
+                    Name = f.Name,
+                    IsSelected = vm.SelectedFeatureIds.Contains(f.Id)
+                }).ToList();
 
             return vm;
         }

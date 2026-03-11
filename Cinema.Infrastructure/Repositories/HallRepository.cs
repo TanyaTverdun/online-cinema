@@ -1,17 +1,18 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.Hall;
+using onlineCinema.Application.DTOs.Session;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class HallRepository 
+    public class HallRepository
         : GenericRepository<Hall>, IHallRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public HallRepository(ApplicationDbContext db) 
+        public HallRepository(ApplicationDbContext db)
             : base(db)
         {
             _db = db;
@@ -37,7 +38,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     HallNumber = h.HallNumber,
                     RowCount = h.RowCount,
                     SeatInRowCount = h.SeatInRowCount,
-                   
+
 
                     FeatureIds = h.HallFeatures
                         .Select(hf => hf.FeatureId)
@@ -63,7 +64,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     HallNumber = h.HallNumber,
                     RowCount = h.RowCount,
                     SeatInRowCount = h.SeatInRowCount,
-                    
+
 
                     FeatureNames = h.HallFeatures
                         .Select(hf => hf.Feature.Name)
@@ -77,7 +78,7 @@ namespace onlineCinema.Infrastructure.Repositories
         }
 
         public async Task UpdateWithFeaturesAsync(
-            Hall hall, 
+            Hall hall,
             List<int> selectedFeatureIds)
         {
             var existingHall = await _db.Halls
@@ -93,9 +94,9 @@ namespace onlineCinema.Infrastructure.Repositories
             existingHall.HallNumber = hall.HallNumber;
             existingHall.RowCount = hall.RowCount;
             existingHall.SeatInRowCount = hall.SeatInRowCount;
-            
 
-            
+
+
 
             selectedFeatureIds ??= new List<int>();
 

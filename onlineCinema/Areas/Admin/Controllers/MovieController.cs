@@ -1,11 +1,9 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.Interfaces;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
+using onlineCinema.Extensions;
 using onlineCinema.Mapping;
-using SharpGrip.FluentValidation.AutoValidation.Mvc.Attributes;
-
-
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -14,13 +12,16 @@ namespace onlineCinema.Areas.Admin.Controllers
     {
         private readonly IMovieService _movieService;
         private readonly AdminMovieMapper _mapper;
+        private readonly IValidator<MovieFormViewModel> _validator;
 
         public MovieController(
-            IMovieService movieService, 
-            AdminMovieMapper mapper)
+            IMovieService movieService,
+            AdminMovieMapper mapper,
+            IValidator<MovieFormViewModel> validator)
         {
             _movieService = movieService;
             _mapper = mapper;
+            _validator = validator;
         }
 
         public IActionResult Index()
@@ -51,18 +52,12 @@ namespace onlineCinema.Areas.Admin.Controllers
         public async Task<IActionResult> Create(
     MovieFormViewModel viewModel)
         {
-            var validator = new Validators.MovieFormValidator();
             var validationResult =
-                await validator.ValidateAsync(viewModel);
+                await _validator.ValidateAsync(viewModel);
 
             if (!validationResult.IsValid)
             {
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(
-                        error.PropertyName,
-                        error.ErrorMessage);
-                }
+                ModelState.AddFluentErrors(validationResult);
             }
 
             if (!ModelState.IsValid)
@@ -110,17 +105,12 @@ namespace onlineCinema.Areas.Admin.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(MovieFormViewModel viewModel)
         {
-            var validator = new Validators.MovieFormValidator();
-            var validationResult = await validator.ValidateAsync(viewModel);
+            var validationResult =
+                await _validator.ValidateAsync(viewModel);
 
             if (!validationResult.IsValid)
             {
-                foreach (var error in validationResult.Errors)
-                {
-                    ModelState.AddModelError(
-                        error.PropertyName,
-                        error.ErrorMessage);
-                }
+                ModelState.AddFluentErrors(validationResult);
             }
 
             if (ModelState.IsValid)

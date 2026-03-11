@@ -1,76 +1,80 @@
-﻿using FluentValidation;
+using FluentValidation;
 using onlineCinema.ViewModels;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
-    public class ProfileViewModelValidator 
+    public class ProfileViewModelValidator
         : AbstractValidator<ProfileViewModel>
     {
         public ProfileViewModelValidator()
         {
-            const string nameRegex = @"^[a-zA-Zа-яА-ЯіІїЇєЄґҐ\s\-']+$";
-
             RuleFor(x => x.FirstName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Ім'я є обов'язковим")
-                .Matches(nameRegex)
-                .WithMessage("Ім'я може містити тільки літери")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "ім'я"))
+                .Matches(NameRegex)
+                    .WithMessage(string.Format(OnlyLetters, "ім'я"))
                 .MaximumLength(50)
-                .WithMessage("Ім'я не може перевищувати 50 символів");
+                    .WithMessage(string.Format(FieldTooLong, "ім'я", 50));
 
             RuleFor(x => x.LastName)
                 .Cascade(CascadeMode.Stop)
-                .NotEmpty().WithMessage("Прізвище є обов'язковим")
-                .Matches(nameRegex)
-                .WithMessage("Прізвище може містити тільки літери")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "прізвище"))
+                .Matches(NameRegex)
+                    .WithMessage(string.Format(OnlyLetters, "прізвище"))
                 .MaximumLength(50)
-                .WithMessage("Прізвище не може перевищувати 50 символів");
+                    .WithMessage(string.Format(FieldTooLong, "прізвище", 50));
 
             RuleFor(x => x.MiddleName)
                 .Cascade(CascadeMode.Stop)
                 .MaximumLength(50)
-                .WithMessage("По батькові не може перевищувати 50 символів")
-                .Matches(nameRegex)
-                .WithMessage("По батькові може містити тільки літери")
+                    .WithMessage(string.Format(FieldTooLong, "по батькові", 50))
+                .Matches(NameRegex)
+                    .WithMessage(string.Format(OnlyLetters, "по батькові"))
                 .When(x => !string.IsNullOrWhiteSpace(x.MiddleName));
 
             RuleFor(x => x.Email)
-                .NotEmpty().WithMessage("Електронна пошта є обов'язковою")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "електронна пошта"))
                 .EmailAddress()
-                .WithMessage("Невірний формат електронної пошти");
+                    .WithMessage(EmailInvalidFormat);
 
             RuleFor(x => x.PhoneNumber)
-                .NotEmpty().WithMessage("Номер телефону є обов'язковим")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "телефон"))
                 .Matches(@"^\+380\d{9}$")
-                .WithMessage("Формат телефону має бути +380XXXXXXXXX");
+                    .WithMessage(PhoneFormat);
 
             RuleFor(x => x.DateOfBirth)
-                .NotEmpty().WithMessage("Дата народження є обов'язковою")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "дата народження"))
                 .Must(d => !d.HasValue || d <= DateTime.Now)
-                .WithMessage("Дата народження не може бути в майбутньому")
+                    .WithMessage(DateOfBirthFuture)
                 .Must(d => !d.HasValue || d >= new DateTime(1900, 1, 1))
-                .WithMessage(
-                "Дата народження не може бути раніше 01.01.1900");
+                    .WithMessage(DateOfBirthTooOld);
 
-            // Ця логіка спрацьовує тільки якщо поле NewPassword не порожнє
             RuleFor(x => x.NewPassword)
                 .MinimumLength(6)
-                .WithMessage("Пароль повинен містити мінімум 6 символів")
+                    .WithMessage(PasswordMinLength)
                 .Matches("[A-Z]")
-                .WithMessage(
-                "Пароль повинен містити хоча б одну велику літеру")
+                    .WithMessage(
+                        string.Format(PasswordFormat, "велику літеру"))
                 .Matches("[a-z]")
-                .WithMessage(
-                "Пароль повинен містити хоча б одну малу літеру")
+                    .WithMessage(
+                        string.Format(PasswordFormat, "малу літеру"))
                 .Matches("[0-9]")
-                .WithMessage(
-                "Пароль повинен містити хоча б одну цифру")
+                    .WithMessage(
+                        string.Format(PasswordFormat, "цифру"))
                 .When(x => !string.IsNullOrEmpty(x.NewPassword));
 
             RuleFor(x => x.ConfirmPassword)
-                .NotEmpty().WithMessage("Підтвердження пароля є обов'язковим")
+                .NotEmpty()
+                    .WithMessage(
+                        string.Format(FieldRequired, "підтвердження пароля"))
                 .Equal(x => x.NewPassword)
-                .WithMessage("Паролі не співпадають")
+                    .WithMessage(PasswordsMismatch)
                 .When(x => !string.IsNullOrEmpty(x.NewPassword));
         }
     }

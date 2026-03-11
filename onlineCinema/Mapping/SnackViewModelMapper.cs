@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Snack;
 using onlineCinema.ViewModels;
 using Riok.Mapperly.Abstractions;
 
@@ -14,7 +14,7 @@ namespace onlineCinema.Mapping
             IEnumerable<SnackDto> dtos);
         public SnackSelectionViewModel MapToSelectionViewModel(
             IEnumerable<SnackDto> snacks,
-            int bookingId, 
+            int bookingId,
             decimal seatsTotalPrice,
             DateTime lockUntil,
             int initialSeconds)
@@ -25,14 +25,14 @@ namespace onlineCinema.Mapping
                 SeatsTotalPrice = seatsTotalPrice,
                 AvailableSnacks = MapSnackDtoToViewModelList(snacks),
                 LockUntil = lockUntil,
-                initialSeconds = $"{initialSeconds / 60:D2}:{initialSeconds % 60:D2}"
+                InitialSeconds = $"{initialSeconds / 60:D2}:{initialSeconds % 60:D2}"
             };
         }
 
         public partial SelectedSnackDto MapSnackItemViewModelToSelectedDto(
             SnackItemViewModel item);
 
-        public partial List<SelectedSnackDto> 
+        public partial List<SelectedSnackDto>
             MapSnackItemViewModelToSelectedDtoList(
             List<SnackItemViewModel> items);
     }

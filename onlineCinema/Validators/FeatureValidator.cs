@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using onlineCinema.Areas.Admin.Models;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
@@ -8,11 +9,14 @@ namespace onlineCinema.Validators
         public FeatureValidator()
         {
             RuleFor(x => x.FeatureName)
-                .NotEmpty().WithMessage("Назва характеристики обов'язкова")
-                .MaximumLength(100).WithMessage("Назва занадто довга");
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "назва"))
+                .MaximumLength(100)
+                    .WithMessage(string.Format(FieldTooLong, "назва", 100));
 
             RuleFor(x => x.FeatureDescription)
-                .MaximumLength(500).WithMessage("Опис занадто довгий");
+                .MaximumLength(500)
+                    .WithMessage(string.Format(FieldTooLong, "опис", 500));
         }
     }
 }

@@ -1,8 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding.Validation;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using onlineCinema.Domain.Enums;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Http;
 
 namespace onlineCinema.Areas.Admin.Models
 {
@@ -32,9 +29,9 @@ namespace onlineCinema.Areas.Admin.Models
         public List<int> FeatureIds { get; set; } = new();
         public string? FeaturesInput { get; set; }
 
-        public IEnumerable<SelectListItem> FeaturesList { get; set; } 
+        public IEnumerable<SelectListItem> FeaturesList { get; set; }
             = Enumerable.Empty<SelectListItem>();
-        public IEnumerable<SelectListItem> GenresList { get; set; } 
+        public IEnumerable<SelectListItem> GenresList { get; set; }
             = Enumerable.Empty<SelectListItem>();
         public IEnumerable<SelectListItem> ActorsList { get; set; }
             = Enumerable.Empty<SelectListItem>();

@@ -9,12 +9,12 @@
     <link rel="stylesheet" href="~/css/SelectSeats.css" asp-append-version="true" />
 }
 
-@if (TempData["Error"] != null)
+@if (TempData["ErrorMessage"] != null)
 {
     <div class="alert alert-danger alert-dismissible fade show m-3 position-absolute top-0 start-50 translate-middle-x"
          style="z-index: 1050; width: 80%; max-width: 600px;" role="alert">
         <i class="bi bi-exclamation-triangle-fill me-2"></i>
-        <strong>Помилка!</strong> @TempData["Error"]
+        <strong>Помилка!</strong> @TempData["ErrorMessage"]
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Закрити"></button>
     </div>
 }

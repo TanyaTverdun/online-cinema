@@ -1,0 +1,13 @@
+﻿namespace onlineCinema.Application.DTOs.Common
+{
+    public class PagedResultDto<T>
+    {
+        public IEnumerable<T> Items { get; set; } = [];
+        public int TotalCount { get; set; }
+        public int PageSize { get; set; }
+        public bool HasNextPage { get; set; }
+        public int? LastId { get; set; }
+        public int? FirstId { get; set; }
+        public bool HasPreviousPage { get; set; }
+    }
+}

@@ -11,24 +11,24 @@ namespace onlineCinema.Mapping
             {
                 OccupancyLabels =
                 dto.MovieOccupancy.Select(x => x.MovieTitle).ToList(),
-                OccupancyData = 
+                OccupancyData =
                 dto.MovieOccupancy
                 .Select(x => x.OccupancyPercentage)
                 .ToList(),
 
-                PopularMoviesLabels = 
+                PopularMoviesLabels =
                 dto.MostPopularMovies.Select(x => x.Name).ToList(),
-                PopularMoviesData = 
+                PopularMoviesData =
                 dto.MostPopularMovies.Select(x => x.Count).ToList(),
 
-                LeastMoviesLabels = 
+                LeastMoviesLabels =
                 dto.LeastPopularMovies.Select(x => x.Name).ToList(),
-                LeastMoviesData = 
+                LeastMoviesData =
                 dto.LeastPopularMovies.Select(x => x.Count).ToList(),
 
                 LeastSnacksLabels =
                 dto.LeastPopularSnacks.Select(x => x.Name).ToList(),
-                LeastSnacksData = 
+                LeastSnacksData =
                 dto.LeastPopularSnacks.Select(x => x.Count).ToList()
             };
         }

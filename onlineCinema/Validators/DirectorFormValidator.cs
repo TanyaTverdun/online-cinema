@@ -1,20 +1,20 @@
-﻿using FluentValidation;
-using onlineCinema.Application.DTOs.Movie;
+using FluentValidation;
 using onlineCinema.Areas.Admin.Models;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
-    public class DirectorFormValidator 
+    public class DirectorFormValidator
         : AbstractValidator<DirectorFormViewModel>
     {
         public DirectorFormValidator()
         {
             RuleFor(x => x.DirectorFirstName)
-                .NotEmpty().WithMessage("Вкажіть ім'я");
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "ім'я"));
             RuleFor(x => x.DirectorLastName)
-                .NotEmpty().WithMessage("Вкажіть прізвище");
-            RuleFor(x => x.DirectorMiddleName)
-                .NotEmpty().WithMessage("Вкажіть по батькові");
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "прізвище"));
         }
     }
 }

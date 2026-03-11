@@ -1,12 +1,5 @@
-﻿using onlineCinema.Application.DTOs;
-using onlineCinema.Application.Interfaces;
-using onlineCinema.Application.Mapping;
+﻿using onlineCinema.Application.DTOs.Hall;
 using onlineCinema.Domain.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace onlineCinema.Application.Services.Interfaces
 {

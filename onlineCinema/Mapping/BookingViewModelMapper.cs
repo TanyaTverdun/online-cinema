@@ -1,4 +1,6 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Booking;
+using onlineCinema.Application.DTOs.Hall;
+using onlineCinema.Application.DTOs.Session;
 using onlineCinema.Domain.Entities;
 using onlineCinema.ViewModels;
 using Riok.Mapperly.Abstractions;
@@ -23,7 +25,7 @@ namespace onlineCinema.Mapping
             return vm;
         }
 
-        [MapProperty(nameof(BookingInputViewModel.SelectedSeatIds), 
+        [MapProperty(nameof(BookingInputViewModel.SelectedSeatIds),
             nameof(CreateBookingDto.SeatIds))]
         private partial CreateBookingDto MapBookingInputViewModeBase(
             BookingInputViewModel model);

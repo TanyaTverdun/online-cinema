@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Hall;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
 
@@ -10,8 +10,8 @@ namespace onlineCinema.Application.Mapping
         private List<int> MapFeaturesToIds(ICollection<HallFeature> features)
             => features.Select(f => f.FeatureId).ToList();
 
-        [MapProperty(nameof(Hall.HallFeatures), 
-            nameof(HallDto.FeatureIds), 
+        [MapProperty(nameof(Hall.HallFeatures),
+            nameof(HallDto.FeatureIds),
             Use = nameof(MapFeaturesToIds))]
 
         [MapProperty(nameof(Hall.HallId), nameof(HallDto.Id))]
@@ -23,7 +23,7 @@ namespace onlineCinema.Application.Mapping
 
             dto.FeatureNames = hall.HallFeatures?
                 .Select(hf => hf.Feature.Name)
-                .ToList() ?? new List<string>();
+                .ToList() ?? [];
             if (hall.HallFeatures != null && hall.HallFeatures.Any())
             {
                 dto.FeatureIds = hall.HallFeatures
@@ -33,7 +33,8 @@ namespace onlineCinema.Application.Mapping
             return dto;
         }
 
-        public partial IEnumerable<HallDto> MapToDtoList(IEnumerable<Hall> hall);
+        public IEnumerable<HallDto> MapToDtoList(IEnumerable<Hall> halls)
+            => halls.Select(MapToHallDto);
 
         [MapProperty(nameof(HallDto.Id), nameof(Hall.HallId))]
         private partial Hall MapToHallEntityBase(HallDto dto);
@@ -42,8 +43,8 @@ namespace onlineCinema.Application.Mapping
         {
             var entity = MapToHallEntityBase(dto);
 
-            entity.HallFeatures = new List<HallFeature>();
-            entity.Seats = new List<Seat>();
+            entity.HallFeatures = [];
+            entity.Seats = [];
             entity.CinemaId = 1;
 
             return entity;

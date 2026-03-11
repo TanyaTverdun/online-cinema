@@ -24,11 +24,6 @@
   </ItemGroup>
 
 	<ItemGroup>
-		<Folder Include="Areas\Admin\Views\Home\" />
-		<Folder Include="Views\NewFolder\" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <ProjectReference Include="..\Cinema.Application\onlineCinema.Application.csproj" />
 	  <ProjectReference Include="..\Cinema.Domain\onlineCinema.Domain.csproj" />
 	  <ProjectReference Include="..\Cinema.Infrastructure\onlineCinema.Infrastructure.csproj" />

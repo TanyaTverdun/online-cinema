@@ -1,6 +1,4 @@
-﻿using onlineCinema.Domain.Entities;
-
-namespace onlineCinema.Domain.Entities;
+﻿namespace onlineCinema.Domain.Entities;
 
 public class Snack
 {
@@ -8,5 +6,5 @@ public class Snack
     public string SnackName { get; set; } = string.Empty;
     public decimal Price { get; set; }
 
-    public ICollection<SnackBooking> SnackBookings { get; set; } = new List<SnackBooking>();
+    public ICollection<SnackBooking> SnackBookings { get; set; } = [];
 }

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using onlineCinema.Domain.Entities;
 
@@ -30,7 +25,7 @@ namespace onlineCinema.Infrastructure.Data.Configurations
                 .HasColumnType("tinyint");
 
             builder.Property(m => m.Rating)
-                .HasColumnType("decimal(3, 1)") 
+                .HasColumnType("decimal(3, 1)")
                 .HasDefaultValue(0);
 
             builder.Property(m => m.ReleaseDate)

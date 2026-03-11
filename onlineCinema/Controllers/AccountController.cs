@@ -1,11 +1,13 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Domain.Entities;
-using onlineCinema.ViewModels;
-using onlineCinema.Mapping;
+using onlineCinema.Application.DTOs.Booking;
+using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Application.DTOs;
+using onlineCinema.Domain.Constants;
+using onlineCinema.Domain.Entities;
+using onlineCinema.Mapping;
+using onlineCinema.ViewModels;
 using System.Security.Claims;
 
 namespace onlineCinema.Controllers
@@ -16,7 +18,7 @@ namespace onlineCinema.Controllers
         private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
-        private readonly UserMapping _userMapping;
+        private readonly UserMapper _userMapping;
         private readonly IBookingService _bookingService;
 
         public AccountController(
@@ -24,7 +26,7 @@ namespace onlineCinema.Controllers
             SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<AccountController> logger,
-            UserMapping userMapping,
+            UserMapper userMapping,
             IBookingService bookingService)
         {
             _userManager = userManager;
@@ -67,7 +69,7 @@ namespace onlineCinema.Controllers
                 return View(model);
             }
 
-            const string userRoleName = "User";
+            const string userRoleName = Roles.User;
             if (!await _roleManager.RoleExistsAsync(userRoleName))
             {
                 await _roleManager
@@ -141,7 +143,7 @@ namespace onlineCinema.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(
-                    "Користувач {Email} успішно увійшов", 
+                    "Користувач {Email} успішно увійшов",
                     model.Email);
 
                 if (!string.IsNullOrEmpty(model.ReturnUrl) &&
@@ -186,7 +188,7 @@ namespace onlineCinema.Controllers
         {
             var user = await _userManager.GetUserAsync(User);
 
-            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            bool isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
 
             var pagedResultDto = isAdmin
                 ? new PagedResultDto<BookingHistoryDto>()
@@ -302,7 +304,7 @@ namespace onlineCinema.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(
-                    "Профіль користувача {UserId} оновлено", 
+                    "Профіль користувача {UserId} оновлено",
                     user.Id);
                 TempData["SuccessMessage"] = "Профіль успішно оновлено";
                 return RedirectToAction("Profile");
@@ -361,12 +363,12 @@ namespace onlineCinema.Controllers
 
 
         private async Task LoadHistoryAsync(
-            ApplicationUser user, 
-            ProfileViewModel model, 
+            ApplicationUser user,
+            ProfileViewModel model,
             int? lastId = null,
             int? firstId = null)
         {
-            bool isAdmin = await _userManager.IsInRoleAsync(user, "Admin");
+            bool isAdmin = await _userManager.IsInRoleAsync(user, Roles.Admin);
 
             var pagedResultDto = isAdmin
                 ? new PagedResultDto<BookingHistoryDto>()
@@ -375,19 +377,19 @@ namespace onlineCinema.Controllers
 
             model.BookingHistory =
                 new PagedResultDto<BookingHistoryItemViewModel>
-            {
-                Items = pagedResultDto.Items
-                    .Select(dto => 
+                {
+                    Items = pagedResultDto.Items
+                    .Select(dto =>
                         _userMapping
                             .ToBookingHistoryItemViewModel(dto))
                             .ToList(),
-                        TotalCount = pagedResultDto.TotalCount,
-                        PageSize = pagedResultDto.PageSize,
-                        HasNextPage = pagedResultDto.HasNextPage,
-                        LastId = pagedResultDto.LastId,
-                        FirstId = pagedResultDto.FirstId,
-                        HasPreviousPage = pagedResultDto.HasPreviousPage
-            };
+                    TotalCount = pagedResultDto.TotalCount,
+                    PageSize = pagedResultDto.PageSize,
+                    HasNextPage = pagedResultDto.HasNextPage,
+                    LastId = pagedResultDto.LastId,
+                    FirstId = pagedResultDto.FirstId,
+                    HasPreviousPage = pagedResultDto.HasPreviousPage
+                };
         }
     }
 }

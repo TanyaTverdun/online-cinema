@@ -1,5 +1,4 @@
-﻿using onlineCinema.Application.DTOs.Genre;
-using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Areas.Admin.Models;
 using Riok.Mapperly.Abstractions;
 

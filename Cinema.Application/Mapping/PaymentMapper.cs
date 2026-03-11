@@ -1,4 +1,5 @@
 ﻿using onlineCinema.Application.DTOs.AdminTickets;
+using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Domain.Enums;
 using Riok.Mapperly.Abstractions;
@@ -9,7 +10,7 @@ namespace onlineCinema.Application.Mapping
     public partial class PaymentMapper
     {
         public Payment CreateCompletedPayment(
-            int bookingId, 
+            int bookingId,
             decimal amount)
         {
             return new Payment
@@ -24,20 +25,21 @@ namespace onlineCinema.Application.Mapping
         [MapProperty("Booking.EmailAddress", "UserEmail")]
         public partial PaymentAdminDto MapToDto(Payment payment);
 
-        public List<PaymentAdminDto> 
+        public List<PaymentAdminDto>
             MapToDtoList(IEnumerable<Payment> payments)
         {
-            return payments.Select(p => {
+            return payments.Select(p =>
+            {
                 var dto = MapToDto(p);
                 var booking = p.Booking;
                 var firstTicket = booking?.Tickets.FirstOrDefault();
 
                 dto.OrderDate = booking?.CreatedDateTime ?? p.PaymentDate;
 
-                dto.MovieTitle = 
+                dto.MovieTitle =
                     firstTicket?.Session?.Movie?.Title ?? "Без фільму";
 
-                dto.MovieSessionDateTime = 
+                dto.MovieSessionDateTime =
                     firstTicket?.Session?.ShowingDateTime ?? DateTime.MinValue;
 
                 dto.TicketCount = booking?.Tickets.Count ?? 0;
@@ -55,12 +57,12 @@ namespace onlineCinema.Application.Mapping
             }).ToList();
         }
 
-        public PagedResult<PaymentAdminDto> MapToPagedResult(
+        public PagedResultDto<PaymentAdminDto> MapToPagedResult(
             IEnumerable<Payment> entities, int totalCount, int pageSize)
         {
             var dtos = MapToDtoList(entities);
 
-            return new PagedResult<PaymentAdminDto>
+            return new PagedResultDto<PaymentAdminDto>
             {
                 Items = dtos,
                 TotalCount = totalCount,
