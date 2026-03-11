@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-
-
-namespace onlineCinema.Application.DTOs
+﻿namespace onlineCinema.Application.DTOs.Common
 {
     public class PagedResultDto<T>
     {

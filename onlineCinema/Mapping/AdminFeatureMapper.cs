@@ -1,5 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Areas.Admin.Models;
 using Riok.Mapperly.Abstractions;
 
@@ -15,7 +14,7 @@ namespace onlineCinema.Mapping
             nameof(FeatureDto.Name),
             nameof(FeatureViewModel.FeatureName))]
         [MapProperty(
-            nameof(FeatureDto.Description), 
+            nameof(FeatureDto.Description),
             nameof(FeatureViewModel.FeatureDescription))]
         public partial FeatureViewModel ToViewModel(FeatureDto dto);
 
@@ -26,10 +25,10 @@ namespace onlineCinema.Mapping
             nameof(FeatureViewModel.FeatureId),
             nameof(FeatureDto.Id))]
         [MapProperty(
-            nameof(FeatureViewModel.FeatureName), 
+            nameof(FeatureViewModel.FeatureName),
             nameof(FeatureDto.Name))]
         [MapProperty(
-            nameof(FeatureViewModel.FeatureDescription), 
+            nameof(FeatureViewModel.FeatureDescription),
             nameof(FeatureDto.Description))]
         public partial FeatureDto ToDto(FeatureViewModel model);
     }

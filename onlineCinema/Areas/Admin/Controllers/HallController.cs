@@ -1,16 +1,9 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.DTOs;
-using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;
 using onlineCinema.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -23,8 +16,8 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IValidator<HallInputViewModel> _validator;
 
         public HallController(
-            IHallService hallService, 
-            HallViewModelMapper mapper, 
+            IHallService hallService,
+            HallViewModelMapper mapper,
             IValidator<HallInputViewModel> validator)
         {
             _hallService = hallService;
@@ -96,7 +89,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                     {
                         Id = f.Id,
                         Name = f.Name,
-                        IsSelected = model.SelectedFeatureIds != null 
+                        IsSelected = model.SelectedFeatureIds != null
                                 && model.SelectedFeatureIds.Contains(f.Id)
                     })
                     .ToList();

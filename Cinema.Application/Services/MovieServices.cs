@@ -1,11 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
-using onlineCinema.Application.DTOs;
 using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
@@ -22,8 +16,8 @@ namespace onlineCinema.Application.Services
         private readonly MovieMapping _mapper;
 
         public MovieService(
-            IUnitOfWork unitOfWork, 
-            IWebHostEnvironment webHostEnvironment, 
+            IUnitOfWork unitOfWork,
+            IWebHostEnvironment webHostEnvironment,
             MovieMapping mapper)
         {
             _unitOfWork = unitOfWork;
@@ -215,7 +209,7 @@ namespace onlineCinema.Application.Services
                 {
                     var (first, last) = ParseName(fullName);
                     var existing = (await _unitOfWork.CastMember
-                        .GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower() 
+                        .GetAllAsync(x => x.CastFirstName.ToLower() == first.ToLower()
                             && x.CastLastName.ToLower() == last.ToLower())).FirstOrDefault();
 
                     if (existing != null)
@@ -249,7 +243,7 @@ namespace onlineCinema.Application.Services
                 {
                     var (first, last) = ParseName(fullName);
                     var existing = (await _unitOfWork.Director
-                        .GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower() 
+                        .GetAllAsync(x => x.DirectorFirstName.ToLower() == first.ToLower()
                             && x.DirectorLastName.ToLower() == last.ToLower())).FirstOrDefault();
 
                     if (existing != null)
@@ -306,7 +300,7 @@ namespace onlineCinema.Application.Services
 
         private string[] SplitInput(string input)
         {
-            return input.Split(',', StringSplitOptions.RemoveEmptyEntries 
+            return input.Split(',', StringSplitOptions.RemoveEmptyEntries
                 | StringSplitOptions.TrimEntries);
         }
 
@@ -326,7 +320,7 @@ namespace onlineCinema.Application.Services
         private async Task<string> SaveImageAsync(IFormFile file)
         {
             string wwwRootPath = _webHostEnvironment.WebRootPath;
-            string fileName = Guid.NewGuid().ToString() 
+            string fileName = Guid.NewGuid().ToString()
                 + Path.GetExtension(file.FileName);
             string folderPath = Path.Combine(wwwRootPath, @"images\movies");
 
@@ -353,7 +347,7 @@ namespace onlineCinema.Application.Services
 
             var imagePath = Path
                 .Combine(
-                _webHostEnvironment.WebRootPath, 
+                _webHostEnvironment.WebRootPath,
                 imageUrl.TrimStart('\\', '/'));
             if (File.Exists(imagePath))
             {

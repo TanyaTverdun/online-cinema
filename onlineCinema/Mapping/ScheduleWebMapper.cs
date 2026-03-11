@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Session;
 using onlineCinema.ViewModels;
 using Riok.Mapperly.Abstractions;
 
@@ -20,14 +20,14 @@ namespace onlineCinema.Mapping
         {
             var vm = MapBase(dto);
 
-            vm.Days = 
+            vm.Days =
                 dto.Schedule
                 .Select((day, index) => MapToDayVm(day, index)).ToList();
 
             return vm;
         }
 
-        [MapProperty(nameof(MovieScheduleDto.Schedule), 
+        [MapProperty(nameof(MovieScheduleDto.Schedule),
             nameof(MovieScheduleViewModel.Days))]
         private partial MovieScheduleViewModel MapBase(MovieScheduleDto dto);
 

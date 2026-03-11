@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Domain.Enums;
+﻿using onlineCinema.Domain.Enums;
 
 namespace onlineCinema.Application.DTOs.Movie
 {
@@ -15,7 +10,7 @@ namespace onlineCinema.Application.DTOs.Movie
         public string PosterUrl { get; set; } = string.Empty;
         public string? TrailerLink { get; set; }
 
-        public int Runtime { get; set; } 
+        public int Runtime { get; set; }
         public DateTime ReleaseDate { get; set; }
         public AgeRating AgeRating { get; set; }
         public decimal Rating { get; set; }

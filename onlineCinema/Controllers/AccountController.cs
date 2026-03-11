@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Domain.Entities;
-using onlineCinema.ViewModels;
-using onlineCinema.Mapping;
+using onlineCinema.Application.DTOs.Booking;
+using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Application.DTOs;
+using onlineCinema.Domain.Entities;
+using onlineCinema.Mapping;
+using onlineCinema.ViewModels;
 using System.Security.Claims;
 
 namespace onlineCinema.Controllers
@@ -141,7 +142,7 @@ namespace onlineCinema.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(
-                    "Користувач {Email} успішно увійшов", 
+                    "Користувач {Email} успішно увійшов",
                     model.Email);
 
                 if (!string.IsNullOrEmpty(model.ReturnUrl) &&
@@ -302,7 +303,7 @@ namespace onlineCinema.Controllers
             if (result.Succeeded)
             {
                 _logger.LogInformation(
-                    "Профіль користувача {UserId} оновлено", 
+                    "Профіль користувача {UserId} оновлено",
                     user.Id);
                 TempData["SuccessMessage"] = "Профіль успішно оновлено";
                 return RedirectToAction("Profile");
@@ -361,8 +362,8 @@ namespace onlineCinema.Controllers
 
 
         private async Task LoadHistoryAsync(
-            ApplicationUser user, 
-            ProfileViewModel model, 
+            ApplicationUser user,
+            ProfileViewModel model,
             int? lastId = null,
             int? firstId = null)
         {
@@ -375,19 +376,19 @@ namespace onlineCinema.Controllers
 
             model.BookingHistory =
                 new PagedResultDto<BookingHistoryItemViewModel>
-            {
-                Items = pagedResultDto.Items
-                    .Select(dto => 
+                {
+                    Items = pagedResultDto.Items
+                    .Select(dto =>
                         _userMapping
                             .ToBookingHistoryItemViewModel(dto))
                             .ToList(),
-                        TotalCount = pagedResultDto.TotalCount,
-                        PageSize = pagedResultDto.PageSize,
-                        HasNextPage = pagedResultDto.HasNextPage,
-                        LastId = pagedResultDto.LastId,
-                        FirstId = pagedResultDto.FirstId,
-                        HasPreviousPage = pagedResultDto.HasPreviousPage
-            };
+                    TotalCount = pagedResultDto.TotalCount,
+                    PageSize = pagedResultDto.PageSize,
+                    HasNextPage = pagedResultDto.HasNextPage,
+                    LastId = pagedResultDto.LastId,
+                    FirstId = pagedResultDto.FirstId,
+                    HasPreviousPage = pagedResultDto.HasPreviousPage
+                };
         }
     }
 }

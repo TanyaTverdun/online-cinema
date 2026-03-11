@@ -1,16 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class GenericRepository<T> 
+    public class GenericRepository<T>
         : IGenericRepository<T> where T : class
     {
         private readonly ApplicationDbContext _db;
@@ -33,7 +28,7 @@ namespace onlineCinema.Infrastructure.Repositories
         }
 
         public async Task<IEnumerable<T>> GetAllAsync(
-            Expression<Func<T, bool>>? filter = null, 
+            Expression<Func<T, bool>>? filter = null,
             string? includeProperties = null)
         {
             IQueryable<T> query = dbSet;
@@ -46,7 +41,7 @@ namespace onlineCinema.Infrastructure.Repositories
             if (!string.IsNullOrEmpty(includeProperties))
             {
                 foreach (var includeProp in includeProperties
-                    .Split(new char[] { ',' }, 
+                    .Split(new char[] { ',' },
                         StringSplitOptions.RemoveEmptyEntries))
                 {
                     query = query.Include(includeProp);

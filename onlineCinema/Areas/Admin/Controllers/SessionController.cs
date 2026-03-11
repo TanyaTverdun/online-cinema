@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Mapping;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using onlineCinema.Areas.Admin.Models;
 namespace onlineCinema.Areas.Admin.Controllers
 {

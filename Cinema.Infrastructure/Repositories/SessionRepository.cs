@@ -5,12 +5,12 @@ using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class SessionRepository 
+    public class SessionRepository
         : GenericRepository<Session>, ISessionRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public SessionRepository(ApplicationDbContext db) 
+        public SessionRepository(ApplicationDbContext db)
             : base(db)
         {
             _db = db;
@@ -26,11 +26,11 @@ namespace onlineCinema.Infrastructure.Repositories
                 .ToListAsync();
         }
 
-        public async Task<IEnumerable<Session>> 
+        public async Task<IEnumerable<Session>>
             GetFutureSessionsByMovieIdAsync(int movieId)
         {
             return await _db.Sessions
-                .Where(s => s.MovieId == movieId 
+                .Where(s => s.MovieId == movieId
                     && s.ShowingDateTime > DateTime.Now)
                 .Include(s => s.Hall)
                     .ThenInclude(hf => hf.HallFeatures)
@@ -82,7 +82,7 @@ namespace onlineCinema.Infrastructure.Repositories
                     s.ShowingDateTime.Date == date
                 )
                 .AnyAsync(s =>
-                    showingDateTime < s.ShowingDateTime.AddMinutes(s.Movie.Runtime) 
+                    showingDateTime < s.ShowingDateTime.AddMinutes(s.Movie.Runtime)
                         && newEnd > s.ShowingDateTime
                 );
         }

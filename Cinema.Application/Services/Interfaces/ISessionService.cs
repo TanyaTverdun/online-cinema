@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Session;
 
 namespace onlineCinema.Application.Services.Interfaces
 {

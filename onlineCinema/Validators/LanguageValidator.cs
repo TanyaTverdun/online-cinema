@@ -1,5 +1,5 @@
 ﻿using FluentValidation;
-using onlineCinema.Areas.Admin.Models;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
@@ -8,11 +8,13 @@ namespace onlineCinema.Validators
         public LanguageValidator()
         {
             RuleFor(x => x.LanguageName)
-                .NotEmpty().WithMessage("Назва мови обов'язкова")
-                .MaximumLength(50).WithMessage("Назва мови занадто довга")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "назва мови"))
+                .MaximumLength(50)
+                    .WithMessage(string.Format(FieldTooLong, "назва мови", 50))
                 .Matches(@"^[a-zA-Zа-яА-ЯіІїЇєЄ\s()]+$")
-                .WithMessage(
-                "Назва мови може містити тільки літери, пробіли та дужки");
+                    .WithMessage(
+                        "Назва мови може містити тільки літери, пробіли та дужки");
         }
     }
 }

@@ -1,5 +1,5 @@
-﻿using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.AdminTickets;
+﻿using onlineCinema.Application.DTOs.AdminTickets;
+using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Domain.Enums;
 using Riok.Mapperly.Abstractions;

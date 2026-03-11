@@ -1,7 +1,6 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
-using System.Collections.Generic;
 
 namespace onlineCinema.Application.Mapping
 {
@@ -10,13 +9,13 @@ namespace onlineCinema.Application.Mapping
     {
         public partial LanguageDto MapToDto(Language language);
 
-        public partial List<LanguageDto> 
+        public partial List<LanguageDto>
             MapToDtoList(IEnumerable<Language> languages);
 
         public partial Language MapToEntity(LanguageDto dto);
 
         public partial void UpdateEntityFromDto(
-            LanguageDto dto, 
+            LanguageDto dto,
             Language entity);
     }
 }

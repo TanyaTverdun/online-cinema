@@ -1,5 +1,6 @@
-﻿using FluentValidation;
+using FluentValidation;
 using onlineCinema.Areas.Admin.Models;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Web.Validation
 {
@@ -9,29 +10,27 @@ namespace onlineCinema.Web.Validation
         public SessionViewModelValidator()
         {
             RuleFor(x => x.MovieId)
-                .NotEmpty().WithMessage("Виберіть фільм для сеансу")
+                .NotEmpty()
+                    .WithMessage("Виберіть фільм для сеансу")
                 .WithName("Фільм");
 
             RuleFor(x => x.HallId)
-                .NotEmpty().WithMessage("Виберіть зал для проведення сеансу")
+                .NotEmpty()
+                    .WithMessage("Виберіть зал для проведення сеансу")
                 .WithName("Зал");
 
             RuleFor(x => x.ShowingDateTime)
-                .NotEmpty().WithMessage("Вкажіть дату та час початку сеансу")
+                .NotEmpty()
+                    .WithMessage("Вкажіть дату та час початку сеансу")
                 .GreaterThan(x => DateTime.Now)
-                .WithMessage("Час початку сеансу не може бути в минулому")
+                    .WithMessage("Час початку сеансу не може бути в минулому")
                 .WithName("Дата та час");
 
             RuleFor(x => x.BasePrice)
-                .NotEmpty().WithMessage("Вкажіть базову ціну квитка")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "базова ціна"))
                 .GreaterThan(0)
-                .WithMessage("Ціна квитка повинна бути більшою за 0 грн")
-                .WithName("Ціна");
-
-            RuleFor(x => x.BasePrice)
-                .NotEmpty().WithMessage("Вкажіть базову ціну квитка")
-                .GreaterThan(0)
-                .WithMessage("Ціна повинна бути більшою за 0 грн")
+                    .WithMessage("ціна має бути більше нуля")
                 .WithName("Ціна");
         }
     }

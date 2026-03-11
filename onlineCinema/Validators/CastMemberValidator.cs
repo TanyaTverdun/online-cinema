@@ -1,5 +1,6 @@
-﻿using FluentValidation;
+using FluentValidation;
 using onlineCinema.Areas.Admin.Models;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
@@ -8,22 +9,19 @@ namespace onlineCinema.Validators
         public CastMemberValidator()
         {
             RuleFor(x => x.CastFirstName)
-                .NotEmpty().WithMessage("Ім'я обов'язкове")
+                .NotEmpty().WithMessage(string.Format(FieldRequired, "ім'я"))
                 .MaximumLength(100)
-                .WithMessage(
-                "Ім'я не може перевищувати 100 символів");
+                .WithMessage(string.Format(FieldTooLong, "ім'я", 100));
 
             RuleFor(x => x.CastLastName)
-                .NotEmpty().WithMessage("Прізвище обов'язкове")
+                .NotEmpty().WithMessage(string.Format(FieldRequired, "прізвище"))
                 .MaximumLength(100)
-                .WithMessage(
-                "Прізвище не може перевищувати 100 символів");
+                .WithMessage(string.Format(FieldTooLong, "прізвище", 100));
 
             RuleFor(x => x.CastMiddleName)
-                .NotEmpty().WithMessage("По батькові обов'язкове")
-                .MaximumLength(100).
-                WithMessage(
-                "По батькові не може перевищувати 100 символів");
+                .MaximumLength(100)
+                .WithMessage(string.Format(FieldTooLong, "по батькові", 100))
+                .When(x => !string.IsNullOrWhiteSpace(x.CastMiddleName));
         }
     }
 }

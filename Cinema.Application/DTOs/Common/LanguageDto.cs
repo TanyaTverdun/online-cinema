@@ -1,4 +1,4 @@
-﻿namespace onlineCinema.Application.DTOs;
+namespace onlineCinema.Application.DTOs.Common;
 
 public class LanguageDto
 {

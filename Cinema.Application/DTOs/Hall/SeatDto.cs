@@ -1,6 +1,6 @@
 ﻿using onlineCinema.Domain.Enums;
 
-namespace onlineCinema.Application.DTOs
+namespace onlineCinema.Application.DTOs.Hall
 {
     public class SeatDto
     {

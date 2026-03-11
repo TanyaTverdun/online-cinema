@@ -1,5 +1,6 @@
-﻿using FluentValidation;
+using FluentValidation;
 using onlineCinema.ViewModels;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
@@ -8,13 +9,15 @@ namespace onlineCinema.Validators
         public LoginValidator()
         {
             RuleFor(x => x.Email)
-                 .NotEmpty().WithMessage("Електронна пошта є обов'язковою")
+                 .NotEmpty()
+                    .WithMessage(string.Format(
+                        FieldRequired, "електронна пошта"))
                  .Matches(@"^[^@\s]+@[^@\s]+\.[^@\s]+$")
-                 .WithMessage(
-                "Невірний формат електронної пошти (you@gmail.com)"); ;
+                    .WithMessage(EmailInvalidFormat);
 
             RuleFor(x => x.Password)
-                .NotEmpty().WithMessage("Пароль є обов'язковим");
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "пароль"));
         }
     }
 }

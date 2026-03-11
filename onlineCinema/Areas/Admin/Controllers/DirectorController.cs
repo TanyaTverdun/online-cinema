@@ -1,6 +1,5 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
-using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;

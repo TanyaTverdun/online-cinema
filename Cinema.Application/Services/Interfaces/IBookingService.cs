@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.AdminTickets;
+﻿using onlineCinema.Application.DTOs.Booking;
+using onlineCinema.Application.DTOs.Common;
+using onlineCinema.Application.DTOs.Session;
+using onlineCinema.Application.DTOs.Snack;
 
 namespace onlineCinema.Application.Services.Interfaces
 {
@@ -12,7 +9,7 @@ namespace onlineCinema.Application.Services.Interfaces
     {
         Task<SessionSeatMapDto> GetSessionSeatMapAsync(int sessionId);
         Task AddSnacksToBookingAsync(
-            int bookingId, 
+            int bookingId,
             List<SelectedSnackDto> selectedSnacks);
         Task<int> CreateBookingAsync(CreateBookingDto bookingDto);
         Task<decimal> GetTicketsPriceTotalAsync(int bookingId);
@@ -21,8 +18,8 @@ namespace onlineCinema.Application.Services.Interfaces
         Task<IEnumerable<BookingHistoryDto>> GetBookingHistoryAsync(string userId);
         Task CancelBookingAsync(int bookingId, string userId);
         Task<PagedResultDto<BookingHistoryDto>> GetBookingHistorySeekAsync(
-            string userId, 
-            int? lastId, 
+            string userId,
+            int? lastId,
             int? firstId);
     }
 }

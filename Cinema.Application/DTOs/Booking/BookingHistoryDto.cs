@@ -1,4 +1,7 @@
-namespace onlineCinema.Application.DTOs
+using onlineCinema.Application.DTOs.Snack;
+using onlineCinema.Application.DTOs.Ticket;
+
+namespace onlineCinema.Application.DTOs.Booking
 {
     public class BookingHistoryDto
     {
@@ -13,7 +16,6 @@ namespace onlineCinema.Application.DTOs
         public List<TicketInfoDto> Tickets { get; set; } = new();
         public bool CanRefund { get; set; }
         public List<SnackInfoDto> Snacks { get; set; } = new();
-
     }
 }
 

@@ -1,7 +1,6 @@
 ﻿using FluentValidation;
 using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;
 
 namespace onlineCinema.Areas.Admin.Controllers
@@ -80,7 +79,7 @@ namespace onlineCinema.Areas.Admin.Controllers
                 foreach (var error in result.Errors)
                 {
                     ModelState.AddModelError(
-                        error.PropertyName, 
+                        error.PropertyName,
                         error.ErrorMessage);
                 }
                 return View(model);

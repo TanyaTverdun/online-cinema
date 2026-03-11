@@ -2,6 +2,8 @@
 {
     public class PaymentListViewModel
     {
+        private const string DefaultTitle = "Журнал платежів";
+
         public List<PaymentAdminViewModel> Payments { get; set; } = new();
         public int? LastId { get; set; }
         public int? NextId { get; set; }
@@ -12,7 +14,7 @@
         public string? SearchMovie { get; set; }
         public DateTime? SearchDate { get; set; }
 
-        public string Title { get; set; } = "Журнал платежів";
+        public string Title { get; set; } = DefaultTitle;
         public string? SuccessMessage { get; set; }
         public bool HasFilters => !string.IsNullOrEmpty(SearchEmail) ||
                           !string.IsNullOrEmpty(SearchMovie) ||

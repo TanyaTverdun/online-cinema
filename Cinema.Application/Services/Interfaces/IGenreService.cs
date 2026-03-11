@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Common;
 
 namespace onlineCinema.Application.Services.Interfaces
 {

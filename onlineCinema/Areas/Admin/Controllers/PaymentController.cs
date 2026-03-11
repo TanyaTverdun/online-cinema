@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
-using onlineCinema.Areas.Admin.Models;
-using onlineCinema.Domain.Entities;
 using onlineCinema.Mapping;
-using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {
@@ -13,7 +10,7 @@ namespace onlineCinema.Areas.Admin.Controllers
         private readonly IPaymentService _paymentService;
         private readonly AdminPaymentMapping _viewMapper;
 
-        public PaymentController(IPaymentService paymentService, 
+        public PaymentController(IPaymentService paymentService,
             AdminPaymentMapping viewMapper)
         {
             _paymentService = paymentService;

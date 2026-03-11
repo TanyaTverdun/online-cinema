@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace onlineCinema.Application.DTOs
+﻿namespace onlineCinema.Application.DTOs.Session
 {
-   public class SessionDto
+    public class SessionDto
     {
         public int Id { get; set; }
         public int MovieId { get; set; }

@@ -1,5 +1,7 @@
 using Riok.Mapperly.Abstractions;
-using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.Booking;
+using onlineCinema.Application.DTOs.Common;
+using onlineCinema.Application.DTOs.Ticket;
 using onlineCinema.Domain.Entities;
 using onlineCinema.ViewModels;
 
@@ -36,21 +38,21 @@ namespace onlineCinema.Mapping
         {
             var viewModel = ToProfileViewModelBase(user);
 
-            viewModel.BookingHistory = 
+            viewModel.BookingHistory =
                 new PagedResultDto<BookingHistoryItemViewModel>
-            {
-                Items = 
+                {
+                    Items =
                 bookings.Items
                 .Select(ToBookingHistoryItemViewModel)
                 .ToList(),
-                TotalCount = bookings.TotalCount,
-                PageSize = bookings.PageSize,
+                    TotalCount = bookings.TotalCount,
+                    PageSize = bookings.PageSize,
 
-                HasNextPage = bookings.HasNextPage,
-                HasPreviousPage = bookings.HasPreviousPage,
-                LastId = bookings.LastId,
-                FirstId = bookings.FirstId
-            };
+                    HasNextPage = bookings.HasNextPage,
+                    HasPreviousPage = bookings.HasPreviousPage,
+                    LastId = bookings.LastId,
+                    FirstId = bookings.FirstId
+                };
 
             viewModel.ReturnUrl = returnUrl;
             return viewModel;
@@ -87,11 +89,11 @@ namespace onlineCinema.Mapping
             nameof(TicketInfoViewModel.TicketId))]
         [MapProperty(nameof(TicketInfoDto.Price),
             nameof(TicketInfoViewModel.Price))]
-        [MapProperty(nameof(TicketInfoDto.RowNumber), 
+        [MapProperty(nameof(TicketInfoDto.RowNumber),
             nameof(TicketInfoViewModel.RowNumber))]
         [MapProperty(nameof(TicketInfoDto.SeatNumber),
             nameof(TicketInfoViewModel.SeatNumber))]
-        [MapProperty(nameof(TicketInfoDto.SeatType), 
+        [MapProperty(nameof(TicketInfoDto.SeatType),
             nameof(TicketInfoViewModel.SeatType))]
         public partial TicketInfoViewModel ToTicketInfoViewModel(
             TicketInfoDto dto);
@@ -143,7 +145,7 @@ namespace onlineCinema.Mapping
             nameof(ApplicationUser.FirstName))]
         [MapProperty(nameof(ProfileViewModel.LastName),
             nameof(ApplicationUser.LastName))]
-        [MapProperty(nameof(ProfileViewModel.MiddleName), 
+        [MapProperty(nameof(ProfileViewModel.MiddleName),
             nameof(ApplicationUser.MiddleName))]
         [MapProperty(nameof(ProfileViewModel.DateOfBirth),
             nameof(ApplicationUser.DateOfBirth))]
@@ -178,7 +180,7 @@ namespace onlineCinema.Mapping
             UpdateApplicationUserBase(model, user);
 
             user.MiddleName = string.IsNullOrWhiteSpace(user.MiddleName)
-                ? null 
+                ? null
                 : user.MiddleName.Trim();
         }
     }

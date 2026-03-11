@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
-using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Application.DTOs.Movie;
+using onlineCinema.Application.DTOs.Person;
 using onlineCinema.Areas.Admin.Models;
 using Riok.Mapperly.Abstractions;
 
@@ -40,16 +41,16 @@ namespace onlineCinema.Mapping
             nameof(MovieDropdownsDto.Genres),
             nameof(MovieFormViewModel.GenresList))]
         [MapProperty(
-            nameof(MovieDropdownsDto.Actors), 
+            nameof(MovieDropdownsDto.Actors),
             nameof(MovieFormViewModel.ActorsList))]
         [MapProperty(
             nameof(MovieDropdownsDto.Directors),
             nameof(MovieFormViewModel.DirectorsList))]
         [MapProperty(
-            nameof(MovieDropdownsDto.Languages), 
+            nameof(MovieDropdownsDto.Languages),
             nameof(MovieFormViewModel.LanguagesList))]
         [MapProperty(
-            nameof(MovieDropdownsDto.Features), 
+            nameof(MovieDropdownsDto.Features),
             nameof(MovieFormViewModel.FeaturesList))]
         public partial void Fill(
             MovieDropdownsDto dto,
@@ -68,7 +69,7 @@ namespace onlineCinema.Mapping
 
         private SelectListItem MapLanguageToItem(LanguageDto source)
             => new SelectListItem(
-                source.LanguageName, 
+                source.LanguageName,
                 source.LanguageId.ToString());
     }
 }

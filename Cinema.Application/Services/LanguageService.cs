@@ -1,8 +1,7 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.Interfaces;
-using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Application.Services;
 

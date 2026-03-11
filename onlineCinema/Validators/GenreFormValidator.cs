@@ -1,5 +1,6 @@
 ﻿using FluentValidation;
 using onlineCinema.Areas.Admin.Models;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
@@ -8,10 +9,10 @@ namespace onlineCinema.Validators
         public GenreFormValidator()
         {
             RuleFor(x => x.GenreName)
-                .NotEmpty().WithMessage("Вкажіть назву жанру")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "назва жанру"))
                 .MaximumLength(50)
-                .WithMessage(
-                "Назва не може перевищувати 50 символів");
+                    .WithMessage(string.Format(FieldTooLong, "назва жанру", 50));
         }
     }
 }

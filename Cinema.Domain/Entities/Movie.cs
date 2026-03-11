@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
-using onlineCinema.Domain.Enums;
+﻿using onlineCinema.Domain.Enums;
 
 namespace onlineCinema.Domain.Entities
 {
@@ -18,7 +14,6 @@ namespace onlineCinema.Domain.Entities
         public string? Description { get; set; }
         public decimal Rating { get; set; }
         public string? PosterImage { get; set; }
-
 
         public ICollection<MovieGenre> MovieGenres { get; set; } = new List<MovieGenre>();
         public ICollection<MovieCast> MovieCasts { get; set; } = new List<MovieCast>();

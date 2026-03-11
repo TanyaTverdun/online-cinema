@@ -1,7 +1,6 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Person;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
-using System.Collections.Generic;
 
 namespace onlineCinema.Application.Mapping
 {

@@ -1,5 +1,6 @@
-﻿using FluentValidation;
+using FluentValidation;
 using onlineCinema.Areas.Admin.Models;
+using static onlineCinema.Validators.ValidationMessages;
 
 namespace onlineCinema.Validators
 {
@@ -8,15 +9,19 @@ namespace onlineCinema.Validators
         public SnackValidator()
         {
             RuleFor(x => x.SnackName)
-                .NotEmpty().WithMessage("Назва снеку обов'язкова")
-                .MaximumLength(100).WithMessage("Назва занадто довга");
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "назва снеку"))
+                .MaximumLength(100)
+                    .WithMessage(string.Format(FieldTooLong, "назва снеку", 100));
 
             RuleFor(x => x.Price)
-                .NotEmpty().WithMessage("Вкажіть ціну")
-                .GreaterThan(0).WithMessage("Ціна має бути більше 0")
+                .NotEmpty()
+                    .WithMessage(string.Format(FieldRequired, "ціна"))
+                .GreaterThan(0)
+                    .WithMessage("ціна має бути більше нуля")
                 .PrecisionScale(10, 2, false)
-                .WithMessage(
-                "Ціна має некоректний формат (макс. 2 знаки після коми)");
+                    .WithMessage(
+                        "Ціна має некоректний формат (макс. 2 знаки після коми)");
         }
     }
 }

@@ -1,7 +1,7 @@
 ﻿using Microsoft.Extensions.Options;
 using onlineCinema.Application.Configurations;
-using onlineCinema.Application.DTOs;
 using onlineCinema.Application.DTOs.AdminTickets;
+using onlineCinema.Application.DTOs.Common;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;

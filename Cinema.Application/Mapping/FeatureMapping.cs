@@ -1,8 +1,6 @@
-﻿using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
-using System.Collections.Generic;
 
 namespace onlineCinema.Application.Mapping
 {
@@ -11,13 +9,13 @@ namespace onlineCinema.Application.Mapping
     {
         public partial FeatureDto MapToDto(Feature feature);
 
-        public partial List<FeatureDto> 
+        public partial List<FeatureDto>
             MapToDtoList(IEnumerable<Feature> features);
 
         public partial Feature MapToEntity(FeatureDto dto);
 
         public partial void UpdateEntityFromDto(
-            FeatureDto dto, 
+            FeatureDto dto,
             Feature entity);
     }
 }

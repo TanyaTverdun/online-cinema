@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Person;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Application.Interfaces;

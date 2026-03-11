@@ -11,7 +11,7 @@ namespace onlineCinema.Application.Services
         private readonly DirectorMapping _mapper;
 
         public DirectorService(
-            IUnitOfWork unitOfWork, 
+            IUnitOfWork unitOfWork,
             DirectorMapping mapper)
         {
             _unitOfWork = unitOfWork;

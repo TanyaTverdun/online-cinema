@@ -1,5 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Movie;
 
 namespace onlineCinema.Application.Services.Interfaces;
 

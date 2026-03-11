@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
 
@@ -17,10 +12,10 @@ namespace onlineCinema.Application.Mapping
         public partial Director ToEntity(DirectorFormDto dto);
 
         public partial void UpdateEntityFromDto(
-            DirectorFormDto dto, 
+            DirectorFormDto dto,
             Director director);
 
-        public partial IEnumerable<DirectorFormDto> 
+        public partial IEnumerable<DirectorFormDto>
             ToDtoList(IEnumerable<Director> directors);
     }
 }

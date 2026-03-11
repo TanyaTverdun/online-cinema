@@ -1,4 +1,4 @@
-﻿using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Hall;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
 
@@ -10,8 +10,8 @@ namespace onlineCinema.Application.Mapping
         private List<int> MapFeaturesToIds(ICollection<HallFeature> features)
             => features.Select(f => f.FeatureId).ToList();
 
-        [MapProperty(nameof(Hall.HallFeatures), 
-            nameof(HallDto.FeatureIds), 
+        [MapProperty(nameof(Hall.HallFeatures),
+            nameof(HallDto.FeatureIds),
             Use = nameof(MapFeaturesToIds))]
 
         [MapProperty(nameof(Hall.HallId), nameof(HallDto.Id))]

@@ -1,5 +1,5 @@
-﻿using onlineCinema.Application.DTOs;
-using onlineCinema.Application.DTOs.AdminTickets;
+﻿using onlineCinema.Application.DTOs.AdminTickets;
+using onlineCinema.Application.DTOs.Common;
 
 namespace onlineCinema.Application.Services.Interfaces
 {

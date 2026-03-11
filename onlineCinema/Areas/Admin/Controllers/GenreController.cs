@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Areas.Admin.Models;
 using onlineCinema.Mapping;
-using onlineCinema.Application.DTOs;
 
 namespace onlineCinema.Areas.Admin.Controllers
 {

@@ -1,21 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
 {
-    public class SeatRepository 
+    public class SeatRepository
         : GenericRepository<Seat>, ISeatRepository
     {
         private readonly ApplicationDbContext _db;
 
-        public SeatRepository(ApplicationDbContext db) 
+        public SeatRepository(ApplicationDbContext db)
             : base(db)
         {
             _db = db;

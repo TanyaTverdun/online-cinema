@@ -1,11 +1,9 @@
-﻿using System.Diagnostics;
-using Microsoft.AspNetCore.Authorization;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Mapping;
-using onlineCinema.Models;
 using onlineCinema.ViewModels;
 
 namespace onlineCinema.Controllers
@@ -171,7 +169,7 @@ namespace onlineCinema.Controllers
 
             if (lockUntil < DateTime.Now)
             {
-                TempData["Error"] = 
+                TempData["Error"] =
                     "Час бронювання вийшов. Місця були звільнені.";
                 return RedirectToAction("Index", "Home");
             }

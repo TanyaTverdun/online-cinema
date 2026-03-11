@@ -1,6 +1,4 @@
-﻿using onlineCinema.Domain.Entities;
-
-namespace onlineCinema.Domain.Entities;
+﻿namespace onlineCinema.Domain.Entities;
 
 public class Snack
 {

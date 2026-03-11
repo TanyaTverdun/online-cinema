@@ -1,6 +1,6 @@
 ﻿using Microsoft.Extensions.Options;
 using onlineCinema.Application.Configurations;
-using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.Hall;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -17,8 +17,8 @@ namespace onlineCinema.Application.Services
         private readonly PricingSettings _settings;
 
         public HallService(
-            IUnitOfWork unitOfWork, 
-            HallMapper hallMapper, 
+            IUnitOfWork unitOfWork,
+            HallMapper hallMapper,
             SeatMapper seatMapper,
             IOptions<PricingSettings> settings)
         {
@@ -75,7 +75,7 @@ namespace onlineCinema.Application.Services
             {
                 throw new KeyNotFoundException($"Зал з id {hallDto.Id} не знайдено.");
             }
-            
+
             if (hallDto.VipRowCount > hallDto.RowCount)
             {
                 throw new ArgumentException("VIP рядів не може бути більше " +
@@ -84,14 +84,14 @@ namespace onlineCinema.Application.Services
             bool geometryChanged =
                 existing.RowCount != hallDto.RowCount ||
                 existing.SeatInRowCount != hallDto.SeatInRowCount;
-               
+
 
             var hallEntity = _mapper.MapToEntity(hallDto);
 
             await _unitOfWork.Hall
                 .UpdateWithFeaturesAsync(hallEntity, hallDto.FeatureIds);
 
-            
+
             if (geometryChanged)
             {
                 var seats = await _unitOfWork.Seat
@@ -123,7 +123,7 @@ namespace onlineCinema.Application.Services
         {
             var hallDto = await _unitOfWork.Hall.GetByIdWithStatsAsync(id);
 
-            if(hallDto == null)
+            if (hallDto == null)
             {
                 throw new KeyNotFoundException($"Зал з id {id} не знайдено.");
             }
@@ -140,8 +140,9 @@ namespace onlineCinema.Application.Services
         {
             var dto = await _unitOfWork.Hall.GetHallWithFutureSessionsAsync(id);
 
-            if (dto == null) {
-                throw new KeyNotFoundException($"Зал з id {id} не знайдено."); 
+            if (dto == null)
+            {
+                throw new KeyNotFoundException($"Зал з id {id} не знайдено.");
             }
 
             return dto;
@@ -157,7 +158,7 @@ namespace onlineCinema.Application.Services
                 bool isVipRow = row > startVipRow;
 
                 SeatType type = isVipRow ? SeatType.VIP : SeatType.Standard;
-                float coef = isVipRow ? dto.VipCoefficient 
+                float coef = isVipRow ? dto.VipCoefficient
                     : _settings.DefaultVipCoefficient;
 
                 for (byte number = 1; number <= hall.SeatInRowCount; number++)

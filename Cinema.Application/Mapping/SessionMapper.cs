@@ -1,5 +1,4 @@
-﻿using System.Linq;
-using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Session;
 using onlineCinema.Domain.Entities;
 using Riok.Mapperly.Abstractions;
 

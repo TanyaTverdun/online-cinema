@@ -1,6 +1,9 @@
 ﻿using Microsoft.Extensions.Options;
 using onlineCinema.Application.Configurations;
-using onlineCinema.Application.DTOs;
+using onlineCinema.Application.DTOs.Booking;
+using onlineCinema.Application.DTOs.Common;
+using onlineCinema.Application.DTOs.Session;
+using onlineCinema.Application.DTOs.Snack;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -18,9 +21,9 @@ namespace onlineCinema.Application.Services
         private readonly BookingSettings _settings;
 
         public BookingService(
-            IUnitOfWork unitOfWork, 
-            BookingMapper mapper, 
-            SnackMapper snackMapper, 
+            IUnitOfWork unitOfWork,
+            BookingMapper mapper,
+            SnackMapper snackMapper,
             PaymentMapper paymentMapper,
             IOptions<BookingSettings> settings)
         {
@@ -53,8 +56,8 @@ namespace onlineCinema.Application.Services
 
             var activeTickets = await this._unitOfWork.Ticket.GetAllAsync(t =>
                 t.SessionId == sessionId &&
-                    (t.LockUntil > DateTime.Now 
-                        || (t.Booking.Payment != null 
+                    (t.LockUntil > DateTime.Now
+                        || (t.Booking.Payment != null
                             && t.Booking.Payment.Status == PaymentStatus.Completed)),
                 includeProperties: "Booking,Booking.Payment"
              );
@@ -102,7 +105,7 @@ namespace onlineCinema.Application.Services
             var activeTickets = await this._unitOfWork.Ticket
                 .GetAllAsync(t => t.SessionId == bookingDto.SessionId);
             var busySeatIds = activeTickets
-                .Where(t => t.LockUntil > DateTime.Now 
+                .Where(t => t.LockUntil > DateTime.Now
                     || (t.Booking?.Payment?.Status == PaymentStatus.Completed))
                 .Select(t => t.SeatId);
 
@@ -148,7 +151,7 @@ namespace onlineCinema.Application.Services
         }
 
         public async Task AddSnacksToBookingAsync(
-            int bookingId, 
+            int bookingId,
             List<SelectedSnackDto> selectedSnacks)
         {
             var booking = await this._unitOfWork.Booking.GetByIdAsync(bookingId);
@@ -236,7 +239,7 @@ namespace onlineCinema.Application.Services
                 throw new InvalidOperationException("Бронювання вже скасовано.");
             }
 
-            bool isPaid = booking.Payment != null 
+            bool isPaid = booking.Payment != null
                 && booking.Payment.Status == PaymentStatus.Completed;
 
             var session = booking.Tickets.FirstOrDefault()?.Session;
@@ -282,8 +285,8 @@ namespace onlineCinema.Application.Services
         }
 
         public async Task<PagedResultDto<BookingHistoryDto>> GetBookingHistorySeekAsync(
-            string userId, 
-            int? lastId, 
+            string userId,
+            int? lastId,
             int? firstId)
         {
             int pageSize = 5;

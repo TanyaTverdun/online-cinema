@@ -194,7 +194,6 @@ namespace onlineCinema.Infrastructure.Migrations
                         .HasColumnType("datetimeoffset");
 
                     b.Property<string>("MiddleName")
-                        .IsRequired()
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
@@ -210,7 +209,6 @@ namespace onlineCinema.Infrastructure.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PhoneNumber")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<bool>("PhoneNumberConfirmed")

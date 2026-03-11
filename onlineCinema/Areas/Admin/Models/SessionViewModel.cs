@@ -1,6 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using onlineCinema.Application.DTOs;
+﻿using onlineCinema.Application.DTOs.Hall;
+using onlineCinema.Application.DTOs.Movie;
 
 namespace onlineCinema.Areas.Admin.Models
 {
