@@ -10,15 +10,18 @@ namespace onlineCinema.Areas.Admin.Controllers
     [Area("Admin")]
     public class MovieController : Controller
     {
+        private readonly IPhotoService _photoService;
         private readonly IMovieService _movieService;
         private readonly AdminMovieMapper _mapper;
         private readonly IValidator<MovieFormViewModel> _validator;
 
         public MovieController(
+            IPhotoService photoService,
             IMovieService movieService,
             AdminMovieMapper mapper,
             IValidator<MovieFormViewModel> validator)
         {
+            _photoService = photoService;
             _movieService = movieService;
             _mapper = mapper;
             _validator = validator;
@@ -68,6 +71,20 @@ namespace onlineCinema.Areas.Admin.Controllers
 
             try
             {
+                if (viewModel.PosterFile != null)
+                {
+                    var uploadResult = await _photoService.AddPhotoAsync(viewModel.PosterFile);
+
+                    if (uploadResult.Error != null)
+                    {
+                        ModelState.AddModelError(string.Empty, "Помилка Cloudinary: " + uploadResult.Error.Message);
+                        await ConfigureViewModel(viewModel);
+                        return View(viewModel);
+                    }
+
+                    viewModel.PosterUrl = uploadResult.SecureUrl.AbsoluteUri;
+                }
+
                 var dto = _mapper.ToDto(viewModel);
 
                 await _movieService.AddMovieAsync(dto);
@@ -117,6 +134,25 @@ namespace onlineCinema.Areas.Admin.Controllers
             {
                 try
                 {
+                    if (viewModel.PosterFile != null)
+                    {
+                        if (!string.IsNullOrEmpty(viewModel.PosterUrl))
+                        {
+                            await _photoService.DeletePhotoAsync(viewModel.PosterUrl);
+                        }
+                        var uploadResult = await _photoService.AddPhotoAsync(viewModel.PosterFile);
+
+                        if (uploadResult.Error != null)
+                        {
+                            ModelState.AddModelError(string.Empty, "Cloudinary Error: " + uploadResult.Error.Message);
+                            await ConfigureViewModel(viewModel);
+                            return View(viewModel);
+                        }
+
+                        // 2. (Опціонально) Тут можна було б видалити стару картинку, 
+                        // але для цього треба знати її PublicId. Поки що просто оновимо URL:
+                        viewModel.PosterUrl = uploadResult.SecureUrl.AbsoluteUri;
+                    }
                     var dto = _mapper.ToDto(viewModel);
                     await _movieService.UpdateMovieAsync(dto);
 
@@ -153,6 +189,13 @@ namespace onlineCinema.Areas.Admin.Controllers
         {
             try
             {
+                var movieDto = await _movieService.GetMovieForEditAsync(id);
+
+                if (movieDto != null && !string.IsNullOrEmpty(movieDto.PosterUrl))
+                {
+                    await _photoService.DeletePhotoAsync(movieDto.PosterUrl);
+                }
+                
                 await _movieService.DeleteMovieAsync(id);
 
                 return Json(new
@@ -178,7 +221,6 @@ namespace onlineCinema.Areas.Admin.Controllers
                 });
             }
         }
-
 
         private async Task ConfigureViewModel(MovieFormViewModel vm)
         {

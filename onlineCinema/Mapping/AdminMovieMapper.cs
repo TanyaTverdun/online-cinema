@@ -11,6 +11,7 @@ namespace onlineCinema.Mapping
     public partial class AdminMovieMapper
     {
         [MapperIgnoreTarget(nameof(MovieFormDto.Runtime))]
+        [MapperIgnoreSource(nameof(MovieFormViewModel.PosterFile))]
         private partial MovieFormDto MapToDtoBase(
             MovieFormViewModel viewModel);
 

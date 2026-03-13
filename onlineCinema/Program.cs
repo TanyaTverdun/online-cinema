@@ -17,6 +17,8 @@ using onlineCinema.Domain.Entities;
 using onlineCinema.Application.Configurations;
 
 using onlineCinema.Domain.Constants;
+using onlineCinema.Domain.Settings;
+using onlineCinema.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.EnableDetailedErrors();
     }
 });
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

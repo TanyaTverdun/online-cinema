@@ -110,8 +110,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age13,
                     Runtime = 166,
                     ReleaseDate = new DateTime(2024, 2, 29),
-                    TrailerLink = "https://www.youtube.com/embed/Way9Dexny3w",
-                    PosterImage = "/images/movies/dune2.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=Ljzu52GMytk",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425719/dune2_dhvsla.jpg",
                     Description = "Пол Атрід об'єднується з Чані та фріменами, щоб помститися заколотникам, які знищили його родину. Перед ним постає вибір між коханням усього життя та долею відомого всесвіту.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 1 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -126,8 +126,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age16,
                     Runtime = 180,
                     ReleaseDate = new DateTime(2023, 7, 20),
-                    TrailerLink = "https://www.youtube.com/embed/uYPbbksJxIg",
-                    PosterImage = "/images/movies/oppenheimer.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=eZYD5NRum4A",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425726/oppenheimer_xf6y6p.jpg",
                     Description = "Історія життя американського фізика Роберта Оппенгеймера, який очолив секретну розробку атомної бомби під час Другої світової війни.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 2 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -142,13 +142,13 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age0,
                     Runtime = 96,
                     ReleaseDate = DateTime.Now.AddDays(-60),
-                    TrailerLink = "https://www.youtube.com/embed/LEjhY-X6vS4",
-                    PosterImage = "/images/movies/insideout2.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=QSmqzCMe90M",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425721/insideout2_g9aqme.jpg",
                     Description = "Райлі стає підлітком, і в її головному відділі з'являються нові емоції, зокрема Тривожність, які намагаються витіснити старих друзів.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 13 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 } },
                     MovieFeatures = new List<MovieFeature> { new() { FeatureId = 2 }, new() { FeatureId = 1 } },
-                    MovieCasts = new List<MovieCast> { new() { CastId = 15 } }, // Дуейн Джонсон (озвучка)
+                    MovieCasts = new List<MovieCast> { new() { CastId = 15 } },
                     MovieGenres = new List<MovieGenre> { new() { GenreId = 5 }, new() { GenreId = 4 } }
                 },
                 new() {
@@ -158,8 +158,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age18,
                     Runtime = 127,
                     ReleaseDate = DateTime.Now.AddDays(-30),
-                    TrailerLink = "https://www.youtube.com/embed/73_1biulkYk",
-                    PosterImage = "/images/movies/deadpool3.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=ACGBv-CZ3bM",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425719/deadpool3_qj9fqj.jpg",
                     Description = "Уейд Вілсон намагається жити спокійним життям, але коли його світу загрожує небезпека, він змушений звернутися по допомогу до дуже неохочого Росомахи.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 3 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -174,8 +174,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age18,
                     Runtime = 138,
                     ReleaseDate = DateTime.Now.AddDays(-10),
-                    TrailerLink = "https://www.youtube.com/embed/_OKAwz2MsJs",
-                    PosterImage = "/images/movies/joker2.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=0-wp52fQ6gI",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425722/joker2_aregdk.jpg",
                     Description = "Артур Флек перебуває у лікарні Аркгем, очікуючи на суд. Там він зустрічає кохання свого життя — Харлі Квінн, і разом вони занурюються у спільне божевілля.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 4 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -190,8 +190,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age16,
                     Runtime = 148,
                     ReleaseDate = DateTime.Now.AddDays(-5),
-                    TrailerLink = "https://www.youtube.com/embed/bS5P_LAqiVg",
-                    PosterImage = "/images/movies/gladiator2.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=7K8V33m5vMU",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425720/gladiator2_xjis3h.jpg",
                     Description = "Через роки після смерті Максимуса, Луцій змушений вийти на арену Колізею, щоб знайти силу та честь і повернути славу Риму.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 5 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 } },
@@ -206,8 +206,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age13,
                     Runtime = 190,
                     ReleaseDate = DateTime.Now.AddMonths(12),
-                    TrailerLink = "https://www.youtube.com/embed/ZZ6ZZ6ZZ6ZZ",
-                    PosterImage = "/images/movies/avatar3.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=os_CcXsSHPM",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425718/avatar3_m0kjyp.jpg",
                     Description = "Джейк Саллі та Нейтірі стикаються з новим агресивним племенем На'ві — 'Людьми Попелу', які показують темну сторону Пандори.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 6 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -222,8 +222,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age16,
                     Runtime = 160,
                     ReleaseDate = DateTime.Now.AddMonths(18),
-                    TrailerLink = "https://www.youtube.com/embed/ZZ7ZZ7ZZ7ZZ",
-                    PosterImage = "/images/movies/batman2.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=zC6-H-EcEmU",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425718/batman2_lkqtme.jpg",
                     Description = "Продовження історії Брюса Вейна, який намагається навести лад у Готемі, стикаючись з новими загрозами, що виходять з найтемніших куточків міста.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 7 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -238,8 +238,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age6,
                     Runtime = 110,
                     ReleaseDate = DateTime.Now.AddDays(-2),
-                    TrailerLink = "https://www.youtube.com/embed/qSu6i2iFKn0",
-                    PosterImage = "/images/movies/sonic3.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=bDIUaKYV_Tg",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425728/sonic3_hkooyq.jpg",
                     Description = "Сонік, Тейлз і Наклз повинні об'єднатися, щоб зупинити нового могутнього супротивника — їжака Шедоу, чиє минуле оповите таємницею.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 8 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 4 } },
@@ -254,8 +254,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age13,
                     Runtime = 150,
                     ReleaseDate = DateTime.Now.AddMonths(6),
-                    TrailerLink = "https://www.youtube.com/embed/ZZ9ZZ9ZZ9ZZ",
-                    PosterImage = "/images/movies/superman.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=ALfxbq2RhXw",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425729/superman_ekhg8t.jpg",
                     Description = "Нове бачення історії Кларка Кента, який намагається примирити свою криптонську спадщину з людським вихованням у маленькому містечку.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 9 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -270,8 +270,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age18,
                     Runtime = 132,
                     ReleaseDate = DateTime.Now.AddDays(-3),
-                    TrailerLink = "https://www.youtube.com/embed/nulvWqYUM8k",
-                    PosterImage = "/images/movies/nosferatu.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=ggvZEjSftvw",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425724/nosferatu_pm8lv6.jpg",
                     Description = "Готична казка про одержимість молодої жінки та страхітливого вампіра, що закохався в неї, залишаючи за собою шлейф жаху.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 10 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
@@ -286,8 +286,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age0,
                     Runtime = 100,
                     ReleaseDate = DateTime.Now.AddDays(-7),
-                    TrailerLink = "https://www.youtube.com/embed/hDZ7y8RP5HE",
-                    PosterImage = "/images/movies/moana2.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=c40yI1R1aXA",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425724/moana2_hbarcv.jpg",
                     Description = "Ваяна отримує несподіваний виклик від своїх пращурів і вирушає у далекі моря Океанії, щоб об'єднати свій народ.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 11 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 } },
@@ -302,13 +302,13 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age13,
                     Runtime = 160,
                     ReleaseDate = DateTime.Now.AddDays(-4),
-                    TrailerLink = "https://www.youtube.com/embed/6COmYeLsz4c",
-                    PosterImage = "/images/movies/wicked.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=iid2boBVDL0",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425729/wicked_rkn1mf.jpg",
                     Description = "Неймовірна історія про те, як Ельфаба стала Злою Відьмою Заходу, а Глінда — Доброю Відьмою країни Оз.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 12 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 2 } },
                     MovieFeatures = new List<MovieFeature> { new() { FeatureId = 2 }, new() { FeatureId = 3 } },
-                    MovieCasts = new List<MovieCast> { new() { CastId = 7 } }, // Леді Гага (умовно)
+                    MovieCasts = new List<MovieCast> { new() { CastId = 7 } },
                     MovieGenres = new List<MovieGenre> { new() { GenreId = 2 }, new() { GenreId = 1 } }
                 },
                 new() {
@@ -318,8 +318,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age0,
                     Runtime = 106,
                     ReleaseDate = DateTime.Now.AddDays(-1),
-                    TrailerLink = "https://www.youtube.com/embed/6n-T_Siz7iM",
-                    PosterImage = "/images/movies/paddington3.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=Bywsl2NhjuY",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425728/paddington3_h2xirc.jpg",
                     Description = "Паддінгтон повертається до Перу, щоб відвідати свою улюблену тітоньку Люсі, але несподівана пригода веде його вглиб амазонських лісів.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 13 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 }, new() { LanguageId = 4 } },
@@ -334,8 +334,8 @@ namespace onlineCinema.Infrastructure.Data
                     AgeRating = AgeRating.Age16,
                     Runtime = 115,
                     ReleaseDate = DateTime.Now.AddDays(-40),
-                    TrailerLink = "https://www.youtube.com/embed/hRFY_Fesa9Q",
-                    PosterImage = "/images/movies/badboys4.jpg",
+                    TrailerLink = "https://www.youtube.com/watch?v=kpM2mXklu48",
+                    PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425718/badboys4_gtiult.jpg",
                     Description = "Детективи Майк Лоурі та Маркус Бернетт самі стають втікачами, коли намагаються очистити ім'я свого покійного капітана.",
                     MovieDirectors = new List<DirectorMovie> { new() { DirectorId = 15 } },
                     MovieLanguages = new List<LanguageMovie> { new() { LanguageId = 1 } },
@@ -344,17 +344,13 @@ namespace onlineCinema.Infrastructure.Data
                     MovieGenres = new List<MovieGenre> { new() { GenreId = 3 }, new() { GenreId = 4 } }
                 }
             };
-
                 await context.Movies.AddRangeAsync(movies);
                 await SaveChangesWithIdentityInsert(context, "Movies");
                 await context.Database.ExecuteSqlRawAsync("SET IDENTITY_INSERT Movies OFF");
-
             }
             finally
             {
-
                 await context.Database.CloseConnectionAsync();
-
             }
 
             var cinemas = await LoadDataFromJson<Cinema>("Data/SeedData/cinemas.json");
