@@ -108,6 +108,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Дюна: Частина друга",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age13,
+                    Rating = 8.5m,
                     Runtime = 166,
                     ReleaseDate = new DateTime(2024, 2, 29),
                     TrailerLink = "https://www.youtube.com/watch?v=Ljzu52GMytk",
@@ -124,6 +125,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Оппенгеймер",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age16,
+                    Rating = 7.9m,
                     Runtime = 180,
                     ReleaseDate = new DateTime(2023, 7, 20),
                     TrailerLink = "https://www.youtube.com/watch?v=eZYD5NRum4A",
@@ -140,6 +142,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Думками навиворіт 2",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age0,
+                    Rating = 9.2m,
                     Runtime = 96,
                     ReleaseDate = DateTime.Now.AddDays(-60),
                     TrailerLink = "https://www.youtube.com/watch?v=QSmqzCMe90M",
@@ -156,6 +159,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Дедпул і Росомаха",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age18,
+                    Rating = 7.5m,
                     Runtime = 127,
                     ReleaseDate = DateTime.Now.AddDays(-30),
                     TrailerLink = "https://www.youtube.com/watch?v=ACGBv-CZ3bM",
@@ -173,6 +177,7 @@ namespace onlineCinema.Infrastructure.Data
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age18,
                     Runtime = 138,
+                    Rating = 8.0m,
                     ReleaseDate = DateTime.Now.AddDays(-10),
                     TrailerLink = "https://www.youtube.com/watch?v=0-wp52fQ6gI",
                     PosterImage = "https://res.cloudinary.com/dkesgu722/image/upload/v1773425722/joker2_aregdk.jpg",
@@ -188,6 +193,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Гладіатор II",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age16,
+                    Rating = 7.8m,
                     Runtime = 148,
                     ReleaseDate = DateTime.Now.AddDays(-5),
                     TrailerLink = "https://www.youtube.com/watch?v=7K8V33m5vMU",
@@ -204,6 +210,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Аватар: Вогонь і попіл",
                     Status = MovieStatus.ComingSoon,
                     AgeRating = AgeRating.Age13,
+                    Rating = 8.3m,
                     Runtime = 190,
                     ReleaseDate = DateTime.Now.AddMonths(12),
                     TrailerLink = "https://www.youtube.com/watch?v=os_CcXsSHPM",
@@ -220,6 +227,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Бетмен: Частина 2",
                     Status = MovieStatus.ComingSoon,
                     AgeRating = AgeRating.Age16,
+                    Rating = 7.1m,
                     Runtime = 160,
                     ReleaseDate = DateTime.Now.AddMonths(18),
                     TrailerLink = "https://www.youtube.com/watch?v=zC6-H-EcEmU",
@@ -236,6 +244,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Сонік 3",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age6,
+                    Rating = 7.0m,
                     Runtime = 110,
                     ReleaseDate = DateTime.Now.AddDays(-2),
                     TrailerLink = "https://www.youtube.com/watch?v=bDIUaKYV_Tg",
@@ -252,6 +261,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Супермен",
                     Status = MovieStatus.ComingSoon,
                     AgeRating = AgeRating.Age13,
+                    Rating = 7.6m,
                     Runtime = 150,
                     ReleaseDate = DateTime.Now.AddMonths(6),
                     TrailerLink = "https://www.youtube.com/watch?v=ALfxbq2RhXw",
@@ -268,6 +278,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Носферату",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age18,
+                    Rating = 8.4m,
                     Runtime = 132,
                     ReleaseDate = DateTime.Now.AddDays(-3),
                     TrailerLink = "https://www.youtube.com/watch?v=ggvZEjSftvw",
@@ -284,6 +295,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Ваяна 2",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age0,
+                    Rating = 8.7m,
                     Runtime = 100,
                     ReleaseDate = DateTime.Now.AddDays(-7),
                     TrailerLink = "https://www.youtube.com/watch?v=c40yI1R1aXA",
@@ -300,6 +312,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Wicked: Чародійка",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age13,
+                    Rating = 8.1m,
                     Runtime = 160,
                     ReleaseDate = DateTime.Now.AddDays(-4),
                     TrailerLink = "https://www.youtube.com/watch?v=iid2boBVDL0",
@@ -316,6 +329,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Пригоди Паддінгтона в Перу",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age0,
+                    Rating = 7.4m,
                     Runtime = 106,
                     ReleaseDate = DateTime.Now.AddDays(-1),
                     TrailerLink = "https://www.youtube.com/watch?v=Bywsl2NhjuY",
@@ -332,6 +346,7 @@ namespace onlineCinema.Infrastructure.Data
                     Title = "Погані хлопці 4",
                     Status = MovieStatus.Released,
                     AgeRating = AgeRating.Age16,
+                    Rating = 9.5m,
                     Runtime = 115,
                     ReleaseDate = DateTime.Now.AddDays(-40),
                     TrailerLink = "https://www.youtube.com/watch?v=kpM2mXklu48",
@@ -425,6 +440,55 @@ namespace onlineCinema.Infrastructure.Data
             }
 
             await context.Sessions.AddRangeAsync(sessions);
+            await context.SaveChangesAsync();
+
+            var allFeatures = await context.Features.ToListAsync();
+            var randomForFeatures = new Random();
+
+            // Завантажуємо фільми та зали, щоб змінити їхні списки фіч
+            var allMovies = await context.Movies.Include(m => m.MovieFeatures).ToListAsync();
+            var allHalls = await context.Halls.Include(h => h.HallFeatures).ToListAsync();
+
+            foreach (var entry in movieToHallMap)
+            {
+                int movieId = entry.Key;
+                int hallId = entry.Value;
+
+                var movie = allMovies.FirstOrDefault(m => m.Id == movieId);
+                var hall = allHalls.FirstOrDefault(h => h.HallId == hallId);
+
+                if (movie != null && hall != null)
+                {
+                    hall.HallFeatures.Clear();
+
+                    // Копіюємо фічі з фільму в зал
+                    foreach (var mFeature in movie.MovieFeatures)
+                    {
+                        hall.HallFeatures.Add(new HallFeature
+                        {
+                            HallId = hall.HallId,
+                            FeatureId = mFeature.FeatureId
+                        });
+                    }
+
+                    // 2 рандомні фічі для залу
+                    var movieFeatureIds = movie.MovieFeatures.Select(mf => mf.FeatureId).ToList();
+                    var extraFeatures = allFeatures
+                        .Where(f => !movieFeatureIds.Contains(f.Id)) // Перевір: Id чи FeatureId у тебе в моделі Feature
+                        .OrderBy(x => randomForFeatures.Next())
+                        .Take(2)
+                        .ToList();
+
+                    foreach (var extra in extraFeatures)
+                    {
+                        hall.HallFeatures.Add(new HallFeature
+                        {
+                            HallId = hall.HallId,
+                            FeatureId = extra.Id
+                        });
+                    }
+                }
+            }
             await context.SaveChangesAsync();
 
             // Ролі
