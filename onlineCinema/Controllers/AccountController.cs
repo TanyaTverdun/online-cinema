@@ -96,6 +96,12 @@ namespace onlineCinema.Controllers
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
 
+                if (await _userManager.IsInRoleAsync(user, Roles.Admin))
+                {
+                    return RedirectToAction(
+                        "Index", "Dashboard", new { area = "Admin" });
+                }
+
                 if (!string.IsNullOrEmpty(model.ReturnUrl) &&
                     Url.IsLocalUrl(model.ReturnUrl))
                 {
@@ -147,6 +153,14 @@ namespace onlineCinema.Controllers
                 _logger.LogInformation(
                     "Користувач {UserId} успішно увійшов",
                     loggedInUser?.Id);
+
+                if (loggedInUser != null &&
+                    await _userManager.IsInRoleAsync(
+                        loggedInUser, Roles.Admin))
+                {
+                    return RedirectToAction(
+                        "Index", "Dashboard", new { area = "Admin" });
+                }
 
                 if (!string.IsNullOrEmpty(model.ReturnUrl) &&
                     Url.IsLocalUrl(model.ReturnUrl))
