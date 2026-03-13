@@ -17,6 +17,8 @@ using onlineCinema.Domain.Entities;
 using onlineCinema.Application.Configurations;
 
 using onlineCinema.Domain.Constants;
+using onlineCinema.Domain.Settings;
+using onlineCinema.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -39,6 +41,9 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
         options.EnableDetailedErrors();
     }
 });
+
+builder.Services.Configure<CloudinarySettings>(builder.Configuration.GetSection("CloudinarySettings"));
+builder.Services.AddScoped<IPhotoService, PhotoService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
@@ -149,35 +154,7 @@ builder.Services.AddScoped<IPaymentService, PaymentService>();
 builder.Services
 .AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
 
-
 var app = builder.Build();
-
-using (var scope = app.Services.CreateScope())
-{
-    var services = scope.ServiceProvider;
-    try
-    {
-        var context = services.GetRequiredService<
-            onlineCinema.Infrastructure.Data.ApplicationDbContext>();
-
-        var userManager = services.GetRequiredService<
-            Microsoft.AspNetCore.Identity.UserManager<
-                onlineCinema.Domain.Entities.ApplicationUser>>();
-
-        var roleManager = services.GetRequiredService<
-            Microsoft.AspNetCore.Identity.RoleManager<
-                Microsoft.AspNetCore.Identity.IdentityRole>>();
-
-        await onlineCinema.Infrastructure.Data.DbInitializer
-            .Initialize(context, userManager, roleManager);
-
-    }
-    catch (Exception ex)
-    {
-        var logger = services.GetRequiredService<ILogger<Program>>();
-        logger.LogError(ex, "Сталася помилка під час заповнення БД.");
-    }
-}
 
 var supportedCultures = new[] { new CultureInfo("uk-UA") };
 app.UseRequestLocalization(new RequestLocalizationOptions

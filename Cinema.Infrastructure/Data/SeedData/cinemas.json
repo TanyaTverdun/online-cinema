@@ -1,0 +1,11 @@
+[
+  {
+    "CinemaId": 1,
+    "CinemaName": "CinePrime Plaza",
+    "City": "Kyiv",
+    "Street": "Khreshchatyk",
+    "Building": 22,
+    "TimeOpen": "08:00:00",
+    "TimeClose": "23:59:00"
+  }
+]

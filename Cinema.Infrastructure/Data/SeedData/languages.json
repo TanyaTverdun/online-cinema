@@ -1,0 +1,17 @@
+[
+  { "LanguageId": 1, "LanguageName": "Українська (Дубляж)" },
+  { "LanguageId": 2, "LanguageName": "Англійська (Оригінал)" },
+  { "LanguageId": 3, "LanguageName": "Українські субтитри" },
+  { "LanguageId": 4, "LanguageName": "Польська" },
+  { "LanguageId": 5, "LanguageName": "Німецька" },
+  { "LanguageId": 6, "LanguageName": "Французька" },
+  { "LanguageId": 7, "LanguageName": "Іспанська" },
+  { "LanguageId": 8, "LanguageName": "Італійська" },
+  { "LanguageId": 9, "LanguageName": "Японська" },
+  { "LanguageId": 10, "LanguageName": "Корейська" },
+  { "LanguageId": 11, "LanguageName": "Португальська" },
+  { "LanguageId": 12, "LanguageName": "Китайська" },
+  { "LanguageId": 13, "LanguageName": "Чеська" },
+  { "LanguageId": 14, "LanguageName": "Шведська" },
+  { "LanguageId": 15, "LanguageName": "Турецька" }
+]

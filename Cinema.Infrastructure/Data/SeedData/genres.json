@@ -1,0 +1,9 @@
+[
+  { "GenreId": 1, "GenreName": "Фантастика" },
+  { "GenreId": 2, "GenreName": "Драма" },
+  { "GenreId": 3, "GenreName": "Екшн" },
+  { "GenreId": 4, "GenreName": "Комедія" },
+  { "GenreId": 5, "GenreName": "Мультфільм" },
+  { "GenreId": 6, "GenreName": "Жахи" },
+  { "GenreId": 7, "GenreName": "Пригоди" }
+]

@@ -1,6 +1,4 @@
-﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
-using onlineCinema.Application.DTOs.Movie;
+﻿using onlineCinema.Application.DTOs.Movie;
 using onlineCinema.Application.Interfaces;
 using onlineCinema.Application.Mapping;
 using onlineCinema.Application.Services.Interfaces;
@@ -12,16 +10,13 @@ namespace onlineCinema.Application.Services
     public class MovieService : IMovieService
     {
         private readonly IUnitOfWork _unitOfWork;
-        private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly MovieMapping _mapper;
 
         public MovieService(
             IUnitOfWork unitOfWork,
-            IWebHostEnvironment webHostEnvironment,
             MovieMapping mapper)
         {
             _unitOfWork = unitOfWork;
-            _webHostEnvironment = webHostEnvironment;
             _mapper = mapper;
         }
 
@@ -99,11 +94,6 @@ namespace onlineCinema.Application.Services
         {
             var movie = _mapper.ToEntity(model);
 
-            if (model.PosterFile != null)
-            {
-                movie.PosterImage = await SaveImageAsync(model.PosterFile);
-            }
-
             await ProcessGenresAsync(movie, model);
             await ProcessActorsAsync(movie, model);
             await ProcessDirectorsAsync(movie, model);
@@ -121,15 +111,6 @@ namespace onlineCinema.Application.Services
             if (movieFromDb == null)
             {
                 return;
-            }
-
-            if (model.PosterFile != null)
-            {
-                if (!string.IsNullOrEmpty(movieFromDb.PosterImage))
-                {
-                    DeleteImage(movieFromDb.PosterImage);
-                }
-                movieFromDb.PosterImage = await SaveImageAsync(model.PosterFile);
             }
 
             _mapper.UpdateEntityFromDto(movieFromDb, model);
@@ -369,7 +350,7 @@ namespace onlineCinema.Application.Services
             return input.Split(',', StringSplitOptions.RemoveEmptyEntries
                 | StringSplitOptions.TrimEntries);
         }
-
+        
         private (string First, string Last) ParseName(string fullName)
         {
             var parts = fullName.Split(' ', StringSplitOptions.RemoveEmptyEntries);
@@ -381,44 +362,6 @@ namespace onlineCinema.Application.Services
             var first = parts[0];
             var last = parts.Length > 1 ? string.Join(" ", parts.Skip(1)) : "";
             return (first, last);
-        }
-
-        private async Task<string> SaveImageAsync(IFormFile file)
-        {
-            string wwwRootPath = _webHostEnvironment.WebRootPath;
-            string fileName = Guid.NewGuid().ToString()
-                + Path.GetExtension(file.FileName);
-            string folderPath = Path.Combine(wwwRootPath, @"images\movies");
-
-            if (!Directory.Exists(folderPath))
-            {
-                Directory.CreateDirectory(folderPath);
-            }
-
-            using (var fileStream = new FileStream(
-                Path.Combine(folderPath, fileName), FileMode.Create))
-            {
-                await file.CopyToAsync(fileStream);
-            }
-
-            return @"\images\movies\" + fileName;
-        }
-
-        private void DeleteImage(string imageUrl)
-        {
-            if (imageUrl.Contains("no-poster.png"))
-            {
-                return;
-            }
-
-            var imagePath = Path
-                .Combine(
-                _webHostEnvironment.WebRootPath,
-                imageUrl.TrimStart('\\', '/'));
-            if (File.Exists(imagePath))
-            {
-                File.Delete(imagePath);
-            }
         }
         private async Task ProcessFeaturesAsync(Movie movie, MovieFormDto model)
         {

@@ -74,6 +74,8 @@ namespace onlineCinema.Application.Mapping
             Use = nameof(MapFeatureIds))]
         public partial MovieFormDto ToFormDto(Movie movie);
 
+        [MapProperty(nameof(MovieFormDto.PosterUrl),
+            nameof(Movie.PosterImage))]
         public partial Movie ToEntity(MovieFormDto dto);
 
         public void UpdateEntityFromDto(Movie movie, MovieFormDto dto)
@@ -86,6 +88,7 @@ namespace onlineCinema.Application.Mapping
             movie.AgeRating = dto.AgeRating;
             movie.TrailerLink = dto.TrailerLink;
             movie.Rating = dto.Rating;
+            movie.PosterImage = dto.PosterUrl;
         }
 
         [MapProperty(nameof(Feature.Id), nameof(FeatureDto.Id))]

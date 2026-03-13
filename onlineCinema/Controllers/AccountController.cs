@@ -90,11 +90,17 @@ namespace onlineCinema.Controllers
                 await _userManager.AddToRoleAsync(user, userRoleName);
 
                 _logger.LogInformation(
-                    "Користувач {Email} успішно зареєстрований" +
+                    "Користувач {UserId} успішно зареєстрований " +
                     "з роллю {Role}",
-                    model.Email, userRoleName);
+                    user.Id, userRoleName);
 
                 await _signInManager.SignInAsync(user, isPersistent: false);
+
+                if (await _userManager.IsInRoleAsync(user, Roles.Admin))
+                {
+                    return RedirectToAction(
+                        "Index", "Dashboard", new { area = "Admin" });
+                }
 
                 if (!string.IsNullOrEmpty(model.ReturnUrl) &&
                     Url.IsLocalUrl(model.ReturnUrl))
@@ -142,9 +148,19 @@ namespace onlineCinema.Controllers
 
             if (result.Succeeded)
             {
+                var loggedInUser = await _userManager
+                    .FindByEmailAsync(model.Email ?? string.Empty);
                 _logger.LogInformation(
-                    "Користувач {Email} успішно увійшов",
-                    model.Email);
+                    "Користувач {UserId} успішно увійшов",
+                    loggedInUser?.Id);
+
+                if (loggedInUser != null &&
+                    await _userManager.IsInRoleAsync(
+                        loggedInUser, Roles.Admin))
+                {
+                    return RedirectToAction(
+                        "Index", "Dashboard", new { area = "Admin" });
+                }
 
                 if (!string.IsNullOrEmpty(model.ReturnUrl) &&
                     Url.IsLocalUrl(model.ReturnUrl))
@@ -158,8 +174,7 @@ namespace onlineCinema.Controllers
             if (result.IsLockedOut)
             {
                 _logger.LogWarning(
-                    "Обліковий запис користувача {Email} заблоковано",
-                    model.Email);
+                    "Обліковий запис користувача заблоковано при спробі входу");
                 ModelState.AddModelError(string.Empty,
                     "Обліковий запис заблоковано. Спробуйте пізніше.");
                 return View(model);

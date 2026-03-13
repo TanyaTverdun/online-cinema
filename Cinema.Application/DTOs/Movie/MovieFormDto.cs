@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Http;
 using onlineCinema.Domain.Enums;
 
 namespace onlineCinema.Application.DTOs.Movie
@@ -23,7 +22,6 @@ namespace onlineCinema.Application.DTOs.Movie
         public string? TrailerLink { get; set; }
 
         public string? PosterUrl { get; set; }
-        public IFormFile? PosterFile { get; set; }
 
         public string? GenresInput { get; set; }
 

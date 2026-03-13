@@ -1,0 +1,17 @@
+[
+  { "CinemaId": 1, "HallNumber": 1, "RowCount": 8, "SeatInRowCount": 12 },
+  { "CinemaId": 1, "HallNumber": 2, "RowCount": 8, "SeatInRowCount": 12 },
+  { "CinemaId": 1, "HallNumber": 3, "RowCount": 10, "SeatInRowCount": 15 },
+  { "CinemaId": 1, "HallNumber": 4, "RowCount": 10, "SeatInRowCount": 15 },
+  { "CinemaId": 1, "HallNumber": 5, "RowCount": 12, "SeatInRowCount": 20 },
+  { "CinemaId": 1, "HallNumber": 6, "RowCount": 12, "SeatInRowCount": 20 },
+  { "CinemaId": 1, "HallNumber": 7, "RowCount": 15, "SeatInRowCount": 25 },
+  { "CinemaId": 1, "HallNumber": 8, "RowCount": 6, "SeatInRowCount": 8 },
+  { "CinemaId": 1, "HallNumber": 9, "RowCount": 6, "SeatInRowCount": 8 },
+  { "CinemaId": 1, "HallNumber": 10, "RowCount": 10, "SeatInRowCount": 12 },
+  { "CinemaId": 1, "HallNumber": 11, "RowCount": 5, "SeatInRowCount": 10 },
+  { "CinemaId": 1, "HallNumber": 12, "RowCount": 5, "SeatInRowCount": 10 },
+  { "CinemaId": 1, "HallNumber": 13, "RowCount": 7, "SeatInRowCount": 12 },
+  { "CinemaId": 1, "HallNumber": 14, "RowCount": 9, "SeatInRowCount": 12 },
+  { "CinemaId": 1, "HallNumber": 15, "RowCount": 12, "SeatInRowCount": 12 }
+]
