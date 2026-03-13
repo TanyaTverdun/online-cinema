@@ -1,0 +1,15 @@
+[
+  { "SnackId": 1, "SnackName": "Попкорн Солоний (L)", "Price": 150.00 },
+  { "SnackId": 2, "SnackName": "Coca-Cola 0.5", "Price": 60.00 },
+  { "SnackId": 3, "SnackName": "Nachos з сиром", "Price": 140.00 },
+  { "SnackId": 4, "SnackName": "Попкорн Солодкий (L)", "Price": 160.00 },
+  { "SnackId": 5, "SnackName": "Попкорн Сирний (M)", "Price": 130.00 },
+  { "SnackId": 6, "SnackName": "Pepsi 0.5", "Price": 60.00 },
+  { "SnackId": 7, "SnackName": "Nachos з сальсою", "Price": 140.00 },
+  { "SnackId": 8, "SnackName": "Hot-Dog Французький", "Price": 95.00 },
+  { "SnackId": 9, "SnackName": "Сендвіч з куркою", "Price": 110.00 },
+  { "SnackId": 10, "SnackName": "M&Ms (пачка)", "Price": 85.00 },
+  { "SnackId": 11, "SnackName": "Вода негазована 0.5", "Price": 45.00 },
+  { "SnackId": 12, "SnackName": "Сік Мультивітамін 0.5", "Price": 55.00 },
+  { "SnackId": 13, "SnackName": "Кава Лате", "Price": 70.00 }
+]

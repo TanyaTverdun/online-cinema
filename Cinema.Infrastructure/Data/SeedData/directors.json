@@ -1,0 +1,17 @@
+[
+  { "DirectorId": 1, "DirectorFirstName": "Дені", "DirectorLastName": "Вільнев" },
+  { "DirectorId": 2, "DirectorFirstName": "Крістофер", "DirectorLastName": "Нолан" },
+  { "DirectorId": 3, "DirectorFirstName": "Шон", "DirectorLastName": "Леві" },
+  { "DirectorId": 4, "DirectorFirstName": "Тодд", "DirectorLastName": "Філліпс" },
+  { "DirectorId": 5, "DirectorFirstName": "Рідлі", "DirectorLastName": "Скотт" },
+  { "DirectorId": 6, "DirectorFirstName": "Джеймс", "DirectorLastName": "Кемерон" },
+  { "DirectorId": 7, "DirectorFirstName": "Метт", "DirectorLastName": "Рівз" },
+  { "DirectorId": 8, "DirectorFirstName": "Джефф", "DirectorLastName": "Фоулер" },
+  { "DirectorId": 9, "DirectorFirstName": "Джеймс", "DirectorLastName": "Ганн" },
+  { "DirectorId": 10, "DirectorFirstName": "Роберт", "DirectorLastName": "Еггерс" },
+  { "DirectorId": 11, "DirectorFirstName": "Девід", "DirectorLastName": "Деррік" },
+  { "DirectorId": 12, "DirectorFirstName": "Джон", "DirectorLastName": "М. Чу" },
+  { "DirectorId": 13, "DirectorFirstName": "Пол", "DirectorLastName": "Кінг" },
+  { "DirectorId": 14, "DirectorFirstName": "Крістофер", "DirectorLastName": "Маккворрі" },
+  { "DirectorId": 15, "DirectorFirstName": "Аділь", "DirectorLastName": "Ель Арбі" }
+]
