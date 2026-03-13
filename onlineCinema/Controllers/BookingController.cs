@@ -117,6 +117,7 @@ namespace onlineCinema.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public async Task<IActionResult> AddSnacks(int bookingId)
         {
             try
@@ -161,6 +162,7 @@ namespace onlineCinema.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> AddSnacks(
             SnackSelectionViewModel model)
         {
@@ -217,6 +219,7 @@ namespace onlineCinema.Controllers
 
 
         [HttpGet]
+        [Authorize]
         public IActionResult BookingSuccess(int id)
         {
             return View(id);

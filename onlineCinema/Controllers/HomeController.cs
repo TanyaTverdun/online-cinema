@@ -44,11 +44,6 @@ namespace onlineCinema.Controllers
             return View(movie);
         }
 
-        public IActionResult Privacy()
-        {
-            return View();
-        }
-
         [ResponseCache(
             Duration = 0,
             Location = ResponseCacheLocation.None,
