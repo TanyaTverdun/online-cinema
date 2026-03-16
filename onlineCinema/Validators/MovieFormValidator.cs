@@ -1,4 +1,6 @@
 ﻿using FluentValidation;
+using Microsoft.Extensions.Options;
+using onlineCinema.Application.Configurations;
 using onlineCinema.Areas.Admin.Models;
 using static onlineCinema.Validators.ValidationMessages;
 
@@ -6,8 +8,10 @@ namespace onlineCinema.Validators
 {
     public class MovieFormValidator : AbstractValidator<MovieFormViewModel>
     {
-        public MovieFormValidator()
+        public MovieFormValidator(IOptions<MovieSettings> settings)
         {
+            var maxRuntime = settings.Value.MaxRuntimeMinutes;
+
             RuleFor(x => x.Title)
                 .NotEmpty()
                     .WithMessage(string.Format(FieldRequired, "назва"))
@@ -23,8 +27,8 @@ namespace onlineCinema.Validators
                     .WithMessage(string.Format(FieldRequired, "тривалість"))
                 .Must(t => t.HasValue && t.Value.TotalMinutes > 0)
                     .WithMessage("Тривалість має бути більшою за 0")
-                .Must(t => t.HasValue && t.Value.TotalMinutes <= 300)
-                    .WithMessage("Фільм не може тривати довше 5 годин");
+                .Must(t => t.HasValue && t.Value.TotalMinutes <= maxRuntime)
+                    .WithMessage($"Фільм не може тривати довше {maxRuntime / 60} годин");
 
             RuleFor(x => x.Rating)
                 .InclusiveBetween(0, 10)

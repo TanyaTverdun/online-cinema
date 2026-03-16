@@ -17,7 +17,6 @@ using onlineCinema.Domain.Entities;
 using onlineCinema.Application.Configurations;
 
 using onlineCinema.Domain.Constants;
-using onlineCinema.Domain.Settings;
 using onlineCinema.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -111,6 +110,12 @@ builder.Services.Configure<TimeSettings>(
 
 builder.Services.Configure<PricingSettings>(
     builder.Configuration.GetSection("PricingSettings"));
+
+builder.Services.Configure<HallSettings>(
+    builder.Configuration.GetSection("HallSettings"));
+
+builder.Services.Configure<MovieSettings>(
+    builder.Configuration.GetSection("MovieSettings"));
 
 builder.Services.AddSingleton<SessionMapper>();
 builder.Services.AddSingleton<PaymentMapper>();

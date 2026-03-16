@@ -217,7 +217,7 @@ namespace onlineCinema.Application.Services
                     $"для користувача з ID: {userId} не знайдено.");
             }
 
-            return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
+            return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking, _settings.MinMinutesBeforeSessionForRefund));
         }
 
         public async Task CancelBookingAsync(int bookingId, string userId)
@@ -251,7 +251,7 @@ namespace onlineCinema.Application.Services
                     throw new InvalidOperationException("Сеанс вже розпочався або минув.");
                 }
 
-                if ((session.ShowingDateTime - DateTime.Now).TotalMinutes < 60)
+                if ((session.ShowingDateTime - DateTime.Now).TotalMinutes < _settings.MinMinutesBeforeSessionForRefund)
                 {
                     throw new InvalidOperationException("Повернення можливе " +
                         "не пізніше ніж за 1 годину до початку сеансу.");
@@ -292,7 +292,7 @@ namespace onlineCinema.Application.Services
             int? lastId,
             int? firstId)
         {
-            int pageSize = 5;
+            int pageSize = _settings.HistoryPageSize;
 
             var (bookings, totalCount, hasNext, hasPrevious) =
                 await _unitOfWork.Booking
@@ -300,7 +300,7 @@ namespace onlineCinema.Application.Services
 
             var dtos = bookings
                 .Select(booking => _bookingMapper
-                    .ToBookingHistoryDto(booking))
+                    .ToBookingHistoryDto(booking, _settings.MinMinutesBeforeSessionForRefund))
                 .ToList();
 
             return _bookingMapper

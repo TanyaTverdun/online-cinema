@@ -428,7 +428,7 @@ namespace onlineCinema.Infrastructure.Data
                 new TimeSpan(22, 0, 0)
             };
 
-            for (int day = 0; day < 3; day++)
+            for (int day = 0; day < 8; day++)
             {
                 var currentDate = startDate.AddDays(day);
 

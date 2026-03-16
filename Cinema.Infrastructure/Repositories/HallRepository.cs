@@ -123,10 +123,10 @@ namespace onlineCinema.Infrastructure.Repositories
             await _db.SaveChangesAsync();
         }
 
-        public async Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId)
+        public async Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId, int daysAhead)
         {
             var now = DateTime.Now;
-            var threeDaysLater = now.AddDays(3);
+            var endDate = now.AddDays(daysAhead);
 
             return await _db.Halls
                 .Where(h => h.HallId == hallId)
@@ -148,7 +148,7 @@ namespace onlineCinema.Infrastructure.Repositories
 
                     Sessions = h.Sessions
                         .Where(s => s.ShowingDateTime >= now &&
-                                    s.ShowingDateTime <= threeDaysLater)
+                                    s.ShowingDateTime <= endDate)
                         .OrderBy(s => s.ShowingDateTime)
                         .Select(s => new SessionSeatMapDto
                         {

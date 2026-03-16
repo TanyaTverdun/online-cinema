@@ -14,26 +14,29 @@ namespace onlineCinema.Application.Services
         private readonly IUnitOfWork _unitOfWork;
         private readonly HallMapper _mapper;
         private readonly SeatMapper _seatMapper;
-        private readonly PricingSettings _settings;
+        private readonly PricingSettings _pricingSettings;
+        private readonly HallSettings _hallSettings;
 
         public HallService(
             IUnitOfWork unitOfWork,
             HallMapper hallMapper,
             SeatMapper seatMapper,
-            IOptions<PricingSettings> settings)
+            IOptions<PricingSettings> pricingSettings,
+            IOptions<HallSettings> hallSettings)
         {
             _unitOfWork = unitOfWork;
             _mapper = hallMapper;
             _seatMapper = seatMapper;
-            _settings = settings.Value;
+            _pricingSettings = pricingSettings.Value;
+            _hallSettings = hallSettings.Value;
         }
 
         public async Task<HallDto?> CreateHallAsync(HallDto hallDto)
         {
-            if (hallDto.RowCount > 255 || hallDto.SeatInRowCount > 255)
+            if (hallDto.RowCount > _hallSettings.MaxRowCount || hallDto.SeatInRowCount > _hallSettings.MaxSeatInRowCount)
             {
-                throw new ArgumentException("Кількість рядів та місць у ряді " +
-                    "не може перевищувати 255.");
+                throw new ArgumentException($"Кількість рядів та місць у ряді " +
+                    $"не може перевищувати {_hallSettings.MaxRowCount}.");
             }
             if (hallDto.VipRowCount > hallDto.RowCount)
             {
@@ -138,7 +141,7 @@ namespace onlineCinema.Application.Services
 
         public async Task<HallDto?> GetHallDetailsAsync(int id)
         {
-            var dto = await _unitOfWork.Hall.GetHallWithFutureSessionsAsync(id);
+            var dto = await _unitOfWork.Hall.GetHallWithFutureSessionsAsync(id, _hallSettings.FutureSessionDays);
 
             if (dto == null)
             {
@@ -159,7 +162,7 @@ namespace onlineCinema.Application.Services
 
                 SeatType type = isVipRow ? SeatType.VIP : SeatType.Standard;
                 float coef = isVipRow ? dto.VipCoefficient
-                    : _settings.DefaultVipCoefficient;
+                    : _pricingSettings.DefaultVipCoefficient;
 
                 for (byte number = 1; number <= hall.SeatInRowCount; number++)
                 {

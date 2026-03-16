@@ -96,18 +96,20 @@ namespace onlineCinema.Application.Mapping
         [MapperIgnoreSource(nameof(Ticket.Booking))]
         public partial TicketInfoDto ToTicketInfoDto(Ticket ticket);
 
-        public BookingHistoryDto ToBookingHistoryDto(Booking booking)
+        public BookingHistoryDto ToBookingHistoryDto(
+            Booking booking,
+            int minMinutesBeforeSessionForRefund)
         {
             var firstTicket = booking.Tickets.FirstOrDefault();
             var session = firstTicket?.Session;
             var movie = session?.Movie;
             var hall = session?.Hall;
 
-            // Логіка для кнопки: 
+            // Логіка для кнопки:
             // 1. Оплачено (Completed)
-            // 2. Час до сеансу > 60 хвилин
+            // 2. Час до сеансу > minMinutesBeforeSessionForRefund хвилин
             bool isPaid = booking.Payment?.Status == PaymentStatus.Completed;
-            bool isTimeValid = session != null && (session.ShowingDateTime - DateTime.Now).TotalMinutes > 60;
+            bool isTimeValid = session != null && (session.ShowingDateTime - DateTime.Now).TotalMinutes > minMinutesBeforeSessionForRefund;
             bool notRefunded = booking.Payment?.Status != PaymentStatus.Refunded;
 
             return new BookingHistoryDto
