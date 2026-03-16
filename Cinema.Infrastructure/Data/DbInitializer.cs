@@ -25,7 +25,12 @@ namespace onlineCinema.Infrastructure.Data
 
         public static async Task Initialize(ApplicationDbContext context, UserManager<ApplicationUser> userManager, RoleManager<IdentityRole> roleManager)
         {
-            await context.Database.ExecuteSqlRawAsync("EXEC sp_MSforeachtable 'ALTER TABLE ? NOCHECK CONSTRAINT all'");
+            await context.Database.ExecuteSqlRawAsync(@"
+                DECLARE @sql NVARCHAR(MAX) = N'';
+                SELECT @sql += N'ALTER TABLE [' + SCHEMA_NAME(schema_id) + '].[' + name + '] NOCHECK CONSTRAINT ALL; '
+                FROM sys.tables;
+                EXEC sp_executesql @sql;
+            ");
 
             try
             {
@@ -60,7 +65,13 @@ namespace onlineCinema.Infrastructure.Data
 
                 await context.Database.ExecuteSqlRawAsync("DELETE FROM [AspNetUsers]");
 
-                await context.Database.ExecuteSqlRawAsync("EXEC sp_MSforeachtable 'IF OBJECTPROPERTY(OBJECT_ID(''?''), ''TableHasIdentity'') = 1 DBCC CHECKIDENT (''?'', RESEED, 0)'");
+                await context.Database.ExecuteSqlRawAsync(@"
+                    DECLARE @sql NVARCHAR(MAX) = N'';
+                    SELECT @sql += N'DBCC CHECKIDENT (''[' + SCHEMA_NAME(schema_id) + '].[' + name + ']'', RESEED, 0); '
+                    FROM sys.tables
+                    WHERE OBJECTPROPERTY(object_id, 'TableHasIdentity') = 1;
+                    EXEC sp_executesql @sql;
+                ");
             }
             catch (Exception ex)
             {
@@ -69,7 +80,12 @@ namespace onlineCinema.Infrastructure.Data
             }
             finally
             {
-                await context.Database.ExecuteSqlRawAsync("EXEC sp_MSforeachtable 'ALTER TABLE ? WITH CHECK CHECK CONSTRAINT all'");
+                await context.Database.ExecuteSqlRawAsync(@"
+                    DECLARE @sql NVARCHAR(MAX) = N'';
+                    SELECT @sql += N'ALTER TABLE [' + SCHEMA_NAME(schema_id) + '].[' + name + '] WITH CHECK CHECK CONSTRAINT ALL; '
+                    FROM sys.tables;
+                    EXEC sp_executesql @sql;
+                ");
             }
 
             var actors = await LoadDataFromJson<CastMember>("Data/SeedData/actors.json");
@@ -412,7 +428,7 @@ namespace onlineCinema.Infrastructure.Data
                 new TimeSpan(22, 0, 0)
             };
 
-            for (int day = 0; day < 8; day++)
+            for (int day = 0; day < 3; day++)
             {
                 var currentDate = startDate.AddDays(day);
 
@@ -474,7 +490,7 @@ namespace onlineCinema.Infrastructure.Data
                     // 2 рандомні фічі для залу
                     var movieFeatureIds = movie.MovieFeatures.Select(mf => mf.FeatureId).ToList();
                     var extraFeatures = allFeatures
-                        .Where(f => !movieFeatureIds.Contains(f.Id)) // Перевір: Id чи FeatureId у тебе в моделі Feature
+                        .Where(f => !movieFeatureIds.Contains(f.Id))
                         .OrderBy(x => randomForFeatures.Next())
                         .Take(2)
                         .ToList();
@@ -555,7 +571,7 @@ namespace onlineCinema.Infrastructure.Data
             {
                 var sessionSeats = allSeats.Where(s => s.HallId == session.HallId).ToList();
 
-                int percentage = random.Next(40, 61);
+                int percentage = random.Next(10, 21);
                 int seatsToBookCount = (int)(sessionSeats.Count * (percentage / 100.0));
                 var seatsToBook = sessionSeats.OrderBy(x => random.Next()).Take(seatsToBookCount).ToList();
 

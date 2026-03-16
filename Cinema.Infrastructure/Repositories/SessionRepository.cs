@@ -18,10 +18,11 @@ namespace onlineCinema.Infrastructure.Repositories
 
         public async Task<IEnumerable<Session>> GetFutureSessionsAsync()
         {
+            var now = DateTime.Now;
             return await _db.Sessions
                 .Include(s => s.Movie)
                 .Include(s => s.Hall)
-                .Where(s => s.ShowingDateTime > DateTime.Now)
+                .Where(s => s.ShowingDateTime > now)
                 .OrderBy(s => s.ShowingDateTime)
                 .ToListAsync();
         }
@@ -29,9 +30,10 @@ namespace onlineCinema.Infrastructure.Repositories
         public async Task<IEnumerable<Session>>
             GetFutureSessionsByMovieIdAsync(int movieId)
         {
+            var now = DateTime.Now;
             return await _db.Sessions
                 .Where(s => s.MovieId == movieId
-                    && s.ShowingDateTime > DateTime.Now)
+                    && s.ShowingDateTime > now)
                 .Include(s => s.Hall)
                     .ThenInclude(hf => hf.HallFeatures)
                         .ThenInclude(f => f.Feature)

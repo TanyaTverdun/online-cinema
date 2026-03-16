@@ -261,7 +261,9 @@ namespace onlineCinema.Application.Services
             // Логіка повернення
             if (booking.Payment == null)
             {
-                var dummyPayment = _paymentMapper.CreateCompletedPayment(bookingId, 0);
+                var totalAmount = booking.Tickets.Sum(t => t.Price)
+                    + booking.SnackBookings.Sum(sb => sb.Snack.Price * sb.Quantity);
+                var dummyPayment = _paymentMapper.CreateCompletedPayment(bookingId, totalAmount);
                 dummyPayment.Status = PaymentStatus.Refunded;
                 await _unitOfWork.Payment.AddAsync(dummyPayment);
                 booking.Payment = dummyPayment;

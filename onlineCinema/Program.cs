@@ -31,7 +31,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(
         connectionString,
-        b => b.MigrationsAssembly("onlineCinema.Infrastructure")
+        b => 
+        {
+            b.MigrationsAssembly("onlineCinema.Infrastructure");
+            b.EnableRetryOnFailure();
+        }
     );
 
     if (builder.Environment.IsDevelopment())

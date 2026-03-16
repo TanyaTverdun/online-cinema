@@ -52,7 +52,7 @@ namespace onlineCinema.Mapping
                 Time = s.StartDateTime.ToString(TimeFormat),
                 HallName = s.HallName,
                 Features = s.FeatureNames,
-                Price = $"{s.BasePrice:0} {CurrencySuffix}"
+                Price = $"{s.BasePrice:0.00} {CurrencySuffix}"
             };
         }
 
