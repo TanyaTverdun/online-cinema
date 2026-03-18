@@ -55,11 +55,11 @@ namespace onlineCinema.Application.Mapping
             nameof(Booking.ApplicationUserId))]
         private partial Booking MapToBookingBase(CreateBookingDto dto);
 
-        public Booking MapCreateBookingDtoToEntity(CreateBookingDto dto)
+        public Booking MapCreateBookingDtoToEntity(CreateBookingDto dto, DateTime now)
         {
             var booking = MapToBookingBase(dto);
 
-            booking.CreatedDateTime = DateTime.Now;
+            booking.CreatedDateTime = now;
 
             booking.Tickets = [];
 
@@ -98,7 +98,8 @@ namespace onlineCinema.Application.Mapping
 
         public BookingHistoryDto ToBookingHistoryDto(
             Booking booking,
-            int minMinutesBeforeSessionForRefund)
+            int minMinutesBeforeSessionForRefund,
+            DateTime now)
         {
             var firstTicket = booking.Tickets.FirstOrDefault();
             var session = firstTicket?.Session;
@@ -109,7 +110,7 @@ namespace onlineCinema.Application.Mapping
             // 1. Оплачено (Completed)
             // 2. Час до сеансу > minMinutesBeforeSessionForRefund хвилин
             bool isPaid = booking.Payment?.Status == PaymentStatus.Completed;
-            bool isTimeValid = session != null && (session.ShowingDateTime - DateTime.Now).TotalMinutes > minMinutesBeforeSessionForRefund;
+            bool isTimeValid = session != null && (session.ShowingDateTime - now).TotalMinutes > minMinutesBeforeSessionForRefund;
             bool notRefunded = booking.Payment?.Status != PaymentStatus.Refunded;
 
             return new BookingHistoryDto

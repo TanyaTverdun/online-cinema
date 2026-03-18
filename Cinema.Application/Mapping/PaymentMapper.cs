@@ -11,13 +11,14 @@ namespace onlineCinema.Application.Mapping
     {
         public Payment CreateCompletedPayment(
             int bookingId,
-            decimal amount)
+            decimal amount,
+            DateTime now)
         {
             return new Payment
             {
                 BookingId = bookingId,
                 Amount = amount,
-                PaymentDate = DateTime.Now,
+                PaymentDate = now,
                 Status = PaymentStatus.Completed
             };
         }

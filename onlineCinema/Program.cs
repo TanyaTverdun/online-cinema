@@ -15,7 +15,6 @@ using onlineCinema.Application.Mapping;
 using onlineCinema.Infrastructure.Data;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Application.Configurations;
-
 using onlineCinema.Domain.Constants;
 using onlineCinema.Infrastructure.Services;
 
@@ -159,6 +158,7 @@ builder.Services.AddScoped<IFeatureService, FeatureService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddSingleton<ITimeProvider, LocalTimeProvider>();
 
 builder.Services
 .AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();

@@ -16,6 +16,7 @@ namespace onlineCinema.Controllers
         private readonly ISnackService _snackService;
         private readonly SnackViewModelMapper _snackMapper;
         private readonly ILogger<BookingController> _logger;
+        private readonly ITimeProvider _timeProvider;
 
         public BookingController(
             IBookingService bookingService,
@@ -23,7 +24,8 @@ namespace onlineCinema.Controllers
             BookingViewModelMapper viewMapper,
             ISnackService snackService,
             SnackViewModelMapper snackMapper,
-            ILogger<BookingController> logger)
+            ILogger<BookingController> logger,
+            ITimeProvider timeProvider)
         {
             _bookingService = bookingService;
             _userManager = userManager;
@@ -31,6 +33,7 @@ namespace onlineCinema.Controllers
             _snackService = snackService;
             _snackMapper = snackMapper;
             _logger = logger;
+            _timeProvider = timeProvider;
         }
 
         [HttpGet("Booking/SelectSeats/{sessionId:int}")]
@@ -130,7 +133,7 @@ namespace onlineCinema.Controllers
                 var lockUntil = await _bookingService
                     .GetBookingLockUntilAsync(bookingId);
 
-                var initialSeconds = (int)(lockUntil - DateTime.Now).TotalSeconds;
+                var initialSeconds = (int)(lockUntil - _timeProvider.Now).TotalSeconds;
 
                 var viewModel = _snackMapper
                     .MapToSelectionViewModel(
@@ -169,7 +172,7 @@ namespace onlineCinema.Controllers
             var lockUntil = await _bookingService
                 .GetBookingLockUntilAsync(model.BookingId);
 
-            if (lockUntil < DateTime.Now)
+            if (lockUntil < _timeProvider.Now)
             {
                 TempData["ErrorMessage"] =
                     "Час бронювання вийшов. Місця були звільнені.";

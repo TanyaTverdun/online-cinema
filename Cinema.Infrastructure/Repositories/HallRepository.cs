@@ -2,6 +2,7 @@
 using onlineCinema.Application.DTOs.Hall;
 using onlineCinema.Application.DTOs.Session;
 using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
 
@@ -11,11 +12,13 @@ namespace onlineCinema.Infrastructure.Repositories
         : GenericRepository<Hall>, IHallRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly ITimeProvider _timeProvider;
 
-        public HallRepository(ApplicationDbContext db)
+        public HallRepository(ApplicationDbContext db, ITimeProvider timeProvider)
             : base(db)
         {
             _db = db;
+            _timeProvider = timeProvider;
         }
 
         public async Task DeleteAsync(int id)
@@ -125,7 +128,7 @@ namespace onlineCinema.Infrastructure.Repositories
 
         public async Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId, int daysAhead)
         {
-            var now = DateTime.Now;
+            var now = _timeProvider.Now;
             var endDate = now.AddDays(daysAhead);
 
             return await _db.Halls

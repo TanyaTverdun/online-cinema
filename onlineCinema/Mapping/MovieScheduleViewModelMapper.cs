@@ -1,4 +1,5 @@
 ﻿using onlineCinema.Application.DTOs.Session;
+using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.ViewModels;
 using Riok.Mapperly.Abstractions;
 
@@ -14,6 +15,13 @@ namespace onlineCinema.Mapping
         private const string TimeFormat = "HH:mm";
         private const string IdDateFormat = "yyyyMMdd";
         private const string TabIdPrefix = "day-";
+
+        private readonly ITimeProvider _timeProvider;
+
+        public MovieScheduleViewModelMapper(ITimeProvider timeProvider)
+        {
+            _timeProvider = timeProvider;
+        }
 
         public MovieScheduleViewModel MapMovieScheduleDtoToViewModel(
             MovieScheduleDto dto)
@@ -58,12 +66,14 @@ namespace onlineCinema.Mapping
 
         private string GetHumanReadableDate(DateTime date)
         {
-            if (date.Date == DateTime.Today)
+            var today = _timeProvider.Today;
+
+            if (date.Date == today)
             {
                 return LabelToday;
             }
 
-            if (date.Date == DateTime.Today.AddDays(1))
+            if (date.Date == today.AddDays(1))
             {
                 return LabelTomorrow;
             }
