@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using onlineCinema.Domain.Entities;
 using CinemaEntity = onlineCinema.Domain.Entities.Cinema;
 
-
 namespace onlineCinema.Infrastructure.Data
 {
     public class ApplicationDbContext : IdentityDbContext<ApplicationUser>

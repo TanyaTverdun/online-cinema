@@ -1,4 +1,5 @@
 ﻿using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Infrastructure.Data;
 
 namespace onlineCinema.Infrastructure.Repositories
@@ -22,7 +23,7 @@ namespace onlineCinema.Infrastructure.Repositories
         public ITicketRepository Ticket { get; private set; }
         public IStatisticsRepository Statistics { get; private set; }
 
-        public UnitOfWork(ApplicationDbContext db)
+        public UnitOfWork(ApplicationDbContext db, ITimeProvider timeProvider)
         {
             _db = db;
             this.Booking = new BookingRepository(_db);
@@ -32,11 +33,11 @@ namespace onlineCinema.Infrastructure.Repositories
             this.Movie = new MovieRepository(_db);
             this.Feature = new FeatureRepository(_db);
             this.Genre = new GenreRepository(_db);
-            this.Hall = new HallRepository(_db);
+            this.Hall = new HallRepository(_db, timeProvider);
             this.Language = new LanguageRepository(_db);
             this.Payment = new PaymentRepository(_db);
             this.Seat = new SeatRepository(_db);
-            this.Session = new SessionRepository(_db);
+            this.Session = new SessionRepository(_db, timeProvider);
             this.Snack = new SnackRepository(_db);
             this.Ticket = new TicketRepository(_db);
             this.Statistics = new StatisticsRepository(_db);

@@ -1,4 +1,4 @@
-namespace onlineCinema.Domain.Settings
+namespace onlineCinema.Application.Configurations
 {
     public class CloudinarySettings
     {

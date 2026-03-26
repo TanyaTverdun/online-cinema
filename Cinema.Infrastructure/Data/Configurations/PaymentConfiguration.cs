@@ -21,8 +21,8 @@ namespace onlineCinema.Infrastructure.Data.Configurations
 
             builder.HasOne(p => p.Booking)
                 .WithOne(b => b.Payment)
-                .HasForeignKey<Booking>(b => b.PaymentId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey<Payment>(p => p.BookingId)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }

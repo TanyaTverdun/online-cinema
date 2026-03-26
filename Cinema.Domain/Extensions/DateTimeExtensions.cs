@@ -2,9 +2,8 @@
 {
     public static class DateTimeExtensions
     {
-        public static int CalculateAge(this DateTime birthDate)
+        public static int CalculateAge(this DateTime birthDate, DateTime today)
         {
-            var today = DateTime.Today;
             var age = today.Year - birthDate.Year;
 
             if (birthDate.Date > today.AddYears(-age))

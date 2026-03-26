@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using onlineCinema.Application.Interfaces;
+using onlineCinema.Application.Services.Interfaces;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Infrastructure.Data;
 
@@ -9,19 +10,22 @@ namespace onlineCinema.Infrastructure.Repositories
         : GenericRepository<Session>, ISessionRepository
     {
         private readonly ApplicationDbContext _db;
+        private readonly ITimeProvider _timeProvider;
 
-        public SessionRepository(ApplicationDbContext db)
+        public SessionRepository(ApplicationDbContext db, ITimeProvider timeProvider)
             : base(db)
         {
             _db = db;
+            _timeProvider = timeProvider;
         }
 
         public async Task<IEnumerable<Session>> GetFutureSessionsAsync()
         {
+            var now = _timeProvider.Now;
             return await _db.Sessions
                 .Include(s => s.Movie)
                 .Include(s => s.Hall)
-                .Where(s => s.ShowingDateTime > DateTime.Now)
+                .Where(s => s.ShowingDateTime > now)
                 .OrderBy(s => s.ShowingDateTime)
                 .ToListAsync();
         }
@@ -29,9 +33,10 @@ namespace onlineCinema.Infrastructure.Repositories
         public async Task<IEnumerable<Session>>
             GetFutureSessionsByMovieIdAsync(int movieId)
         {
+            var now = _timeProvider.Now;
             return await _db.Sessions
                 .Where(s => s.MovieId == movieId
-                    && s.ShowingDateTime > DateTime.Now)
+                    && s.ShowingDateTime > now)
                 .Include(s => s.Hall)
                     .ThenInclude(hf => hf.HallFeatures)
                         .ThenInclude(f => f.Feature)

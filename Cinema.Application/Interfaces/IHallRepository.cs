@@ -9,6 +9,6 @@ namespace onlineCinema.Application.Interfaces
         Task UpdateWithFeaturesAsync(Hall hall, List<int> selectedFeatureIds);
         Task DeleteAsync(int id);
         Task<IEnumerable<HallDto>> GetAllWithStatsAsync();
-        Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId);
+        Task<HallDto?> GetHallWithFutureSessionsAsync(int hallId, int daysAhead);
     }
 }

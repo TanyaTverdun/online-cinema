@@ -19,19 +19,22 @@ namespace onlineCinema.Application.Services
         private readonly PaymentMapper _paymentMapper;
         private readonly BookingMapper _bookingMapper;
         private readonly BookingSettings _settings;
+        private readonly ITimeProvider _timeProvider;
 
         public BookingService(
             IUnitOfWork unitOfWork,
             BookingMapper mapper,
             SnackMapper snackMapper,
             PaymentMapper paymentMapper,
-            IOptions<BookingSettings> settings)
+            IOptions<BookingSettings> settings,
+            ITimeProvider timeProvider)
         {
             _unitOfWork = unitOfWork;
             _bookingMapper = mapper;
             _snackMapper = snackMapper;
             _paymentMapper = paymentMapper;
             _settings = settings.Value;
+            _timeProvider = timeProvider;
         }
 
         public async Task<SessionSeatMapDto> GetSessionSeatMapAsync(int sessionId)
@@ -45,7 +48,7 @@ namespace onlineCinema.Application.Services
                     $"з ID {sessionId} не знайдено.");
             }
 
-            if (session.ShowingDateTime < DateTime.Now)
+            if (session.ShowingDateTime < _timeProvider.Now)
             {
                 throw new InvalidOperationException("Цей сеанс " +
                     "уже відбувся або розпочався.");
@@ -56,7 +59,7 @@ namespace onlineCinema.Application.Services
 
             var activeTickets = await this._unitOfWork.Ticket.GetAllAsync(t =>
                 t.SessionId == sessionId &&
-                    (t.LockUntil > DateTime.Now
+                    (t.LockUntil > _timeProvider.Now
                         || (t.Booking != null
                             && t.Booking.Payment != null
                             && t.Booking.Payment.Status == PaymentStatus.Completed)),
@@ -94,7 +97,7 @@ namespace onlineCinema.Application.Services
                 }
 
                 int requiredAge = (int)session.Movie.AgeRating;
-                int userAge = bookingDto.UserDateOfBirth.Value.CalculateAge();
+                int userAge = bookingDto.UserDateOfBirth.Value.CalculateAge(_timeProvider.Today);
 
                 if (userAge < requiredAge)
                 {
@@ -105,8 +108,9 @@ namespace onlineCinema.Application.Services
 
             var activeTickets = await this._unitOfWork.Ticket
                 .GetAllAsync(t => t.SessionId == bookingDto.SessionId);
+            var now = _timeProvider.Now;
             var busySeatIds = activeTickets
-                .Where(t => t.LockUntil > DateTime.Now
+                .Where(t => t.LockUntil > now
                     || (t.Booking?.Payment?.Status == PaymentStatus.Completed))
                 .Select(t => t.SeatId);
 
@@ -117,9 +121,9 @@ namespace onlineCinema.Application.Services
             }
 
             var booking = this._bookingMapper
-                .MapCreateBookingDtoToEntity(bookingDto);
+                .MapCreateBookingDtoToEntity(bookingDto, _timeProvider.Now);
 
-            var lockExpiration = DateTime.Now
+            var lockExpiration = _timeProvider.Now
                 .AddSeconds(_settings.BookingLockSeconds);
 
             var allHallSeats = await this._unitOfWork.Seat
@@ -177,7 +181,7 @@ namespace onlineCinema.Application.Services
                 throw new KeyNotFoundException();
             }
 
-            return booking.Tickets.FirstOrDefault()?.LockUntil ?? DateTime.Now;
+            return booking.Tickets.FirstOrDefault()?.LockUntil ?? _timeProvider.Now;
         }
 
         public async Task CompletePaymentAsync(int bookingId)
@@ -196,13 +200,9 @@ namespace onlineCinema.Application.Services
             decimal totalAmount = ticketsTotal + snacksTotal;
 
             var payment = this._paymentMapper
-                .CreateCompletedPayment(bookingId, totalAmount);
+                .CreateCompletedPayment(bookingId, totalAmount, _timeProvider.Now);
 
             await this._unitOfWork.Payment.AddAsync(payment);
-            await this._unitOfWork.SaveAsync();
-
-            booking.PaymentId = payment.PaymentId;
-            await this._unitOfWork.Booking.UpdateWithDetailsAsync(booking);
             await this._unitOfWork.SaveAsync();
         }
 
@@ -217,7 +217,7 @@ namespace onlineCinema.Application.Services
                     $"для користувача з ID: {userId} не знайдено.");
             }
 
-            return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking));
+            return bookings.Select(booking => _bookingMapper.ToBookingHistoryDto(booking, _settings.MinMinutesBeforeSessionForRefund, _timeProvider.Now));
         }
 
         public async Task CancelBookingAsync(int bookingId, string userId)
@@ -246,12 +246,12 @@ namespace onlineCinema.Application.Services
             var session = booking.Tickets.FirstOrDefault()?.Session;
             if (session != null)
             {
-                if (session.ShowingDateTime < DateTime.Now)
+                if (session.ShowingDateTime < _timeProvider.Now)
                 {
                     throw new InvalidOperationException("Сеанс вже розпочався або минув.");
                 }
 
-                if ((session.ShowingDateTime - DateTime.Now).TotalMinutes < 60)
+                if ((session.ShowingDateTime - _timeProvider.Now).TotalMinutes < _settings.MinMinutesBeforeSessionForRefund)
                 {
                     throw new InvalidOperationException("Повернення можливе " +
                         "не пізніше ніж за 1 годину до початку сеансу.");
@@ -261,7 +261,9 @@ namespace onlineCinema.Application.Services
             // Логіка повернення
             if (booking.Payment == null)
             {
-                var dummyPayment = _paymentMapper.CreateCompletedPayment(bookingId, 0);
+                var totalAmount = booking.Tickets.Sum(t => t.Price)
+                    + booking.SnackBookings.Sum(sb => sb.Snack.Price * sb.Quantity);
+                var dummyPayment = _paymentMapper.CreateCompletedPayment(bookingId, totalAmount, _timeProvider.Now);
                 dummyPayment.Status = PaymentStatus.Refunded;
                 await _unitOfWork.Payment.AddAsync(dummyPayment);
                 booking.Payment = dummyPayment;
@@ -279,7 +281,7 @@ namespace onlineCinema.Application.Services
             // Час блокування -1, щоб карта місць не бачила ці квитки як активні
             foreach (var ticket in booking.Tickets)
             {
-                ticket.LockUntil = DateTime.Now.AddMinutes(-1);
+                ticket.LockUntil = _timeProvider.Now.AddMinutes(-1);
             }
 
             await _unitOfWork.SaveAsync();
@@ -290,7 +292,7 @@ namespace onlineCinema.Application.Services
             int? lastId,
             int? firstId)
         {
-            int pageSize = 5;
+            int pageSize = _settings.HistoryPageSize;
 
             var (bookings, totalCount, hasNext, hasPrevious) =
                 await _unitOfWork.Booking
@@ -298,7 +300,7 @@ namespace onlineCinema.Application.Services
 
             var dtos = bookings
                 .Select(booking => _bookingMapper
-                    .ToBookingHistoryDto(booking))
+                    .ToBookingHistoryDto(booking, _settings.MinMinutesBeforeSessionForRefund, _timeProvider.Now))
                 .ToList();
 
             return _bookingMapper

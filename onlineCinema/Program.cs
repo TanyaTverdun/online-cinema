@@ -15,9 +15,7 @@ using onlineCinema.Application.Mapping;
 using onlineCinema.Infrastructure.Data;
 using onlineCinema.Domain.Entities;
 using onlineCinema.Application.Configurations;
-
 using onlineCinema.Domain.Constants;
-using onlineCinema.Domain.Settings;
 using onlineCinema.Infrastructure.Services;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -31,7 +29,11 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 {
     options.UseSqlServer(
         connectionString,
-        b => b.MigrationsAssembly("onlineCinema.Infrastructure")
+        b => 
+        {
+            b.MigrationsAssembly("onlineCinema.Infrastructure");
+            b.EnableRetryOnFailure();
+        }
     );
 
     if (builder.Environment.IsDevelopment())
@@ -59,15 +61,12 @@ Microsoft.AspNetCore.Identity.IdentityRole>(
     options.Password.RequireNonAlphanumeric = false;
     options.Password.RequiredLength = 6;
 
-
     options.SignIn.RequireConfirmedAccount = false;
     options.SignIn.RequireConfirmedEmail = false;
-
 
     options.User.RequireUniqueEmail = true;
     options.User.AllowedUserNameCharacters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
-
 
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.MaxFailedAccessAttempts = 5;
@@ -107,6 +106,12 @@ builder.Services.Configure<TimeSettings>(
 
 builder.Services.Configure<PricingSettings>(
     builder.Configuration.GetSection("PricingSettings"));
+
+builder.Services.Configure<HallSettings>(
+    builder.Configuration.GetSection("HallSettings"));
+
+builder.Services.Configure<MovieSettings>(
+    builder.Configuration.GetSection("MovieSettings"));
 
 builder.Services.AddSingleton<SessionMapper>();
 builder.Services.AddSingleton<PaymentMapper>();
@@ -150,6 +155,7 @@ builder.Services.AddScoped<IFeatureService, FeatureService>();
 builder.Services.AddScoped<ILanguageService, LanguageService>();
 builder.Services.AddScoped<IStatisticsService, StatisticsService>();
 builder.Services.AddScoped<IPaymentService, PaymentService>();
+builder.Services.AddSingleton<ITimeProvider, LocalTimeProvider>();
 
 builder.Services
 .AddValidatorsFromAssemblyContaining<RegisterViewModelValidator>();
