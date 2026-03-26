@@ -1,0 +1,16 @@
+name: Weekly Database Update
+
+on:
+    schedule:
+        - cron: "0 3 * * 0"
+
+    workflow_dispatch:
+
+jobs:
+    update-database:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Send POST request to wake up Azure and update DB
+              run: |
+                  curl -X POST "https://cinema-manager-facuf8dzdebsfeb7.polandcentral-01.azurewebsites.net/api/maintenance/reset-database" \
+                       -H "X-Maintenance-Token: ${{ secrets.MAINTENANCE_TOKEN }}"
