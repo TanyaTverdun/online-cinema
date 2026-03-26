@@ -608,8 +608,7 @@ namespace onlineCinema.Infrastructure.Data
                     {
                         Amount = ticket.Price,
                         PaymentDate = booking.CreatedDateTime.AddMinutes(5),
-                        Status = paymentStatus,
-                        Booking = booking
+                        Status = paymentStatus
                     };
                     booking.Payment = payment;
 

@@ -9,8 +9,10 @@ namespace onlineCinema.Mapping
     {
         [MapProperty(nameof(SnackDto.Name), nameof(SnackViewModel.SnackName))]
         public partial SnackViewModel ToViewModel(SnackDto dto);
-        public partial List<SnackViewModel> ToViewModelList(
-            IEnumerable<SnackDto> dtos);
+
+        public List<SnackViewModel> ToViewModelList(IEnumerable<SnackDto> dtos)
+            => dtos.Select(ToViewModel).ToList();
+
         [MapProperty(nameof(SnackViewModel.SnackName), nameof(SnackDto.Name))]
         public partial SnackDto ToDto(SnackViewModel model);
     }

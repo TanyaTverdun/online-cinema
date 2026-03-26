@@ -17,12 +17,6 @@ namespace onlineCinema.Infrastructure.Data.Configurations
             builder.Property(b => b.CreatedDateTime)
                 .HasColumnType("datetime");
 
-            builder.HasOne(b => b.Payment)
-               .WithOne(p => p.Booking)
-               .HasForeignKey<Booking>(b => b.PaymentId)
-               .OnDelete(DeleteBehavior.Restrict);
-
-
             builder.HasOne(b => b.ApplicationUser)
                 .WithMany(u => u.Bookings)
                 .HasForeignKey(b => b.ApplicationUserId)

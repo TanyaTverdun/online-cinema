@@ -204,10 +204,6 @@ namespace onlineCinema.Application.Services
 
             await this._unitOfWork.Payment.AddAsync(payment);
             await this._unitOfWork.SaveAsync();
-
-            booking.PaymentId = payment.PaymentId;
-            await this._unitOfWork.Booking.UpdateWithDetailsAsync(booking);
-            await this._unitOfWork.SaveAsync();
         }
 
         public async Task<IEnumerable<BookingHistoryDto>> GetBookingHistoryAsync(string userId)

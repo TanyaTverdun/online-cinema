@@ -7,7 +7,6 @@
         public string EmailAddress { get; set; } = string.Empty;
         public DateTime CreatedDateTime { get; set; }
 
-        public int? PaymentId { get; set; }
         public Payment? Payment { get; set; }
 
         public string ApplicationUserId { get; set; } = string.Empty;

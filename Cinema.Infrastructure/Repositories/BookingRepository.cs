@@ -19,8 +19,11 @@ namespace onlineCinema.Infrastructure.Repositories
         public async Task<Booking?> GetByIdWithDetailsAsync(int id)
         {
             return await _db.Bookings
+                .Include(b => b.Payment)
                 .Include(b => b.Tickets)
                     .ThenInclude(t => t.Seat)
+                .Include(b => b.Tickets)
+                    .ThenInclude(t => t.Session)
                 .Include(b => b.SnackBookings)
                     .ThenInclude(sb => sb.Snack)
                 .FirstOrDefaultAsync(b => b.BookingId == id);
@@ -34,8 +37,6 @@ namespace onlineCinema.Infrastructure.Repositories
                 .FirstOrDefaultAsync(b => b.BookingId == newBookingData.BookingId);
 
             if (existingBooking == null) return;
-
-            existingBooking.PaymentId = newBookingData.PaymentId;
 
             foreach (var existingSnack in existingBooking.SnackBookings.ToList())
             {
