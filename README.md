@@ -129,7 +129,7 @@ The solution is built following the **Clean Architecture** principles.
 
 This project was developed collaboratively by a team of 6 members:
 
-* **Tanya Tverdun** - Team Lead, Core Architecture, CI/CD Deployment (Azure & GitHub Actions), Cloudinary Integration, Movie Sessions, Seat & Snack Booking System, Admin Booking Management.
+* **Tanya Tverdun** - Team Lead, Core Architecture, Cloud Hosting (Azure) & Scheduled Automation (GitHub Actions), Cloudinary Integration, Movie Sessions, Seat & Snack Booking System, Admin Booking Management.
 * **Stanislav Sizuk** - Main Movies Catalog, Detailed Movie Pages, and Admin Movie Management (CRUD).
 * **Oleksiy Voloshin** - Admin Dashboard & Cinema Halls Management.
 * **Maksym Kovalenko** - Identity (Authentication & Registration) and User Profiles.
