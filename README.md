@@ -7,6 +7,7 @@ A web application for managing a movie theater. Users can browse the movie catal
 ## Tech Stack
 
 * **Backend:** C#, ASP.NET Core MVC / Web API
+* **Frontend:** Razor Views (.cshtml), CSS, JavaScript, Bootstrap
 * **Database & ORM:** MS SQL Server, Entity Framework Core
 * **Authentication & Authorization:** ASP.NET Core Identity
 * **Media Storage:** Cloudinary (for movie posters)
