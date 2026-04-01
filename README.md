@@ -4,6 +4,11 @@ A web application for managing a movie theater. Users can browse the movie catal
 
 **Live Demo:** (https://cinema-manager-facuf8dzdebsfeb7.polandcentral-01.azurewebsites.net)
 
+For quick testing without registration, you can use the following test accounts:
+
+*  **User:** `user1@cinema.com` | **Password:** `Pa$$w0rd123!`
+*  **Admin:** `admin@test.com` | **Password:** `AdminPass123!`
+
 ## Tech Stack
 
 * **Backend:** C#, ASP.NET Core MVC / Web API
