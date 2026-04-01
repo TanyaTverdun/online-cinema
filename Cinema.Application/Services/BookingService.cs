@@ -124,7 +124,7 @@ namespace onlineCinema.Application.Services
                 .MapCreateBookingDtoToEntity(bookingDto, _timeProvider.Now);
 
             var lockExpiration = _timeProvider.Now
-                .AddSeconds(_settings.BookingLockSeconds);
+                .AddMinutes(_settings.BookingLockMinutes);
 
             var allHallSeats = await this._unitOfWork.Seat
                 .GetSeatsByHallIdAsync(session.HallId);
