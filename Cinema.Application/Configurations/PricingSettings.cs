@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿namespace onlineCinema.Application.Configurations;
 
-namespace onlineCinema.Application.Configurations
+public class PricingSettings
 {
-    public class PricingSettings
-    {
-        public float DefaultVipCoefficient { get; set; }
-    }
+    public decimal DefaultVipCoefficient { get; set; }
+    // Можеш додати базову ціну, якщо захочеш
+    public decimal DropInPriceDefault { get; set; }
 }

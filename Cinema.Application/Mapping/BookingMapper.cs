@@ -8,12 +8,12 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class BookingMapper
     {
-        [MapProperty(nameof(Seat.RowNumber), nameof(SeatDto.Row))]
-        [MapProperty(nameof(Seat.SeatNumber), nameof(SeatDto.Number))]
-        private partial SeatDto MapToSeatBase(Seat seat);
+        [MapProperty(nameof(Inventary.RowNumber), nameof(SeatDto.Row))]
+        [MapProperty(nameof(Inventary.SeatNumber), nameof(SeatDto.Number))]
+        private partial SeatDto MapToSeatBase(Inventary seat);
 
         public SeatDto MapToSeatDto(
-            Seat seat, 
+            Inventary seat, 
             decimal basePrice, 
             HashSet<int> bookedSeatIds)
         {
@@ -25,16 +25,16 @@ namespace onlineCinema.Application.Mapping
             return dto;
         }
 
-        [MapProperty(nameof(Session.Hall.HallNumber), 
-            nameof(SessionSeatMapDto.HallNumber))]
-        [MapProperty(nameof(Session.Movie.Title), 
-            nameof(SessionSeatMapDto.MovieTitle))]
-        [MapProperty(nameof(Session.ShowingDateTime), 
-            nameof(SessionSeatMapDto.ShowingDate))]
-        private partial SessionSeatMapDto MapToSessionBase(Session session);
+        [MapProperty(nameof(DanceClass.Hall.HallNumber), 
+            nameof(DanceClassMapDto.HallNumber))]
+        [MapProperty(nameof(DanceClass.Movie.Title), 
+            nameof(DanceClassMapDto.MovieTitle))]
+        [MapProperty(nameof(DanceClass.ShowingDateTime), 
+            nameof(DanceClassMapDto.ShowingDate))]
+        private partial DanceClassMapDto MapToSessionBase(DanceClass session);
 
-        public SessionSeatMapDto MapToSessionSeatMapDto(
-            Session session, 
+        public DanceClassMapDto MapToSessionSeatMapDto(
+            DanceClass session, 
             List<SeatDto> seatDtos)
         {
             var dto = MapToSessionBase(session);
@@ -45,29 +45,29 @@ namespace onlineCinema.Application.Mapping
         }
 
         [MapProperty(nameof(CreateBookingDto.UserEmail), 
-            nameof(Booking.EmailAddress))]
+            nameof(CostumeBooking.EmailAddress))]
         [MapProperty(nameof(CreateBookingDto.UserId), 
-            nameof(Booking.ApplicationUserId))]
-        private partial Booking MapToBookingBase(CreateBookingDto dto);
+            nameof(CostumeBooking.ApplicationUserId))]
+        private partial CostumeBooking MapToBookingBase(CreateBookingDto dto);
 
-        public Booking MapCreateBookingDtoToEntity(CreateBookingDto dto)
+        public CostumeBooking MapCreateBookingDtoToEntity(CreateBookingDto dto)
         {
             var booking = MapToBookingBase(dto);
 
             booking.CreatedDateTime = DateTime.Now;
 
-            booking.Tickets = new List<Ticket>();
+            booking.Tickets = new List<AttendanceLog>();
 
             return booking;
         }
 
-        public Ticket MapToTicket(
-            Seat seat, 
+        public AttendanceLog MapToTicket(
+            Inventary seat, 
             int sessionId, 
             decimal basePrice, 
             DateTime lockUntil)
         {
-            return new Ticket
+            return new AttendanceLog
             {
                 SessionId = sessionId,
                 SeatId = seat.SeatId,
@@ -76,22 +76,22 @@ namespace onlineCinema.Application.Mapping
             };
         }
 
-        [MapProperty(nameof(Ticket.TicketId), nameof(TicketInfoDto.TicketId))]
-        [MapProperty(nameof(Ticket.Price), nameof(TicketInfoDto.Price))]
-        [MapProperty(nameof(Ticket.Seat.RowNumber), nameof(TicketInfoDto.RowNumber))]
-        [MapProperty(nameof(Ticket.Seat.SeatNumber), nameof(TicketInfoDto.SeatNumber))]
-        [MapperIgnoreSource(nameof(Ticket.SessionId))]
-        [MapperIgnoreSource(nameof(Ticket.SeatId))]
-        [MapperIgnoreSource(nameof(Ticket.BookingId))]
-        [MapperIgnoreSource(nameof(Ticket.Session))]
-        [MapperIgnoreSource(nameof(Ticket.Seat.HallId))]
-        [MapperIgnoreSource(nameof(Ticket.Seat.Coefficient))]
-        [MapperIgnoreSource(nameof(Ticket.Seat.Hall))]
-        [MapperIgnoreSource(nameof(Ticket.Seat.Tickets))]
-        [MapperIgnoreSource(nameof(Ticket.Booking))]
-        public partial TicketInfoDto ToTicketInfoDto(Ticket ticket);
+        [MapProperty(nameof(AttendanceLog.TicketId), nameof(AttendanceLogInfoDto.TicketId))]
+        [MapProperty(nameof(AttendanceLog.Price), nameof(AttendanceLogInfoDto.Price))]
+        [MapProperty(nameof(AttendanceLog.ItemId.RowNumber), nameof(AttendanceLogInfoDto.RowNumber))]
+        [MapProperty(nameof(AttendanceLog.ItemId.SeatNumber), nameof(AttendanceLogInfoDto.SeatNumber))]
+        [MapperIgnoreSource(nameof(AttendanceLog.SessionId))]
+        [MapperIgnoreSource(nameof(AttendanceLog.SeatId))]
+        [MapperIgnoreSource(nameof(AttendanceLog.BookingId))]
+        [MapperIgnoreSource(nameof(AttendanceLog.Session))]
+        [MapperIgnoreSource(nameof(AttendanceLog.ItemId.HallId))]
+        [MapperIgnoreSource(nameof(AttendanceLog.ItemId.Coefficient))]
+        [MapperIgnoreSource(nameof(AttendanceLog.ItemId.Hall))]
+        [MapperIgnoreSource(nameof(AttendanceLog.ItemId.Tickets))]
+        [MapperIgnoreSource(nameof(AttendanceLog.Booking))]
+        public partial AttendanceLogInfoDto ToTicketInfoDto(AttendanceLog ticket);
 
-        public BookingHistoryDto ToBookingHistoryDto(Booking booking)
+        public BookingHistoryDto ToBookingHistoryDto(CostumeBooking booking)
         {
             var firstTicket = booking.Tickets.FirstOrDefault();
             var session = firstTicket?.Session;
@@ -149,10 +149,10 @@ namespace onlineCinema.Application.Mapping
             };
         }
 
-        private TicketInfoDto ToTicketInfoDtoWithSeatType(Ticket ticket)
+        private AttendanceLogInfoDto ToTicketInfoDtoWithSeatType(AttendanceLog ticket)
         {
             var dto = ToTicketInfoDto(ticket);
-            dto.SeatType = MapSeatType(ticket.Seat.Type);
+            dto.SeatType = MapSeatType(ticket.ItemId.Type);
             return dto;
         }
 
@@ -168,7 +168,7 @@ namespace onlineCinema.Application.Mapping
             };
         }
 
-        private decimal MapTotalAmount(Booking booking)
+        private decimal MapTotalAmount(CostumeBooking booking)
         {
             return booking.Payment?.Amount ?? booking.Tickets.Sum(t => t.Price);
         }
@@ -188,9 +188,9 @@ namespace onlineCinema.Application.Mapping
             return $"Зал {hallNumber ?? 0}";
         }
 
-        private string MapSeatType(SeatType seatType)
+        private string MapSeatType(ConditionStatus seatType)
         {
-            return seatType == SeatType.VIP ? "VIP" : "Стандарт";
+            return seatType == ConditionStatus.VIP ? "VIP" : "Стандарт";
         }
     }
 }

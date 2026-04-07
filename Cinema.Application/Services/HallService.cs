@@ -131,7 +131,7 @@ namespace onlineCinema.Application.Services
             return hallDto;
         }
 
-        public async Task<IEnumerable<Feature>> GetAllFeaturesAsync()
+        public async Task<IEnumerable<Requriment>> GetAllFeaturesAsync()
         {
             return await _unitOfWork.Feature.GetAllAsync();
         }
@@ -148,7 +148,7 @@ namespace onlineCinema.Application.Services
         }
 
         // seats
-        private async Task GenerateSeatsForHall(Hall hall, HallDto dto)
+        private async Task GenerateSeatsForHall(DanceHall hall, HallDto dto)
         {
             int startVipRow = hall.RowCount - dto.VipRowCount;
 
@@ -156,7 +156,7 @@ namespace onlineCinema.Application.Services
             {
                 bool isVipRow = row > startVipRow;
 
-                SeatType type = isVipRow ? SeatType.VIP : SeatType.Standard;
+                ConditionStatus type = isVipRow ? ConditionStatus.VIP : ConditionStatus.Standard;
                 float coef = isVipRow ? dto.VipCoefficient 
                     : _settings.DefaultVipCoefficient;
 

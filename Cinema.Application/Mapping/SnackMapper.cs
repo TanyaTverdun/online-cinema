@@ -12,23 +12,23 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class SnackMapper
     {
-        [MapProperty(nameof(Snack.SnackName), nameof(SnackDto.Name))]
-        public partial SnackDto MapSnackToDto(Snack snack);
+        [MapProperty(nameof(StudioMerch.SnackName), nameof(SnackDto.Name))]
+        public partial SnackDto MapSnackToDto(StudioMerch snack);
 
         public partial List<SnackDto> 
-            MapSnacksToDtos(IEnumerable<Snack> snacks);
+            MapSnacksToDtos(IEnumerable<StudioMerch> snacks);
 
-        public partial SnackBooking 
+        public partial MerchOrder 
             MapSelectedSnackDtoToEntity(SelectedSnackDto dto);
 
-        public partial List<SnackBooking> 
+        public partial List<MerchOrder> 
             MapSelectedSnackDtoToEntityList(
                 List<SelectedSnackDto> dtos, 
                 int bookingId);
 
-        public partial Snack MapToEntity(SnackDto dto);
+        public partial StudioMerch MapToEntity(SnackDto dto);
         public partial void UpdateEntityFromDto(
             SnackDto dto, 
-            Snack entity);
+            StudioMerch entity);
     }
 }

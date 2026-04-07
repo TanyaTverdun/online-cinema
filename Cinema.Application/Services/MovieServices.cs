@@ -42,7 +42,7 @@ namespace onlineCinema.Application.Services
         public async Task<IEnumerable<MovieCardDto>> GetMoviesForShowcaseAsync()
         {
             var movies = await _unitOfWork.Movie.GetAllAsync(
-                filter: m => m.Status != MovieStatus.Archived,
+                filter: m => m.Status != PerformanceStatus.Archived,
                 includeProperties: "MovieGenres.Genre"
             );
 
@@ -55,7 +55,7 @@ namespace onlineCinema.Application.Services
         public async Task<MovieDetailsDto?> GetMovieDetailsAsync(int id)
         {
             var movie = await _unitOfWork.Movie.GetByIdWithAllDetailsAsync(id);
-            if (movie == null || movie.Status == MovieStatus.Archived)
+            if (movie == null || movie.Status == PerformanceStatus.Archived)
             {
                 return null;
             }
@@ -164,13 +164,13 @@ namespace onlineCinema.Application.Services
             var movie = await _unitOfWork.Movie.GetByIdAsync(id);
             if (movie != null)
             {
-                movie.Status = MovieStatus.Archived;
+                movie.Status = PerformanceStatus.Archived;
                 _unitOfWork.Movie.Update(movie);
                 await _unitOfWork.SaveAsync();
             }
         }
 
-        private async Task ProcessGenresAsync(Movie movie, MovieFormDto model)
+        private async Task ProcessGenresAsync(Performance movie, MovieFormDto model)
         {
             var allIds = new HashSet<int>(model.GenreIds);
 
@@ -190,7 +190,7 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new Genre { GenreName = name };
+                        var newEntity = new DanceStyle { GenreName = name };
                         await _unitOfWork.Genre.AddAsync(newEntity);
                         await _unitOfWork.SaveAsync();
                         allIds.Add(newEntity.GenreId);
@@ -200,11 +200,11 @@ namespace onlineCinema.Application.Services
 
             foreach (var id in allIds)
             {
-                movie.MovieGenres.Add(new MovieGenre { GenreId = id });
+                movie.MovieGenres.Add(new PerformanceStyle { GenreId = id });
             }
         }
 
-        private async Task ProcessActorsAsync(Movie movie, MovieFormDto model)
+        private async Task ProcessActorsAsync(Performance movie, MovieFormDto model)
         {
             var allIds = new HashSet<int>(model.CastIds);
 
@@ -224,7 +224,7 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new CastMember { CastFirstName = first, CastLastName = last };
+                        var newEntity = new Dancer { CastFirstName = first, CastLastName = last };
                         await _unitOfWork.CastMember.AddAsync(newEntity);
                         await _unitOfWork.SaveAsync();
                         allIds.Add(newEntity.CastId);
@@ -234,11 +234,11 @@ namespace onlineCinema.Application.Services
 
             foreach (var id in allIds)
             {
-                movie.MovieCasts.Add(new MovieCast { CastId = id });
+                movie.MovieCasts.Add(new PerformanceDancers { CastId = id });
             }
         }
 
-        private async Task ProcessDirectorsAsync(Movie movie, MovieFormDto model)
+        private async Task ProcessDirectorsAsync(Performance movie, MovieFormDto model)
         {
             var allIds = new HashSet<int>(model.DirectorIds);
 
@@ -258,7 +258,7 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new Director { DirectorFirstName = first, DirectorLastName = last };
+                        var newEntity = new Choreographer { DirectorFirstName = first, DirectorLastName = last };
                         await _unitOfWork.Director.AddAsync(newEntity);
                         await _unitOfWork.SaveAsync();
                         allIds.Add(newEntity.DirectorId);
@@ -268,11 +268,11 @@ namespace onlineCinema.Application.Services
 
             foreach (var id in allIds)
             {
-                movie.MovieDirectors.Add(new DirectorMovie { DirectorId = id });
+                movie.MovieDirectors.Add(new ChoreographerPerformance { DirectorId = id });
             }
         }
 
-        private async Task ProcessLanguagesAsync(Movie movie, MovieFormDto model)
+        private async Task ProcessLanguagesAsync(Performance movie, MovieFormDto model)
         {
             var allIds = new HashSet<int>(model.LanguageIds);
 
@@ -290,7 +290,7 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new Language { LanguageName = name };
+                        var newEntity = new SkillLevel { LanguageName = name };
                         await _unitOfWork.Language.AddAsync(newEntity);
                         await _unitOfWork.SaveAsync();
                         allIds.Add(newEntity.LanguageId);
@@ -300,7 +300,7 @@ namespace onlineCinema.Application.Services
 
             foreach (var id in allIds)
             {
-                movie.MovieLanguages.Add(new LanguageMovie { LanguageId = id });
+                movie.MovieLanguages.Add(new PerformanceLevel { LanguageId = id });
             }
         }
 
@@ -360,7 +360,7 @@ namespace onlineCinema.Application.Services
                 File.Delete(imagePath);
             }
         }
-        private async Task ProcessFeaturesAsync(Movie movie, MovieFormDto model)
+        private async Task ProcessFeaturesAsync(Performance movie, MovieFormDto model)
         {
             var allIds = new HashSet<int>(model.FeatureIds);
 
@@ -378,7 +378,7 @@ namespace onlineCinema.Application.Services
                     }
                     else
                     {
-                        var newEntity = new Feature { Name = name };
+                        var newEntity = new Requriment { Name = name };
                         await _unitOfWork.Feature.AddAsync(newEntity);
                         await _unitOfWork.SaveAsync();
                         allIds.Add(newEntity.Id);
@@ -388,7 +388,7 @@ namespace onlineCinema.Application.Services
 
             foreach (var id in allIds)
             {
-                movie.MovieFeatures.Add(new MovieFeature { FeatureId = id });
+                movie.MovieFeatures.Add(new PerformanceRequirement { FeatureId = id });
             }
         }
     }

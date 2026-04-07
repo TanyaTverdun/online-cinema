@@ -37,7 +37,7 @@
     builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
     builder.Services
-    .AddIdentity<ApplicationUser,
+    .AddIdentity<DanceMember,
     Microsoft.AspNetCore.Identity.IdentityRole>(
         options =>
     {
@@ -122,7 +122,7 @@ builder.Services.AddSingleton<SessionMapper>();
     builder.Services.AddScoped<AdminMovieMapper>();
     builder.Services.AddScoped<UserMapping>();
     builder.Services.AddScoped<AdminGenreMapper>();
-    builder.Services.AddScoped<AdminCastMemberMapper>();
+    builder.Services.AddScoped<AdminDancerMapper>();
     builder.Services.AddScoped<AdminFeatureMapper>();
     builder.Services.AddScoped<AdminLanguageMapper>();
     builder.Services.AddScoped<AdminSnackMapper>();

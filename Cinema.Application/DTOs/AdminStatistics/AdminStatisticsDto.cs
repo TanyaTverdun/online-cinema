@@ -1,17 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
-namespace onlineCinema.Application.DTOs.AdminStatistics
+namespace onlineCinema.Application.DTOs.AdminStatistics;
+
+public class AdminStatisticsDto // Залишаємо назву класу, вона універсальна
 {
-    public class AdminStatisticsDto
-    {
-        public List<MovieOccupancyDto> MovieOccupancy { get; set; } = new();
-        public List<TopItemDto> MostPopularMovies { get; set; } = new();
-        public List<TopItemDto> LeastPopularMovies { get; set; } = new();
-        public List<TopItemDto> MostPopularSnacks { get; set; } = new();
-        public List<TopItemDto> LeastPopularSnacks { get; set; } = new();
-    }
+    // Заповнюваність виступів/занять
+    public List<OccupancyDto> PerformanceOccupancy { get; set; } = new();
+
+    // Найпопулярніші та найменш популярні виступи (курси)
+    public List<TopItemDto> MostPopularPerformances { get; set; } = new();
+    public List<TopItemDto> LeastPopularPerformances { get; set; } = new();
+
+    // Статистика по товарах (мерчу) студії
+    public List<TopItemDto> MostPopularMerch { get; set; } = new();
+    public List<TopItemDto> LeastPopularMerch { get; set; } = new();
 }

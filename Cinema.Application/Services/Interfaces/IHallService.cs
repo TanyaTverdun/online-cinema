@@ -17,7 +17,7 @@ namespace onlineCinema.Application.Services.Interfaces
         Task<HallDto?> CreateHallAsync(HallDto hallDto);
         Task<HallDto?> EditHallAsync(HallDto hallDto);
         Task<bool> DeleteHallAsync(int id);
-        Task<IEnumerable<Feature>> GetAllFeaturesAsync();
+        Task<IEnumerable<Requriment>> GetAllFeaturesAsync();
         Task<HallDto?> GetHallDetailsAsync(int id);
     }
 }

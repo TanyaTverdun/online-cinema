@@ -9,15 +9,15 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class FeatureMapping
     {
-        public partial FeatureDto MapToDto(Feature feature);
+        public partial FeatureDto MapToDto(Requriment feature);
 
         public partial List<FeatureDto> 
-            MapToDtoList(IEnumerable<Feature> features);
+            MapToDtoList(IEnumerable<Requriment> features);
 
-        public partial Feature MapToEntity(FeatureDto dto);
+        public partial Requriment MapToEntity(FeatureDto dto);
 
         public partial void UpdateEntityFromDto(
             FeatureDto dto, 
-            Feature entity);
+            Requriment entity);
     }
 }

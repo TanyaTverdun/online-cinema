@@ -12,12 +12,12 @@ namespace onlineCinema.Areas.Admin.Controllers
     {
         private readonly ICastMemberService _castMemberService;
         private readonly IValidator<CastMemberViewModel> _validator;
-        private readonly AdminCastMemberMapper _mapper;
+        private readonly AdminDancerMapper _mapper;
 
         public CastMemberController(
             ICastMemberService castMemberService,
             IValidator<CastMemberViewModel> validator,
-            AdminCastMemberMapper mapper)
+            AdminDancerMapper mapper)
         {
             _castMemberService = castMemberService;
             _validator = validator;

@@ -8,11 +8,11 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class PaymentMapper
     {
-        public Payment CreateCompletedPayment(
+        public FinancialTransaction CreateCompletedPayment(
             int bookingId, 
             decimal amount)
         {
-            return new Payment
+            return new FinancialTransaction
             {
                 BookingId = bookingId,
                 Amount = amount,
@@ -22,10 +22,10 @@ namespace onlineCinema.Application.Mapping
         }
 
         [MapProperty("Booking.EmailAddress", "UserEmail")]
-        public partial PaymentAdminDto MapToDto(Payment payment);
+        public partial PaymentAdminDto MapToDto(FinancialTransaction payment);
 
         public List<PaymentAdminDto> 
-            MapToDtoList(IEnumerable<Payment> payments)
+            MapToDtoList(IEnumerable<FinancialTransaction> payments)
         {
             return payments.Select(p => {
                 var dto = MapToDto(p);
@@ -43,8 +43,8 @@ namespace onlineCinema.Application.Mapping
                 dto.TicketCount = booking?.Tickets.Count ?? 0;
 
                 dto.TicketsInfo = booking?.Tickets
-                    .Select(t => $"Ряд {t.Seat.RowNumber}, Місце {t.Seat.SeatNumber} " +
-                        $"({(t.Seat.Type == SeatType.VIP ? "VIP" : "Стандарт")})")
+                    .Select(t => $"Ряд {t.ItemId.RowNumber}, Місце {t.ItemId.SeatNumber} " +
+                        $"({(t.ItemId.Type == ConditionStatus.VIP ? "VIP" : "Стандарт")})")
                     .ToList() ?? new();
 
                 dto.SnacksInfo = booking?.SnackBookings
@@ -56,7 +56,7 @@ namespace onlineCinema.Application.Mapping
         }
 
         public PagedResult<PaymentAdminDto> MapToPagedResult(
-            IEnumerable<Payment> entities, int totalCount, int pageSize)
+            IEnumerable<FinancialTransaction> entities, int totalCount, int pageSize)
         {
             var dtos = MapToDtoList(entities);
 

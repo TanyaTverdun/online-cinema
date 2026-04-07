@@ -12,15 +12,15 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class DirectorMapping
     {
-        public partial DirectorFormDto? ToDto(Director? director);
+        public partial DirectorFormDto? ToDto(Choreographer? director);
 
-        public partial Director ToEntity(DirectorFormDto dto);
+        public partial Choreographer ToEntity(DirectorFormDto dto);
 
         public partial void UpdateEntityFromDto(
             DirectorFormDto dto, 
-            Director director);
+            Choreographer director);
 
         public partial IEnumerable<DirectorFormDto> 
-            ToDtoList(IEnumerable<Director> directors);
+            ToDtoList(IEnumerable<Choreographer> directors);
     }
 }

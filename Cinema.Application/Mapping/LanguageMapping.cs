@@ -8,15 +8,15 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class LanguageMapping
     {
-        public partial LanguageDto MapToDto(Language language);
+        public partial LanguageDto MapToDto(SkillLevel language);
 
         public partial List<LanguageDto> 
-            MapToDtoList(IEnumerable<Language> languages);
+            MapToDtoList(IEnumerable<SkillLevel> languages);
 
-        public partial Language MapToEntity(LanguageDto dto);
+        public partial SkillLevel MapToEntity(LanguageDto dto);
 
         public partial void UpdateEntityFromDto(
             LanguageDto dto, 
-            Language entity);
+            SkillLevel entity);
     }
 }

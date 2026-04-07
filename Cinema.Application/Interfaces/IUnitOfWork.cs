@@ -1,28 +1,26 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
 
 namespace onlineCinema.Application.Interfaces
 {
     public interface IUnitOfWork
     {
-        IBookingRepository Booking { get; }
-        ICastMemberRepository CastMember { get; }
-        ICinemaRepository Cinema { get; }
-        IDirectorRepository Director { get; }
-        IFeatureRepository Feature { get; }
-        IGenreRepository Genre { get; }
-        IHallRepository Hall { get; }
-        ILanguageRepository Language { get; }
-        IMovieRepository Movie { get; }
-        IPaymentRepository Payment { get; }
-        ISeatRepository Seat { get; }
-        ISessionRepository Session { get; }
-        ISnackRepository Snack { get; }
-        ITicketRepository Ticket { get; }
-        IStatisticsRepository Statistics { get; }
+        // Властивості тепер називаються відповідно до сутностей танцювальної студії
+        ICostumeBookingRepository Bookings { get; }         // Було Booking
+        IDancerRepository Dancers { get; }                  // Було CastMember
+        IStudioBranchRepository Branches { get; }           // Було Cinema
+        IChoreographerRepository Choreographers { get; }    // Було Director
+        IRequirementRepository Requirements { get; }        // Було Feature
+        IDanceStyleRepository Styles { get; }               // Було Genre
+        IDanceHallRepository Halls { get; }                 // Було Hall
+        ISkillLevelRepository SkillLevels { get; }          // Було Language
+        IPerformanceRepository Performances { get; }        // Було Movie
+        IFinancialTransactionRepository Payments { get; }   // Було Payment
+        IInventaryRepository Inventory { get; }             // Було Seat
+        IDanceClassRepository Classes { get; }              // Було Session
+        IStudioMerchRepository Merch { get; }               // Було Snack
+        IAttendanceLogRepository AttendanceLogs { get; }    // Було Ticket
+        IStatisticRepository Statistics { get; }
+
         Task SaveAsync();
     }
 }

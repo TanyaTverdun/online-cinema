@@ -9,9 +9,9 @@ using onlineCinema.Domain.Entities;
 
 namespace onlineCinema.Infrastructure.Data.Configurations
 {
-    public class ApplicationUserConfiguration : IEntityTypeConfiguration<ApplicationUser>
+    public class ApplicationUserConfiguration : IEntityTypeConfiguration<DanceMember>
     {
-        public void Configure(EntityTypeBuilder<ApplicationUser> builder)
+        public void Configure(EntityTypeBuilder<DanceMember> builder)
         {
             builder.Property(u => u.FirstName)
                 .HasMaxLength(100)
@@ -21,13 +21,13 @@ namespace onlineCinema.Infrastructure.Data.Configurations
                 .HasMaxLength(100)
                 .IsRequired();
 
-            builder.Property(u => u.MiddleName)
-                .HasMaxLength(100);
+            //builder.Property(u => u.MiddleName)
+            //    .HasMaxLength(100);
 
             builder.Property(u => u.DateOfBirth)
                 .HasColumnType("date");
 
-            builder.HasMany(u => u.Bookings)
+            builder.HasMany(u => u.CostumeBookings)
                 .WithOne(b => b.ApplicationUser)
                 .HasForeignKey(b => b.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Restrict);

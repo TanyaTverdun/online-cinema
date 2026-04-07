@@ -31,7 +31,7 @@ namespace onlineCinema.Application.Services
             _settings = settings.Value;
         }
 
-        public async Task<SessionSeatMapDto> GetSessionSeatMapAsync(int sessionId)
+        public async Task<DanceClassMapDto> GetSessionSeatMapAsync(int sessionId)
         {
             var session = await this._unitOfWork.Session
                 .GetByIdWithMovieAndHallAsync(sessionId);
@@ -81,7 +81,7 @@ namespace onlineCinema.Application.Services
                 throw new KeyNotFoundException("Сеанс не знайдено.");
             }
 
-            if (session.Movie.AgeRating != AgeRating.Age0)
+            if (session.Movie.AgeRating != AgeCategory.Age0)
             {
                 if (!bookingDto.UserDateOfBirth.HasValue)
                 {

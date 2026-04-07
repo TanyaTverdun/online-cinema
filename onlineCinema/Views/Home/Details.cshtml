@@ -101,7 +101,7 @@
                         <div class="card border-secondary p-4 bg-dark bg-opacity-50">
                             <div class="text-center mb-4">
                                 <small class="text-muted text-uppercase">Поточний статус</small>
-                                @if (Model.Status == MovieStatus.Released)
+                                @if (Model.Status == PerformanceStatus.Released)
                                 {
                                     <h3 class="text-success fw-bold mt-1">У прокаті</h3>
                                 }
@@ -111,7 +111,7 @@
                                 }
                             </div>
 
-                            @if (Model.Status == MovieStatus.Released)
+                            @if (Model.Status == PerformanceStatus.Released)
                             {
                                 <a asp-controller="Session"
                                    asp-action="Schedule"

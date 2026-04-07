@@ -5,13 +5,13 @@ using Riok.Mapperly.Abstractions;
 namespace onlineCinema.Mapping
 {
     [Mapper]
-    public partial class AdminCastMemberMapper
+    public partial class AdminDancerMapper
     {
-        public partial CastMemberViewModel ToViewModel(CastMemberDto dto);
-        public partial List<CastMemberViewModel> ToViewModelList(
-            IEnumerable<CastMemberDto> dtos);
+        public partial DancerViewModel ToViewModel(DancerDto dto);
+        public partial List<DancerViewModel> ToViewModelList(
+            IEnumerable<DancerDto> dtos);
 
-        public partial CastMemberCreateUpdateDto ToCreateUpdateDto(
-            CastMemberViewModel model);
+        public partial DancerCreateUpdateDto ToCreateUpdateDto(
+         DancerViewModel model);
     }
 }

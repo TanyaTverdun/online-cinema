@@ -8,29 +8,29 @@ namespace onlineCinema.Mapping
     [Mapper]
     public partial class UserMapping
     {
-        [MapperIgnoreSource(nameof(ApplicationUser.Bookings))]
-        [MapperIgnoreSource(nameof(ApplicationUser.UserName))]
-        [MapperIgnoreSource(nameof(ApplicationUser.NormalizedUserName))]
-        [MapperIgnoreSource(nameof(ApplicationUser.NormalizedEmail))]
-        [MapperIgnoreSource(nameof(ApplicationUser.EmailConfirmed))]
-        [MapperIgnoreSource(nameof(ApplicationUser.PasswordHash))]
-        [MapperIgnoreSource(nameof(ApplicationUser.SecurityStamp))]
-        [MapperIgnoreSource(nameof(ApplicationUser.ConcurrencyStamp))]
-        [MapperIgnoreSource(nameof(ApplicationUser.PhoneNumberConfirmed))]
-        [MapperIgnoreSource(nameof(ApplicationUser.TwoFactorEnabled))]
-        [MapperIgnoreSource(nameof(ApplicationUser.LockoutEnd))]
-        [MapperIgnoreSource(nameof(ApplicationUser.LockoutEnabled))]
-        [MapperIgnoreSource(nameof(ApplicationUser.AccessFailedCount))]
+        [MapperIgnoreSource(nameof(DanceMember.Bookings))]
+        [MapperIgnoreSource(nameof(DanceMember.UserName))]
+        [MapperIgnoreSource(nameof(DanceMember.NormalizedUserName))]
+        [MapperIgnoreSource(nameof(DanceMember.NormalizedEmail))]
+        [MapperIgnoreSource(nameof(DanceMember.EmailConfirmed))]
+        [MapperIgnoreSource(nameof(DanceMember.PasswordHash))]
+        [MapperIgnoreSource(nameof(DanceMember.SecurityStamp))]
+        [MapperIgnoreSource(nameof(DanceMember.ConcurrencyStamp))]
+        [MapperIgnoreSource(nameof(DanceMember.PhoneNumberConfirmed))]
+        [MapperIgnoreSource(nameof(DanceMember.TwoFactorEnabled))]
+        [MapperIgnoreSource(nameof(DanceMember.LockoutEnd))]
+        [MapperIgnoreSource(nameof(DanceMember.LockoutEnabled))]
+        [MapperIgnoreSource(nameof(DanceMember.AccessFailedCount))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.FullName))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.BookingHistory))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.ReturnUrl))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.NewPassword))]
         [MapperIgnoreTarget(nameof(ProfileViewModel.ConfirmPassword))]
         public partial ProfileViewModel ToProfileViewModelBase(
-            ApplicationUser user);
+            DanceMember user);
 
         public ProfileViewModel ToProfileViewModel(
-            ApplicationUser user,
+            DanceMember user,
             PagedResultDto<BookingHistoryDto> bookings,
             string? returnUrl = null)
         {
@@ -83,18 +83,18 @@ namespace onlineCinema.Mapping
             };
         }
 
-        [MapProperty(nameof(TicketInfoDto.TicketId),
+        [MapProperty(nameof(AttendanceLogInfoDto.TicketId),
             nameof(TicketInfoViewModel.TicketId))]
-        [MapProperty(nameof(TicketInfoDto.Price),
+        [MapProperty(nameof(AttendanceLogInfoDto.Price),
             nameof(TicketInfoViewModel.Price))]
-        [MapProperty(nameof(TicketInfoDto.RowNumber), 
+        [MapProperty(nameof(AttendanceLogInfoDto.RowNumber), 
             nameof(TicketInfoViewModel.RowNumber))]
-        [MapProperty(nameof(TicketInfoDto.SeatNumber),
+        [MapProperty(nameof(AttendanceLogInfoDto.SeatNumber),
             nameof(TicketInfoViewModel.SeatNumber))]
-        [MapProperty(nameof(TicketInfoDto.SeatType), 
+        [MapProperty(nameof(AttendanceLogInfoDto.SeatType), 
             nameof(TicketInfoViewModel.SeatType))]
         public partial TicketInfoViewModel ToTicketInfoViewModel(
-            TicketInfoDto dto);
+            AttendanceLogInfoDto dto);
 
         private string? MapMoviePoster(byte[]? posterBytes)
         {
@@ -107,29 +107,29 @@ namespace onlineCinema.Mapping
         }
 
         [MapProperty(nameof(RegisterViewModel.Email),
-            nameof(ApplicationUser.UserName))]
+            nameof(DanceMember.UserName))]
         [MapProperty(nameof(RegisterViewModel.Email),
-            nameof(ApplicationUser.Email))]
+            nameof(DanceMember.Email))]
         [MapperIgnoreSource(nameof(RegisterViewModel.Password))]
         [MapperIgnoreSource(nameof(RegisterViewModel.ConfirmPassword))]
         [MapperIgnoreSource(nameof(RegisterViewModel.ReturnUrl))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.Bookings))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.Id))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.NormalizedUserName))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.NormalizedEmail))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.EmailConfirmed))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.PasswordHash))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.SecurityStamp))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.ConcurrencyStamp))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.PhoneNumberConfirmed))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.TwoFactorEnabled))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnd))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnabled))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.AccessFailedCount))]
-        private partial ApplicationUser ToApplicationUserBase(
+        [MapperIgnoreTarget(nameof(DanceMember.Bookings))]
+        [MapperIgnoreTarget(nameof(DanceMember.Id))]
+        [MapperIgnoreTarget(nameof(DanceMember.NormalizedUserName))]
+        [MapperIgnoreTarget(nameof(DanceMember.NormalizedEmail))]
+        [MapperIgnoreTarget(nameof(DanceMember.EmailConfirmed))]
+        [MapperIgnoreTarget(nameof(DanceMember.PasswordHash))]
+        [MapperIgnoreTarget(nameof(DanceMember.SecurityStamp))]
+        [MapperIgnoreTarget(nameof(DanceMember.ConcurrencyStamp))]
+        [MapperIgnoreTarget(nameof(DanceMember.PhoneNumberConfirmed))]
+        [MapperIgnoreTarget(nameof(DanceMember.TwoFactorEnabled))]
+        [MapperIgnoreTarget(nameof(DanceMember.LockoutEnd))]
+        [MapperIgnoreTarget(nameof(DanceMember.LockoutEnabled))]
+        [MapperIgnoreTarget(nameof(DanceMember.AccessFailedCount))]
+        private partial DanceMember ToApplicationUserBase(
             RegisterViewModel model);
 
-        public ApplicationUser ToApplicationUser(RegisterViewModel model)
+        public DanceMember ToApplicationUser(RegisterViewModel model)
         {
             var user = ToApplicationUserBase(model);
             user.EmailConfirmed = true;
@@ -138,42 +138,42 @@ namespace onlineCinema.Mapping
         }
 
         [MapProperty(nameof(ProfileViewModel.PhoneNumber),
-            nameof(ApplicationUser.PhoneNumber))]
+            nameof(DanceMember.PhoneNumber))]
         [MapProperty(nameof(ProfileViewModel.FirstName),
-            nameof(ApplicationUser.FirstName))]
+            nameof(DanceMember.FirstName))]
         [MapProperty(nameof(ProfileViewModel.LastName),
-            nameof(ApplicationUser.LastName))]
+            nameof(DanceMember.LastName))]
         [MapProperty(nameof(ProfileViewModel.MiddleName), 
-            nameof(ApplicationUser.MiddleName))]
+            nameof(DanceMember.MiddleName))]
         [MapProperty(nameof(ProfileViewModel.DateOfBirth),
-            nameof(ApplicationUser.DateOfBirth))]
+            nameof(DanceMember.DateOfBirth))]
         [MapperIgnoreSource(nameof(ProfileViewModel.Id))]
         [MapperIgnoreSource(nameof(ProfileViewModel.Email))]
         [MapperIgnoreSource(nameof(ProfileViewModel.FullName))]
         [MapperIgnoreSource(nameof(ProfileViewModel.NewPassword))]
         [MapperIgnoreSource(nameof(ProfileViewModel.ConfirmPassword))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.Id))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.Email))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.Bookings))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.UserName))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.NormalizedUserName))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.NormalizedEmail))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.EmailConfirmed))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.PasswordHash))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.SecurityStamp))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.ConcurrencyStamp))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.PhoneNumberConfirmed))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.TwoFactorEnabled))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnd))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.LockoutEnabled))]
-        [MapperIgnoreTarget(nameof(ApplicationUser.AccessFailedCount))]
+        [MapperIgnoreTarget(nameof(DanceMember.Id))]
+        [MapperIgnoreTarget(nameof(DanceMember.Email))]
+        [MapperIgnoreTarget(nameof(DanceMember.Bookings))]
+        [MapperIgnoreTarget(nameof(DanceMember.UserName))]
+        [MapperIgnoreTarget(nameof(DanceMember.NormalizedUserName))]
+        [MapperIgnoreTarget(nameof(DanceMember.NormalizedEmail))]
+        [MapperIgnoreTarget(nameof(DanceMember.EmailConfirmed))]
+        [MapperIgnoreTarget(nameof(DanceMember.PasswordHash))]
+        [MapperIgnoreTarget(nameof(DanceMember.SecurityStamp))]
+        [MapperIgnoreTarget(nameof(DanceMember.ConcurrencyStamp))]
+        [MapperIgnoreTarget(nameof(DanceMember.PhoneNumberConfirmed))]
+        [MapperIgnoreTarget(nameof(DanceMember.TwoFactorEnabled))]
+        [MapperIgnoreTarget(nameof(DanceMember.LockoutEnd))]
+        [MapperIgnoreTarget(nameof(DanceMember.LockoutEnabled))]
+        [MapperIgnoreTarget(nameof(DanceMember.AccessFailedCount))]
         private partial void UpdateApplicationUserBase(
             ProfileViewModel model,
-            ApplicationUser user);
+            DanceMember user);
 
         public void UpdateApplicationUser(
             ProfileViewModel model,
-            ApplicationUser user)
+            DanceMember user)
         {
             UpdateApplicationUserBase(model, user);
 

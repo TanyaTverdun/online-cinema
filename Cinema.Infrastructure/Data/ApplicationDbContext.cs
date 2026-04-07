@@ -1,37 +1,49 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using onlineCinema.Domain.Entities;
-using CinemaEntity = onlineCinema.Domain.Entities.Cinema;
-
 
 namespace onlineCinema.Infrastructure.Data
 {
-	public class ApplicationDbContext : IdentityDbContext<ApplicationUser>
+    public class ApplicationDbContext : IdentityDbContext<DanceMember>
     {
-		public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
-			: base(options)
-		{
-		}
-        public DbSet<CinemaEntity> Cinemas { get; set; }
-        public DbSet<Hall> Halls { get; set; }
-        public DbSet<Seat> Seats { get; set; }
-        public DbSet<Movie> Movies { get; set; }
-        public DbSet<Session> Sessions { get; set; }
-        public DbSet<Ticket> Tickets { get; set; }
-        public DbSet<Booking> Bookings { get; set; }
-        public DbSet<Payment> Payments { get; set; }
+        public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
+            : base(options)
+        {
+        }
 
-        public DbSet<Genre> Genres { get; set; }
-        public DbSet<Director> Directors { get; set; }
-        public DbSet<CastMember> CastMembers { get; set; }
-        public DbSet<Language> Languages { get; set; }
-        public DbSet<Feature> Features { get; set; }
-        public DbSet<Snack> Snacks { get; set; }
+        // Основні таблиці студії
+        public DbSet<StudioBranch> StudioBranches { get; set; } = null!;
+        public DbSet<DanceHall> DanceHalls { get; set; } = null!;
+        public DbSet<Inventory> Inventories { get; set; } = null!; // Пофікшено: Inventory замість Inventary
+        public DbSet<Requirement> Requirements { get; set; } = null!; // Пофікшено: Requirement замість Requriment
+
+        // Розклад та постановки
+        public DbSet<Performance> Performances { get; set; } = null!;
+        public DbSet<DanceClass> DanceClasses { get; set; } = null!;
+        public DbSet<DanceStyle> DanceStyles { get; set; } = null!;
+        public DbSet<SkillLevel> SkillLevels { get; set; } = null!;
+
+        // Люди
+        public DbSet<Choreographer> Choreographers { get; set; } = null!;
+        public DbSet<Dancer> Dancers { get; set; } = null!;
+
+        // Процеси та фінанси
+        public DbSet<AttendanceLog> AttendanceLogs { get; set; } = null!;
+        public DbSet<CostumeBooking> CostumeBookings { get; set; } = null!;
+        public DbSet<FinancialTransaction> FinancialTransactions { get; set; } = null!;
+        public DbSet<StudioMerch> StudioMerches { get; set; } = null!;
+
+        // Проміжні таблиці (Join Tables) - за бажанням можна додати і їх для зручних запитів
+        public DbSet<PerformanceStyle> PerformanceStyles { get; set; } = null!;
+        public DbSet<PerformanceDancers> PerformanceDancers { get; set; } = null!;
+        public DbSet<ChoreographerPerformance> ChoreographerPerformances { get; set; } = null!;
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
+            // Важливо: спочатку викликаємо base, щоб Identity налаштував свої таблиці
             base.OnModelCreating(builder);
 
+            // Автоматично застосовуємо всі конфігурації з папки Configurations
             builder.ApplyConfigurationsFromAssembly(typeof(ApplicationDbContext).Assembly);
         }
     }

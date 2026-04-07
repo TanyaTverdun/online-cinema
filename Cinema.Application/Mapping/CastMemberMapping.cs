@@ -8,15 +8,15 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class CastMemberMapping
     {
-        public partial CastMemberDto MapToDto(CastMember castMember);
+        public partial CastMemberDto MapToDto(Dancer castMember);
 
         public partial List<CastMemberDto> 
-            MapToDtoList(IEnumerable<CastMember> castMembers);
+            MapToDtoList(IEnumerable<Dancer> castMembers);
 
-        public partial CastMember MapToEntity(CastMemberCreateUpdateDto dto);
+        public partial Dancer MapToEntity(CastMemberCreateUpdateDto dto);
 
         public partial void UpdateEntityFromDto(
             CastMemberCreateUpdateDto dto, 
-            CastMember entity);
+            Dancer entity);
     }
 }

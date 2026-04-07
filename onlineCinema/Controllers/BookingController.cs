@@ -13,7 +13,7 @@ namespace onlineCinema.Controllers
     public class BookingController : Controller
     {
         private readonly IBookingService _bookingService;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly UserManager<DanceMember> _userManager;
         private readonly BookingViewModelMapper _viewMapper;
         private readonly ISnackService _snackService;
         private readonly SnackViewModelMapper _snackMapper;
@@ -21,7 +21,7 @@ namespace onlineCinema.Controllers
 
         public BookingController(
             IBookingService bookingService,
-            UserManager<ApplicationUser> userManager,
+            UserManager<DanceMember> userManager,
             BookingViewModelMapper viewMapper,
             ISnackService snackService,
             SnackViewModelMapper snackMapper,

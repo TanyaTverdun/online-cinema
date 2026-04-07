@@ -9,7 +9,7 @@ namespace onlineCinema.Areas.Admin.Models
         public string? PosterUrl { get; set; }
         public int ReleaseYear { get; set; }
         public string GenreSummary { get; set; } = string.Empty;
-        public MovieStatus Status { get; set; }
-        public AgeRating AgeRating { get; set; }
+        public PerformanceStatus Status { get; set; }
+        public AgeCategory AgeRating { get; set; }
     }
 }

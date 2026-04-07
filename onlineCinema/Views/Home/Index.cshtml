@@ -5,8 +5,8 @@
 @{
     ViewData["Title"] = "Афіша";
 
-    var nowShowing = Model.Where(m => m.Status == MovieStatus.Released).ToList();
-    var comingSoon = Model.Where(m => m.Status == MovieStatus.ComingSoon).ToList();
+    var nowShowing = Model.Where(m => m.Status == PerformanceStatus.Released).ToList();
+    var comingSoon = Model.Where(m => m.Status == PerformanceStatus.ComingSoon).ToList();
     var heroMovie = nowShowing.FirstOrDefault(); 
 }
 

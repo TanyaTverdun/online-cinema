@@ -131,7 +131,7 @@
                     <div class="card-body">
                         <div class="mb-3">
                             <label asp-for="Status" class="form-label text-muted small text-uppercase">Статус</label>
-                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<MovieStatus>()" class="form-select mb-3"></select>
+                            <select asp-for="Status" asp-items="Html.GetEnumSelectList<PerformanceStatus>()" class="form-select mb-3"></select>
                         </div>
                         <div class="row g-2">
                             <div class="col-6">
@@ -144,7 +144,7 @@
                             </div>
                             <div class="col-6">
                                 <label asp-for="AgeRating" class="form-label text-muted  small text-uppercase ">Вікове обмеження</label>
-                                <select asp-for="AgeRating" asp-items="Html.GetEnumSelectList<AgeRating>()" class="form-select text-light border-secondary"></select>
+                                <select asp-for="AgeRating" asp-items="Html.GetEnumSelectLiCategoryRating>()" class="form-select text-light border-secondary"></select>
                                 <span asp-validation-for="AgeRating" class="text-danger small"></span>
                             </div>
                             <div class="col-4">

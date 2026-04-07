@@ -10,7 +10,7 @@ namespace onlineCinema.Application.Services.Interfaces
 {
     public interface IBookingService
     {
-        Task<SessionSeatMapDto> GetSessionSeatMapAsync(int sessionId);
+        Task<DanceClassMapDto> GetSessionSeatMapAsync(int sessionId);
         Task AddSnacksToBookingAsync(
             int bookingId, 
             List<SelectedSnackDto> selectedSnacks);

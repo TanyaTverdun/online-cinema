@@ -81,7 +81,7 @@ namespace onlineCinema.Application.Services
                         $"Конфлікт сеансу на дату {sessionDate:dd.MM.yyyy HH:mm}");
                 }
 
-                Session session = _mapper.MapToSession(dto);
+                DanceClass session = _mapper.MapToSession(dto);
                 session.ShowingDateTime = sessionDate;
 
                 await _unitOfWork.Session.AddAsync(session);

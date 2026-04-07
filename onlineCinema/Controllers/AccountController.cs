@@ -12,16 +12,16 @@ namespace onlineCinema.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<DanceMember> _userManager;
+        private readonly SignInManager<DanceMember> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         private readonly ILogger<AccountController> _logger;
         private readonly UserMapping _userMapping;
         private readonly IBookingService _bookingService;
 
         public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            UserManager<DanceMember> userManager,
+            SignInManager<DanceMember> signInManager,
             RoleManager<IdentityRole> roleManager,
             ILogger<AccountController> logger,
             UserMapping userMapping,
@@ -361,7 +361,7 @@ namespace onlineCinema.Controllers
 
 
         private async Task LoadHistoryAsync(
-            ApplicationUser user, 
+            DanceMember user, 
             ProfileViewModel model, 
             int? lastId = null,
             int? firstId = null)

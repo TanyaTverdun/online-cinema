@@ -7,14 +7,14 @@ namespace onlineCinema.ViewModels
         public int SeatId { get; set; }
         public int Row { get; set; }
         public int Number { get; set; }
-        public SeatType Type { get; set; }
+        public ConditionStatus Type { get; set; }
         public decimal Price { get; set; }
         public bool IsBooked { get; set; }
 
         public string CssClass => 
             IsBooked 
             ? "seat-booked" 
-            : (Type == SeatType.VIP 
+            : (Type == ConditionStatus.VIP 
             ? "seat-vip" 
             : "");
     }

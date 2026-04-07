@@ -52,7 +52,7 @@ namespace onlineCinema.Mapping
         }
 
         public HallInputViewModel PrepareInputViewModel(
-            IEnumerable<Feature> allFeatures,
+            IEnumerable<Requriment> allFeatures,
             HallDto? hallDto = null)
         {
             var vm = new HallInputViewModel();

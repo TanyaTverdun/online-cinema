@@ -9,6 +9,6 @@ namespace onlineCinema.Application.DTOs
     public class DailyScheduleDto
     {
         public DateTime Date { get; set; }
-        public List<SessionScheduleDto> Sessions { get; set; } = new();
+        public List<DanceClassScheduleDto> DanceClasses { get; set; } = new();
     }
 }

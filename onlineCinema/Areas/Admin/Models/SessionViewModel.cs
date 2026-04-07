@@ -12,6 +12,7 @@ namespace onlineCinema.Areas.Admin.Models
         public string MovieTitle { get; set; } = string.Empty;
         public string HallName { get; set; } = string.Empty;
         public DateTime? ShowingDateTime { get; set; }
+        [DisplayFormat(DataFormatString = "{0:0.##}", ApplyFormatInEditMode = true)]
         public decimal? BasePrice { get; set; }
         public bool GenerateForWeek { get; set; }
         public IEnumerable<MovieDto> MoviesList { get; set; }

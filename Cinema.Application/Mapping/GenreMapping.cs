@@ -8,18 +8,18 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class GenreMapping
     {
-        [MapperIgnoreSource(nameof(Genre.MovieGenres))]
-        public partial GenreFormDto? ToDto(Genre? genre);
+        [MapperIgnoreSource(nameof(DanceStyle.MovieGenres))]
+        public partial GenreFormDto? ToDto(DanceStyle? genre);
 
-        [MapperIgnoreTarget(nameof(Genre.MovieGenres))]
-        public partial Genre ToEntity(GenreFormDto dto);
+        [MapperIgnoreTarget(nameof(DanceStyle.MovieGenres))]
+        public partial DanceStyle ToEntity(GenreFormDto dto);
 
-        [MapperIgnoreTarget(nameof(Genre.MovieGenres))]
+        [MapperIgnoreTarget(nameof(DanceStyle.MovieGenres))]
         public partial void UpdateEntityFromDto(
             GenreFormDto dto, 
-            Genre genre);
+            DanceStyle genre);
 
         public partial IEnumerable<GenreFormDto> 
-            ToDtoList(IEnumerable<Genre> genres);
+            ToDtoList(IEnumerable<DanceStyle> genres);
     }
 }

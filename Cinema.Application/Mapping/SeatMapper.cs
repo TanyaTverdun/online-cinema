@@ -7,14 +7,14 @@ namespace onlineCinema.Application.Mapping
     [Mapper]
     public partial class SeatMapper
     {
-        public Seat CreateSeatEntity(
+        public Inventary CreateSeatEntity(
             int hallId, 
             int row, 
             int number, 
-            SeatType type, 
+            ConditionStatus type, 
             float coefficient)
         {
-            return new Seat
+            return new Inventary
             {
                 HallId = hallId,
                 RowNumber = (byte)row,
